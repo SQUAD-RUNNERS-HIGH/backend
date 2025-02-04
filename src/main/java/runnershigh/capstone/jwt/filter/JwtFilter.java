@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import runnershigh.capstone.jwt.enums.AuthConstants;
 import runnershigh.capstone.jwt.util.JwtProvider;
 
 @Slf4j
@@ -47,7 +48,8 @@ public class JwtFilter implements Filter {
                     String loginId = jwtProvider.extractLoginIdByRefreshToken(refreshToken);
                     String newAccessToken = jwtProvider.generateAccessToken(loginId);
 
-                    httpResponse.setHeader("Authorization", "Bearer " + newAccessToken);
+                    httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
+                        AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
 
                     log.info("새로운 AccessToken 생성");
 
@@ -64,8 +66,8 @@ public class JwtFilter implements Filter {
     }
 
     private String extractToken(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
+        String token = request.getHeader(AuthConstants.AUTHORIZATION_HEADER.getValue());
+        if (token != null && token.startsWith(AuthConstants.BEARER_PREFIX.getValue())) {
             return token.substring(7);  // "Bearer " 부분을 잘라내고 실제 토큰만 반환
         }
         return null;
@@ -75,7 +77,7 @@ public class JwtFilter implements Filter {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("refresh_token".equals(cookie.getName())) {
+                if (AuthConstants.REFRESH_COOKIE_NAME.getValue().equals(cookie.getName())) {
                     return cookie.getValue();  // 쿠키에서 리프레시 토큰 반환
                 }
             }

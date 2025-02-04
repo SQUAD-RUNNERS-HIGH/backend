@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.jwt.config.JwtProperties;
 import runnershigh.capstone.jwt.dto.JwtRequest;
 import runnershigh.capstone.jwt.dto.JwtResponse;
+import runnershigh.capstone.jwt.enums.AuthConstants;
 import runnershigh.capstone.jwt.service.JwtService;
 
 @RestController
@@ -24,13 +25,14 @@ public class JwtController {
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
 
-    private static final String REFRESH_COOKIE_NAME = "refresh_token";
+    private static final String COOKIE_HEADER = "Set-Cookie";
 
     @PostMapping("/login")
     public JwtResponse login(@RequestBody JwtRequest jwtRequest, HttpServletResponse response) {
         JwtResponse jwtResponse = jwtService.login(jwtRequest.loginId(), jwtRequest.password());
 
-        response.setHeader("Authorization", "Bearer" + jwtResponse.accessToken());
+        response.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
+            AuthConstants.BEARER_PREFIX.getValue() + jwtResponse.accessToken());
 
         setRefreshTokenInCookie(response, jwtResponse.refreshToken(),
             jwtProperties.getRefreshExpirationTime());
@@ -58,7 +60,8 @@ public class JwtController {
 
         jwtService.logout(loginId);
 
-        ResponseCookie expiredCookie = ResponseCookie.from(REFRESH_COOKIE_NAME, "")
+        ResponseCookie expiredCookie = ResponseCookie.from(
+                AuthConstants.REFRESH_COOKIE_NAME.getValue(), "")
             .maxAge(0)  // 쿠키 삭제
             .path("/")
             .secure(true)
@@ -66,20 +69,21 @@ public class JwtController {
             .httpOnly(true)
             .build();
 
-        response.setHeader("Set-Cookie", expiredCookie.toString());
+        response.setHeader(COOKIE_HEADER, expiredCookie.toString());
 
         return ResponseEntity.ok("Logged out successfully");
     }
 
     private void setRefreshTokenInCookie(HttpServletResponse response, String refreshToken,
         Long refreshExpirationTime) {
-        ResponseCookie cookie = ResponseCookie.from(REFRESH_COOKIE_NAME, refreshToken)
+        ResponseCookie cookie = ResponseCookie.from(AuthConstants.REFRESH_COOKIE_NAME.getValue(),
+                refreshToken)
             .maxAge(refreshExpirationTime)
             .path("/")
             .secure(true)
             .sameSite("None")
             .httpOnly(true)
             .build();
-        response.setHeader("Set-Cookie", cookie.toString());
+        response.setHeader(COOKIE_HEADER, cookie.toString());
     }
 }
