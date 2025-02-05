@@ -1,8 +1,5 @@
 package runnershigh.capstone.jwt.enums;
 
-import lombok.Getter;
-
-@Getter
 public enum AuthConstants {
     REFRESH_COOKIE_NAME("refresh_token"),
     AUTHORIZATION_HEADER("Authorization"),
@@ -14,4 +11,7 @@ public enum AuthConstants {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
 }

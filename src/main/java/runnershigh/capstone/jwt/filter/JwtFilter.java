@@ -5,20 +5,23 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import runnershigh.capstone.jwt.enums.AuthConstants;
-import runnershigh.capstone.jwt.util.JwtProvider;
+import runnershigh.capstone.jwt.util.JwtExtractor;
+import runnershigh.capstone.jwt.util.JwtGenerator;
+import runnershigh.capstone.jwt.util.JwtValidator;
 
 @Slf4j
 @AllArgsConstructor
 public class JwtFilter implements Filter {
 
-    private final JwtProvider jwtProvider;
+    private final JwtExtractor jwtExtractor;
+    private final JwtValidator jwtValidator;
+    private final JwtGenerator jwtGenerator;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -34,29 +37,27 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        String accessToken = extractToken(httpRequest);
-        String refreshToken = extractRefreshTokenFromCookie(httpRequest);
+        String accessToken = jwtExtractor.extractAccessToken(httpRequest);
+        String refreshToken = jwtExtractor.extractRefreshTokenFromCookie(httpRequest);
 
-        if (accessToken != null && jwtProvider.validateAccessToken(accessToken)) {
+        if (accessToken != null && jwtValidator.validateAccessToken(accessToken)) {
             processValidAccessToken(request, response, chain, accessToken, httpRequest);
             return;
         }
 
-        if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
+        if (refreshToken != null && jwtValidator.validateRefreshToken(refreshToken)) {
             processValidRefreshToken(request, response, chain, refreshToken, httpResponse,
                 httpRequest);
             return;
         }
 
         sendUnauthorizedResponse(httpResponse);
-
-
     }
 
     private void processValidAccessToken(ServletRequest request, ServletResponse response,
         FilterChain chain,
         String accessToken, HttpServletRequest httpRequest) throws IOException, ServletException {
-        String loginId = jwtProvider.extractLoginIdByAccessToken(accessToken);
+        String loginId = jwtExtractor.extractLoginIdByAccessToken(accessToken);
         httpRequest.setAttribute("loginId", loginId);
         chain.doFilter(request, response);
     }
@@ -65,8 +66,8 @@ public class JwtFilter implements Filter {
         FilterChain chain,
         String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest)
         throws IOException, ServletException {
-        String loginId = jwtProvider.extractLoginIdByRefreshToken(refreshToken);
-        String newAccessToken = jwtProvider.generateAccessToken(loginId);
+        String loginId = jwtExtractor.extractLoginIdByRefreshToken(refreshToken);
+        String newAccessToken = jwtGenerator.generateAccessToken(loginId);
 
         httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
@@ -75,26 +76,6 @@ public class JwtFilter implements Filter {
 
         httpRequest.setAttribute("loginId", loginId);
         chain.doFilter(request, response);
-    }
-
-    private String extractToken(HttpServletRequest request) {
-        String token = request.getHeader(AuthConstants.AUTHORIZATION_HEADER.getValue());
-        if (token != null && token.startsWith(AuthConstants.BEARER_PREFIX.getValue())) {
-            return token.substring(7);  // "Bearer " 부분을 잘라내고 실제 토큰만 반환
-        }
-        return null;
-    }
-
-    private String extractRefreshTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (AuthConstants.REFRESH_COOKIE_NAME.getValue().equals(cookie.getName())) {
-                    return cookie.getValue();  // 쿠키에서 리프레시 토큰 반환
-                }
-            }
-        }
-        return null;
     }
 
     private void sendUnauthorizedResponse(HttpServletResponse response)

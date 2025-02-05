@@ -1,24 +1,21 @@
 package runnershigh.capstone.jwt.util;
 
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.jwt.config.JwtProperties;
 
-@Slf4j
 @Component
-public class JwtProvider {
+public class JwtGenerator {
 
     private final SecretKey accessSecretKey;
     private final SecretKey refreshSecretKey;
     private final Long accessExpirationTime;
     private final Long refreshExpirationTime;
 
-    public JwtProvider(JwtProperties jwtProperties) {
+    public JwtGenerator(JwtProperties jwtProperties) {
         this.accessSecretKey = Keys.hmacShaKeyFor(jwtProperties.getAccessSecretKey().getBytes());
         this.refreshSecretKey = Keys.hmacShaKeyFor(jwtProperties.getRefreshSecretKey().getBytes());
         this.accessExpirationTime = jwtProperties.getAccessExpirationTime();
@@ -44,45 +41,4 @@ public class JwtProvider {
             .compact();
     }
 
-    public boolean validateAccessToken(String accessToken) {
-        try {
-            Jwts.parser()
-                .setSigningKey(accessSecretKey)
-                .build()
-                .parseClaimsJws(accessToken);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    public boolean validateRefreshToken(String refreshToken) {
-        try {
-            Jwts.parser()
-                .setSigningKey(refreshSecretKey)
-                .build()
-                .parseClaimsJws(refreshToken);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    public String extractLoginIdByAccessToken(String token) {
-        return Jwts.parser()
-            .setSigningKey(accessSecretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
-    }
-
-    public String extractLoginIdByRefreshToken(String token) {
-        return Jwts.parser()
-            .setSigningKey(refreshSecretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
-    }
 }

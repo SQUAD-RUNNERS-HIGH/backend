@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.jwt.domain.RefreshToken;
 import runnershigh.capstone.jwt.dto.JwtResponse;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
-import runnershigh.capstone.jwt.util.JwtProvider;
+import runnershigh.capstone.jwt.util.JwtGenerator;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.repository.UserRepository;
 
@@ -16,7 +16,7 @@ import runnershigh.capstone.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class JwtService {
 
-    private final JwtProvider jwtProvider;
+    private final JwtGenerator jwtGenerator;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -25,8 +25,8 @@ public class JwtService {
         Optional<User> exitUser = userRepository.findByLoginId(loginId);
 
         if (exitUser.isPresent() && exitUser.get().getPassword().equals(password)) {
-            String accessToken = jwtProvider.generateAccessToken(loginId);
-            String refreshToken = jwtProvider.generateRefreshToken(loginId);
+            String accessToken = jwtGenerator.generateAccessToken(loginId);
+            String refreshToken = jwtGenerator.generateRefreshToken(loginId);
 
             refreshTokenRepository.deleteRefreshTokenByLoginId(loginId);
             refreshTokenRepository.save(new RefreshToken(refreshToken, loginId));

@@ -5,18 +5,22 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import runnershigh.capstone.jwt.filter.JwtFilter;
-import runnershigh.capstone.jwt.util.JwtProvider;
+import runnershigh.capstone.jwt.util.JwtExtractor;
+import runnershigh.capstone.jwt.util.JwtGenerator;
+import runnershigh.capstone.jwt.util.JwtValidator;
 
 @Configuration
 @AllArgsConstructor
 public class FilterConfig {
 
-    private final JwtProvider jwtProvider;
+    private final JwtExtractor jwtExtractor;
+    private final JwtValidator jwtValidator;
+    private final JwtGenerator jwtGenerator;
 
     @Bean
     public FilterRegistrationBean<JwtFilter> jwtFilter() {
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new JwtFilter(jwtProvider));
+        registrationBean.setFilter(new JwtFilter(jwtExtractor, jwtValidator, jwtGenerator));
         registrationBean.addUrlPatterns("/auth/*");
         registrationBean.setOrder(1);
         return registrationBean;
