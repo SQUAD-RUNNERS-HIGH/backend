@@ -37,32 +37,44 @@ public class JwtFilter implements Filter {
         String accessToken = extractToken(httpRequest);
         String refreshToken = extractRefreshTokenFromCookie(httpRequest);
 
-        if (accessToken != null) { // 로그인 자체가 되지 않은 경우
-            if (jwtProvider.validateAccessToken(accessToken)) {        // accessToken 검증 성공
-                String loginId = jwtProvider.extractLoginIdByAccessToken(accessToken);
-                httpRequest.setAttribute("loginId", loginId);
-                chain.doFilter(request, response);
-            } else {                                                   // accessToken 검증 실패
-                if (refreshToken != null && jwtProvider.validateRefreshToken(
-                    refreshToken)) {                                   // refreshToken 검증 성공
-                    String loginId = jwtProvider.extractLoginIdByRefreshToken(refreshToken);
-                    String newAccessToken = jwtProvider.generateAccessToken(loginId);
-
-                    httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
-                        AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
-
-                    log.info("새로운 AccessToken 생성");
-
-                    httpRequest.setAttribute("loginId", loginId);
-                    chain.doFilter(request, response);
-                } else {                                              // refreshToken 검증 실패
-                    sendUnauthorizedResponse(httpResponse,
-                        "AccessToken / RefreshToken is expired. plz login");
-                }
-            }
-        } else {
-            sendUnauthorizedResponse(httpResponse, "AccessToken is expired. plz login");
+        if (accessToken != null && jwtProvider.validateAccessToken(accessToken)) {
+            processValidAccessToken(request, response, chain, accessToken, httpRequest);
+            return;
         }
+
+        if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
+            processValidRefreshToken(request, response, chain, refreshToken, httpResponse,
+                httpRequest);
+            return;
+        }
+
+        sendUnauthorizedResponse(httpResponse);
+
+
+    }
+
+    private void processValidAccessToken(ServletRequest request, ServletResponse response,
+        FilterChain chain,
+        String accessToken, HttpServletRequest httpRequest) throws IOException, ServletException {
+        String loginId = jwtProvider.extractLoginIdByAccessToken(accessToken);
+        httpRequest.setAttribute("loginId", loginId);
+        chain.doFilter(request, response);
+    }
+
+    private void processValidRefreshToken(ServletRequest request, ServletResponse response,
+        FilterChain chain,
+        String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest)
+        throws IOException, ServletException {
+        String loginId = jwtProvider.extractLoginIdByRefreshToken(refreshToken);
+        String newAccessToken = jwtProvider.generateAccessToken(loginId);
+
+        httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
+            AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
+
+        log.info("새로운 AccessToken 생성");
+
+        httpRequest.setAttribute("loginId", loginId);
+        chain.doFilter(request, response);
     }
 
     private String extractToken(HttpServletRequest request) {
@@ -85,10 +97,10 @@ public class JwtFilter implements Filter {
         return null;
     }
 
-    private void sendUnauthorizedResponse(HttpServletResponse response, String message)
+    private void sendUnauthorizedResponse(HttpServletResponse response)
         throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(message);
+        response.getWriter().write("AccessToken / RefreshToken is expired. Please login.");
     }
 
 }
