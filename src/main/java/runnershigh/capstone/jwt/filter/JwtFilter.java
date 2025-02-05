@@ -11,9 +11,9 @@ import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import runnershigh.capstone.jwt.enums.AuthConstants;
-import runnershigh.capstone.jwt.util.JwtExtractor;
-import runnershigh.capstone.jwt.util.JwtGenerator;
-import runnershigh.capstone.jwt.util.JwtValidator;
+import runnershigh.capstone.jwt.service.JwtExtractor;
+import runnershigh.capstone.jwt.service.JwtGenerator;
+import runnershigh.capstone.jwt.service.JwtValidator;
 
 @Slf4j
 @AllArgsConstructor

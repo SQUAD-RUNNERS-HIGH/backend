@@ -5,9 +5,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import runnershigh.capstone.jwt.filter.JwtFilter;
-import runnershigh.capstone.jwt.util.JwtExtractor;
-import runnershigh.capstone.jwt.util.JwtGenerator;
-import runnershigh.capstone.jwt.util.JwtValidator;
+import runnershigh.capstone.jwt.service.JwtExtractor;
+import runnershigh.capstone.jwt.service.JwtGenerator;
+import runnershigh.capstone.jwt.service.JwtValidator;
 
 @Configuration
 @AllArgsConstructor

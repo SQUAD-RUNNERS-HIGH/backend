@@ -1,4 +1,4 @@
-package runnershigh.capstone.jwt.util;
+package runnershigh.capstone.jwt.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

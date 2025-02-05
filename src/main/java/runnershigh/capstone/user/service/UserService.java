@@ -29,14 +29,16 @@ public class UserService {
 
     @Transactional
     public UserResponse updateProfile(String userId, UserProfileRequest userProfileRequest) {
-        User user = userRepository.findByLoginId(userId).orElse(null);
+
+        User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
         assert user != null;
         user.updateProfile(userProfileRequest);
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }
 
     public UserResponse getProfile(String userId) {
-        User user = userRepository.findByLoginId(userId).orElse(null);
+
+        User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
         assert user != null;
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }

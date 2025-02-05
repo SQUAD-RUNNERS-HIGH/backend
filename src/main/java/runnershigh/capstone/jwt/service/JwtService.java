@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.jwt.domain.RefreshToken;
 import runnershigh.capstone.jwt.dto.LoginResponse;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
-import runnershigh.capstone.jwt.util.JwtGenerator;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.repository.UserRepository;
 
