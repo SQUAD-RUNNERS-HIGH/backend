@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.jwt.config.JwtProperties;
-import runnershigh.capstone.jwt.dto.JwtRequest;
-import runnershigh.capstone.jwt.dto.JwtResponse;
+import runnershigh.capstone.jwt.dto.LoginRequest;
+import runnershigh.capstone.jwt.dto.LoginResponse;
 import runnershigh.capstone.jwt.enums.AuthConstants;
 import runnershigh.capstone.jwt.service.JwtService;
 
@@ -28,23 +28,25 @@ public class JwtController {
     private static final String COOKIE_HEADER = "Set-Cookie";
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody JwtRequest jwtRequest, HttpServletResponse response) {
-        JwtResponse jwtResponse = jwtService.login(jwtRequest.loginId(), jwtRequest.password());
+    public LoginResponse login(@RequestBody LoginRequest loginRequest,
+        HttpServletResponse response) {
+        LoginResponse loginResponse = jwtService.login(loginRequest.loginId(),
+            loginRequest.password());
 
         response.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
-            AuthConstants.BEARER_PREFIX.getValue() + jwtResponse.accessToken());
+            AuthConstants.BEARER_PREFIX.getValue() + loginResponse.accessToken());
 
-        setRefreshTokenInCookie(response, jwtResponse.refreshToken(),
+        setRefreshTokenInCookie(response, loginResponse.refreshToken(),
             jwtProperties.getRefreshExpirationTime());
 
-        return jwtResponse;
+        return loginResponse;
     }
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserFromToken(HttpServletRequest request) {
-        String loginId = (String) request.getAttribute("loginId");
-        if (loginId != null) {
-            return ResponseEntity.ok("Authenticated user: " + loginId);
+        String userId = (String) request.getAttribute("userId");
+        if (userId != null) {
+            return ResponseEntity.ok("Authenticated userId : " + userId);
         } else {
             return ResponseEntity.status(401).body("Invalid or expired token");
         }
@@ -52,13 +54,13 @@ public class JwtController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        String loginId = (String) request.getAttribute("loginId");
+        String userId = (String) request.getAttribute("userId");
 
-        if (loginId == null) {
+        if (userId == null) {
             return ResponseEntity.status(401).body("Invalid or expired token");
         }
 
-        jwtService.logout(loginId);
+        jwtService.logout(userId);
 
         ResponseCookie expiredCookie = ResponseCookie.from(
                 AuthConstants.REFRESH_COOKIE_NAME.getValue(), "")

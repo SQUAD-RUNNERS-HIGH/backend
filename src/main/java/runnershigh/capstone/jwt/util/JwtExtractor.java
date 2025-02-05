@@ -41,7 +41,7 @@ public class JwtExtractor {
         return null;
     }
 
-    public String extractLoginIdByAccessToken(String token) {
+    public String extractUserIdByAccessToken(String token) {
         return Jwts.parser()
             .setSigningKey(accessSecretKey)
             .build()
@@ -51,7 +51,7 @@ public class JwtExtractor {
     }
 
 
-    public String extractLoginIdByRefreshToken(String token) {
+    public String extractUserIdByRefreshToken(String token) {
         return Jwts.parser()
             .setSigningKey(refreshSecretKey)
             .build()

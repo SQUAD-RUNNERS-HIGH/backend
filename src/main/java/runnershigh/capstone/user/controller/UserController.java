@@ -35,16 +35,16 @@ public class UserController {
     @GetMapping
     public UserResponse getProfile(@RequestHeader(AUTHORIZATION_HEADER) String token) {
         String jwtToken = token.replace(BEARER_PREFIX, "").trim();
-        String loginId = jwtExtractor.extractLoginIdByAccessToken(jwtToken);
-        return userService.getProfile(loginId);
+        String userId = jwtExtractor.extractUserIdByAccessToken(jwtToken);
+        return userService.getProfile(userId);
     }
 
     @PutMapping
     public UserResponse updateProfile(@RequestHeader(AUTHORIZATION_HEADER) String token,
         @RequestBody UserProfileRequest userProfileRequest) {
         String jwtToken = token.replace(BEARER_PREFIX, "").trim();
-        String loginId = jwtExtractor.extractLoginIdByAccessToken(jwtToken);
-        return userService.updateProfile(loginId, userProfileRequest);
+        String userId = jwtExtractor.extractUserIdByAccessToken(jwtToken);
+        return userService.updateProfile(userId, userProfileRequest);
     }
 
 

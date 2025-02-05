@@ -57,8 +57,8 @@ public class JwtFilter implements Filter {
     private void processValidAccessToken(ServletRequest request, ServletResponse response,
         FilterChain chain,
         String accessToken, HttpServletRequest httpRequest) throws IOException, ServletException {
-        String loginId = jwtExtractor.extractLoginIdByAccessToken(accessToken);
-        httpRequest.setAttribute("loginId", loginId);
+        String userId = jwtExtractor.extractUserIdByAccessToken(accessToken);
+        httpRequest.setAttribute("userId", userId);
         chain.doFilter(request, response);
     }
 
@@ -66,15 +66,15 @@ public class JwtFilter implements Filter {
         FilterChain chain,
         String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest)
         throws IOException, ServletException {
-        String loginId = jwtExtractor.extractLoginIdByRefreshToken(refreshToken);
-        String newAccessToken = jwtGenerator.generateAccessToken(loginId);
+        String userId = jwtExtractor.extractUserIdByRefreshToken(refreshToken);
+        String newAccessToken = jwtGenerator.generateAccessToken(userId);
 
         httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
 
         log.info("새로운 AccessToken 생성");
 
-        httpRequest.setAttribute("loginId", loginId);
+        httpRequest.setAttribute("userId", userId);
         chain.doFilter(request, response);
     }
 
