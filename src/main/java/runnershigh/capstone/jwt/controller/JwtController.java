@@ -32,7 +32,6 @@ public class JwtController {
         HttpServletResponse response) {
         LoginResponse loginResponse = jwtService.login(loginRequest.loginId(),
             loginRequest.password());
-
         response.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + loginResponse.accessToken());
 

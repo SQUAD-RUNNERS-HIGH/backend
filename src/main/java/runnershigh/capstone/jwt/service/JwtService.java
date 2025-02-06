@@ -26,12 +26,11 @@ public class JwtService {
         if (existUser.isPresent() && existUser.get().getPassword().equals(password)) {
 
             String userId = String.valueOf(existUser.get().getId());
-
             String accessToken = jwtGenerator.generateAccessToken(userId);
             String refreshToken = jwtGenerator.generateRefreshToken(userId);
 
-            refreshTokenRepository.deleteRefreshTokenByLoginId(loginId);
-            refreshTokenRepository.save(new RefreshToken(refreshToken, loginId));
+            refreshTokenRepository.deleteByUserId(userId);
+            refreshTokenRepository.save(new RefreshToken(refreshToken, userId));
 
             return new LoginResponse(accessToken, refreshToken);
         }
@@ -40,7 +39,7 @@ public class JwtService {
     }
 
     public void logout(String userId) {
-        refreshTokenRepository.deleteRefreshTokenByLoginId(userId);
+        refreshTokenRepository.deleteByUserId(userId);
     }
 
 
