@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import runnershigh.capstone.jwt.enums.AuthConstants;
@@ -42,12 +43,14 @@ public class JwtFilter implements Filter {
         String accessToken = jwtExtractor.extractAccessToken(httpRequest);
         String refreshToken = jwtExtractor.extractRefreshTokenFromCookie(httpRequest);
 
-        log.info(accessToken);
-        log.info(refreshToken);
+        log.info("accessToken :{}", accessToken);
+        log.info("refreshToken :{}", refreshToken);
 
-        if (accessToken != null && jwtValidator.validateAccessToken(accessToken)) {
-            if (refreshToken != null && jwtValidator.validateRefreshToken(
-                refreshToken)) {                              // 엑세스 O, 리프레쉬 O -> 엑세스로 검증
+        boolean isAccessValid = jwtValidator.validateAccessToken(accessToken);
+        boolean isRefreshValid = jwtValidator.validateRefreshToken(refreshToken);
+
+        if (Objects.nonNull(accessToken) && isAccessValid) {
+            if (Objects.nonNull(refreshToken) && isRefreshValid) {     // 엑세스 O, 리프레쉬 O -> 엑세스로 검증
                 log.info("엑세스 토큰 O");
                 processValidAccessToken(request, response, chain, accessToken, httpRequest);
                 return;
@@ -56,8 +59,7 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        if (refreshToken != null && jwtValidator.validateRefreshToken(
-            refreshToken)) {                                  // 엑세스 X, 리프레시 O -> 엑세스 토큰 만료
+        if (Objects.nonNull(refreshToken) && isRefreshValid) {         // 엑세스 X, 리프레시 O -> 엑세스 토큰 만료
             log.info("엑세스 토큰 X");
             processValidRefreshToken(refreshToken, httpResponse, httpRequest);
             return;
@@ -68,9 +70,9 @@ public class JwtFilter implements Filter {
     private void processValidAccessToken(ServletRequest request, ServletResponse response,
         FilterChain chain,
         String accessToken, HttpServletRequest httpRequest) throws IOException, ServletException {
+
         String userId = jwtExtractor.extractUserIdByAccessToken(accessToken);
         httpRequest.setAttribute("userId", userId);
-        log.info(userId);
 
         chain.doFilter(request, response);
     }
@@ -85,9 +87,7 @@ public class JwtFilter implements Filter {
         httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
 
-        log.info("새로운 AccessToken 생성");
-        log.info("{}{}", AuthConstants.BEARER_PREFIX.getValue(), newAccessToken);
-        log.info("리프레쉬 토큰으로 새로운 엑세스 토큰 설정 완료!");
+        log.info("새로운 AccessToken {}{}", AuthConstants.BEARER_PREFIX.getValue(), newAccessToken);
 
         HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(httpRequest) {
             @Override
