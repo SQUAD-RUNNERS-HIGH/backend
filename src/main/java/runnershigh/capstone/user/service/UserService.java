@@ -3,6 +3,7 @@ package runnershigh.capstone.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
@@ -21,7 +22,10 @@ public class UserService {
     @Transactional
     public UserResponse register(UserRegisterRequest userRegisterRequest) {
 
-        User user = userMapper.toUser(userRegisterRequest);
+        String salt = PBKDF2Util.generateSalt();
+        String hashedPassword = PBKDF2Util.hashPassword(userRegisterRequest.password(), salt);
+
+        User user = userMapper.toUser(userRegisterRequest, hashedPassword, salt);
         userRepository.save(user);
 
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.jwt.domain.RefreshToken;
 import runnershigh.capstone.jwt.dto.TokenResponse;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
+import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.repository.UserRepository;
 
@@ -25,13 +26,24 @@ public class JwtService {
 
         Optional<User> existUser = userRepository.findByLoginId(loginId);
 
-        if (existUser.isPresent() && existUser.get().getPassword().equals(password)) {
+        boolean isPasswordValid = isPasswordValid(password, existUser);
+
+        if (isPasswordValid) {
+
             String userId = String.valueOf(existUser.get().getId());
 
             return generateAndReturnToken(userId);
         }
 
         return null;
+    }
+
+    private static boolean isPasswordValid(String password, Optional<User> existUser) {
+        boolean isUserPresent = existUser.isPresent();
+        return isUserPresent && PBKDF2Util.verifyPassword(password,
+            existUser.get().getPasswordSalt(),
+            existUser.get().getPassword()
+        );
     }
 
     public void logout(String userId) {
@@ -42,7 +54,7 @@ public class JwtService {
         return generateAndReturnToken(userId);
     }
 
-    public TokenResponse generateAndReturnToken(String userId) {
+    private TokenResponse generateAndReturnToken(String userId) {
         String accessToken = jwtGenerator.generateAccessToken(userId);
         String refreshToken = jwtGenerator.generateRefreshToken(userId);
 
