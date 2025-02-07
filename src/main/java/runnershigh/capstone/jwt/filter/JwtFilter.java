@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
@@ -40,6 +39,7 @@ public class JwtFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+
         String accessToken = jwtExtractor.extractAccessToken(httpRequest);
         String refreshToken = jwtExtractor.extractRefreshTokenFromCookie(httpRequest);
 
@@ -48,6 +48,16 @@ public class JwtFilter implements Filter {
 
         boolean isAccessValid = jwtValidator.validateAccessToken(accessToken);
         boolean isRefreshValid = jwtValidator.validateRefreshToken(refreshToken);
+
+        if (path.equals("/auth/refresh")) {
+            if (Objects.nonNull(accessToken) && isAccessValid) {
+                log.info("만료되지 않았지만 토큰 재발급");
+                chain.doFilter(request, response);
+            } else {
+                UnauthorizedResponse(httpResponse);
+            }
+            return;
+        }
 
         if (Objects.nonNull(accessToken) && isAccessValid) {
             if (Objects.nonNull(refreshToken) && isRefreshValid) {     // 엑세스 O, 리프레쉬 O -> 엑세스로 검증
@@ -78,29 +88,16 @@ public class JwtFilter implements Filter {
     }
 
     private void processValidRefreshToken(
-        String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest)
-        throws ServletException, IOException {
+        String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest) {
 
         String userId = jwtExtractor.extractUserIdByRefreshToken(refreshToken);
         String newAccessToken = jwtGenerator.generateAccessToken(userId);
+
         httpRequest.setAttribute("userId", userId);
         httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
 
-        log.info("새로운 AccessToken {}{}", AuthConstants.BEARER_PREFIX.getValue(), newAccessToken);
-
-        HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(httpRequest) {
-            @Override
-            public String getHeader(String name) {
-                if (AuthConstants.AUTHORIZATION_HEADER.getValue().equals(name)) {
-                    return AuthConstants.BEARER_PREFIX.getValue() + newAccessToken;
-                }
-                return super.getHeader(name);
-            }
-        };
-        httpRequest.getRequestDispatcher(httpRequest.getRequestURI())
-            .forward(wrappedRequest, httpResponse);
-
+        log.info("새로운 AccessToken : {}{}", AuthConstants.BEARER_PREFIX.getValue(), newAccessToken);
     }
 
     private void UnauthorizedResponse(HttpServletResponse response)
