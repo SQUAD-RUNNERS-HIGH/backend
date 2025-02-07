@@ -38,6 +38,5 @@ out/
 
 ### Senstive File ###
 application-*.yml
-application.yml
 .DS_Store
 
