@@ -24,6 +24,7 @@ public class User {
     private Long id;
     private String loginId;
     private String password;
+    private String passwordSalt;
     private String username;
 
     @Embedded

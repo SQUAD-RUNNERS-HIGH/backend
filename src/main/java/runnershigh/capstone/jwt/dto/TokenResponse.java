@@ -1,6 +1,6 @@
 package runnershigh.capstone.jwt.dto;
 
-public record LoginResponse(
+public record TokenResponse(
     String accessToken,
     String refreshToken
 ) {
