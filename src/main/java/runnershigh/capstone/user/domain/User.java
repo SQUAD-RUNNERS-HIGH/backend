@@ -33,6 +33,9 @@ public class User {
     @Embedded
     private Goal goal;
 
+    @Embedded
+    private UserLocation userLocation;
+
     public void updateProfile(UserProfileRequest userProfileRequest) {
         this.password = userProfileRequest.password();
         this.username = userProfileRequest.username();

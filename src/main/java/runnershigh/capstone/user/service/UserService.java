@@ -1,10 +1,13 @@
 package runnershigh.capstone.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
+import runnershigh.capstone.user.dto.UserLocationRequest;
+import runnershigh.capstone.user.dto.UserLocationResponse;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
@@ -14,6 +17,7 @@ import runnershigh.capstone.user.service.mapper.UserMapper;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class UserService {
 
     private final UserMapper userMapper;
@@ -33,18 +37,32 @@ public class UserService {
 
     @Transactional
     public UserResponse updateProfile(String userId, UserProfileRequest userProfileRequest) {
-
-        User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
-        assert user != null;
+        User user = getUser(userId);
         user.updateProfile(userProfileRequest);
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }
 
     public UserResponse getProfile(String userId) {
+        User user = getUser(userId);
+        return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
+    }
 
+    @Transactional
+    public UserLocationResponse saveUserLocation(String userId,
+        UserLocationRequest userLocationRequest) {
+        User user = getUser(userId);
+
+        user.getUserLocation().saveUserLocation(userLocationRequest.latitude(),
+            userLocationRequest.longitude());
+
+        log.info(user.getUserLocation().getCellParentToken());
+        return new UserLocationResponse(user.getUserLocation().getCellParentToken());
+    }
+
+    public User getUser(String userId) {
         User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
         assert user != null;
-        return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
+        return user;
     }
 
 

@@ -21,7 +21,7 @@ public class FilterConfig {
     public FilterRegistrationBean<JwtFilter> jwtFilter() {
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtFilter(jwtExtractor, jwtValidator, jwtGenerator));
-        registrationBean.addUrlPatterns("/auth/*", "/user");
+        registrationBean.addUrlPatterns("/auth/*", "/user", "/crew/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }

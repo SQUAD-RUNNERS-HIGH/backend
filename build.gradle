@@ -38,10 +38,14 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     // MongoDB
-    implementation ('org.springframework.boot:spring-boot-starter-data-mongodb')
+    implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
 
     // WebSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //Google S2 Geometry
+    implementation 'com.google.geometry:s2-geometry:2.0.0'
+
 }
 
 tasks.named('test') {
