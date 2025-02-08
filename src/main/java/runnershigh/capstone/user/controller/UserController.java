@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.jwt.service.JwtExtractor;
+import runnershigh.capstone.user.dto.UserLocationRequest;
+import runnershigh.capstone.user.dto.UserLocationResponse;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
@@ -34,22 +36,30 @@ public class UserController {
 
     @GetMapping
     public UserResponse getProfile(HttpServletRequest request) {
-        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
-        String refineToken = accessToken.replace(BEARER_PREFIX, "").trim();
-        log.info(refineToken);
-        String userId = jwtExtractor.extractUserIdByAccessToken(refineToken);
-        log.info("userController userId : {}", userId);
+        String userId = extractUserIdFromToken(request);
         return userService.getProfile(userId);
     }
 
     @PutMapping
     public UserResponse updateProfile(HttpServletRequest request,
         @RequestBody UserProfileRequest userProfileRequest) {
-        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
-        String jwtToken = accessToken.replace(BEARER_PREFIX, "").trim();
-        String userId = jwtExtractor.extractUserIdByAccessToken(jwtToken);
+
+        String userId = extractUserIdFromToken(request);
         return userService.updateProfile(userId, userProfileRequest);
     }
 
+    @PostMapping("/location")
+    public UserLocationResponse saveUserLocation(HttpServletRequest request,
+        @RequestBody UserLocationRequest userLocationRequest) {
+        
+        String userId = extractUserIdFromToken(request);
+        return userService.saveUserLocation(userId, userLocationRequest);
+    }
+
+    private String extractUserIdFromToken(HttpServletRequest request) {
+        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
+        String refineToken = accessToken.replace(BEARER_PREFIX, "").trim();
+        return jwtExtractor.extractUserIdByAccessToken(refineToken);
+    }
 
 }
