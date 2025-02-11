@@ -32,7 +32,7 @@ public class CrewService {
     private static final double EARTH_RADIUS = 6378.137;
     private static final double MAX_SEARCH_KM = 10.0;
 
-    public CrewCreateResponse createCrew(String crewLeaderId, CrewCreateRequest crewCreateRequest) {
+    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
 
         Crew crew = crewMapper.toCrew(userService.getUser(crewLeaderId), crewCreateRequest);
 
@@ -41,7 +41,7 @@ public class CrewService {
         return new CrewCreateResponse(crew.getId());
     }
 
-    public CrewSearchResponse searchCrew(String userId) {
+    public CrewSearchResponse searchCrew(Long userId) {
         UserLocation userLocation = userService.getUser(userId).getUserLocation();
 
         List<Crew> surroundCrews = crewRepository.findByCellParentToken(

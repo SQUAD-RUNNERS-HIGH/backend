@@ -1,6 +1,5 @@
 package runnershigh.capstone.jwt.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.jwt.config.JwtProperties;
 import runnershigh.capstone.jwt.dto.LoginRequest;
 import runnershigh.capstone.jwt.dto.TokenResponse;
@@ -46,8 +46,7 @@ public class JwtController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getUserFromToken(HttpServletRequest request) {
-        String userId = (String) request.getAttribute("userId");
+    public ResponseEntity<?> getUserFromToken(@AuthUser Long userId) {
 
         if (Objects.isNull(userId)) {
             return ResponseEntity.status(401).body("Invalid or expired token");
@@ -56,9 +55,7 @@ public class JwtController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        String userId = (String) request.getAttribute("userId");
-
+    public ResponseEntity<?> logout(@AuthUser Long userId, HttpServletResponse response) {
         if (Objects.isNull(userId)) {
             return ResponseEntity.status(401).body("Invalid or expired token");
         }
@@ -71,9 +68,7 @@ public class JwtController {
     }
 
     @PostMapping("/refresh")
-    public TokenResponse refresh(HttpServletRequest request, HttpServletResponse response) {
-        String userId = (String) request.getAttribute("userId");
-
+    public TokenResponse refresh(@AuthUser Long userId, HttpServletResponse response) {
         TokenResponse tokenResponse = jwtService.refresh(userId);
 
         setHeaderAndRefreshTokenCookie(response, tokenResponse);

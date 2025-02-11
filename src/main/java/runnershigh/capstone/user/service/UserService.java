@@ -36,19 +36,19 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse updateProfile(String userId, UserProfileRequest userProfileRequest) {
+    public UserResponse updateProfile(Long userId, UserProfileRequest userProfileRequest) {
         User user = getUser(userId);
         user.updateProfile(userProfileRequest);
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }
 
-    public UserResponse getProfile(String userId) {
+    public UserResponse getProfile(Long userId) {
         User user = getUser(userId);
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }
 
     @Transactional
-    public UserLocationResponse saveUserLocation(String userId,
+    public UserLocationResponse saveUserLocation(Long userId,
         UserLocationRequest userLocationRequest) {
         User user = getUser(userId);
 
@@ -59,8 +59,8 @@ public class UserService {
         return new UserLocationResponse(user.getUserLocation().getCellParentToken());
     }
 
-    public User getUser(String userId) {
-        User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
+    public User getUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
         assert user != null;
         return user;
     }

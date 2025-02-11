@@ -30,7 +30,7 @@ public class JwtService {
 
         if (isPasswordValid) {
 
-            String userId = String.valueOf(existUser.get().getId());
+            Long userId = existUser.get().getId();
 
             return generateAndReturnToken(userId);
         }
@@ -46,15 +46,15 @@ public class JwtService {
         );
     }
 
-    public void logout(String userId) {
+    public void logout(Long userId) {
         refreshTokenRepository.deleteByUserId(userId);
     }
 
-    public TokenResponse refresh(String userId) {
+    public TokenResponse refresh(Long userId) {
         return generateAndReturnToken(userId);
     }
 
-    private TokenResponse generateAndReturnToken(String userId) {
+    private TokenResponse generateAndReturnToken(Long userId) {
         String accessToken = jwtGenerator.generateAccessToken(userId);
         String refreshToken = jwtGenerator.generateRefreshToken(userId);
 
