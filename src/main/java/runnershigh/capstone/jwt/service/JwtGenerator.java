@@ -22,18 +22,18 @@ public class JwtGenerator {
         this.refreshExpirationTime = jwtProperties.getRefreshExpirationTime();
     }
 
-    public String generateAccessToken(String userId) {
+    public String generateAccessToken(Long userId) {
         return Jwts.builder()
-            .subject(userId)
+            .subject(String.valueOf(userId))
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + (accessExpirationTime * 1000)))
             .signWith(accessSecretKey)
             .compact();
     }
 
-    public String generateRefreshToken(String userId) {
+    public String generateRefreshToken(Long userId) {
         return Jwts.builder()
-            .subject(userId)
+            .subject(String.valueOf(userId))
             .issuedAt(new Date())
             .expiration(new Date(
                 System.currentTimeMillis() + (refreshExpirationTime * 1000)))

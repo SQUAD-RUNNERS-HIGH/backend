@@ -41,23 +41,23 @@ public class JwtExtractor {
         return null;
     }
 
-    public String extractUserIdByAccessToken(String token) {
-        return Jwts.parser()
+    public Long extractUserIdByAccessToken(String token) {
+        return Long.parseLong(Jwts.parser()
             .setSigningKey(accessSecretKey)
             .build()
             .parseClaimsJws(token)
             .getBody()
-            .getSubject();
+            .getSubject());
     }
 
 
-    public String extractUserIdByRefreshToken(String token) {
-        return Jwts.parser()
+    public Long extractUserIdByRefreshToken(String token) {
+        return Long.parseLong(Jwts.parser()
             .setSigningKey(refreshSecretKey)
             .build()
             .parseClaimsJws(token)
             .getBody()
-            .getSubject();
+            .getSubject());
     }
 
 

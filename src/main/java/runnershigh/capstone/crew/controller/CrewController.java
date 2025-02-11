@@ -1,6 +1,5 @@
 package runnershigh.capstone.crew.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +10,7 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.service.CrewService;
-import runnershigh.capstone.jwt.service.JwtExtractor;
+import runnershigh.capstone.global.argumentresolver.AuthUser;
 
 @RestController
 @RequestMapping("/crew")
@@ -19,27 +18,15 @@ import runnershigh.capstone.jwt.service.JwtExtractor;
 public class CrewController {
 
     private final CrewService crewService;
-    private final JwtExtractor jwtExtractor;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
 
     @PostMapping
-    public CrewCreateResponse createCrew(HttpServletRequest request,
+    public CrewCreateResponse createCrew(@AuthUser Long crewLeaderId,
         @RequestBody CrewCreateRequest crewCreateRequest) {
-        String crewLeaderId = extractUserIdFromToken(request);
         return crewService.createCrew(crewLeaderId, crewCreateRequest);
     }
 
     @GetMapping("/surround")
-    public CrewSearchResponse searchCrew(HttpServletRequest request) {
-        String userId = extractUserIdFromToken(request);
+    public CrewSearchResponse searchCrew(@AuthUser Long userId) {
         return crewService.searchCrew(userId);
-    }
-
-    private String extractUserIdFromToken(HttpServletRequest request) {
-        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
-        String refineToken = accessToken.replace(BEARER_PREFIX, "").trim();
-        return jwtExtractor.extractUserIdByAccessToken(refineToken);
     }
 }

@@ -5,7 +5,7 @@ import runnershigh.capstone.jwt.domain.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {
 
-    void deleteByUserId(String userId);
+    void deleteByUserId(Long userId);
 
 }
 

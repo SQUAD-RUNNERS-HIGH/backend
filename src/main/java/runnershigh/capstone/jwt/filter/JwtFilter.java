@@ -51,7 +51,7 @@ public class JwtFilter implements Filter {
 
         if (path.equals("/auth/refresh")) {
             if (Objects.nonNull(accessToken) && isAccessValid) {
-                log.info("만료되지 않았지만 토큰 재발급");
+                log.info("만료되지 않았지만 accessToken 재발급");
                 chain.doFilter(request, response);
             } else {
                 UnauthorizedResponse(httpResponse);
@@ -62,7 +62,7 @@ public class JwtFilter implements Filter {
         if (Objects.nonNull(accessToken) && isAccessValid) {
             if (Objects.nonNull(refreshToken) && isRefreshValid) {     // 엑세스 O, 리프레쉬 O -> 엑세스로 검증
                 log.info("엑세스 토큰 O");
-                processValidAccessToken(request, response, chain, accessToken, httpRequest);
+                chain.doFilter(request, response);
                 return;
             }
             UnauthorizedResponse(httpResponse);               // 엑세스 O, 리프레쉬 X -> 로그아웃 한 것
@@ -71,29 +71,18 @@ public class JwtFilter implements Filter {
 
         if (Objects.nonNull(refreshToken) && isRefreshValid) {         // 엑세스 X, 리프레시 O -> 엑세스 토큰 만료
             log.info("엑세스 토큰 X");
-            processValidRefreshToken(refreshToken, httpResponse, httpRequest);
+            processValidRefreshToken(refreshToken, httpResponse);
             return;
         }
         UnauthorizedResponse(httpResponse);                   // 엑세스 X, 리프레쉬 X -> 로그인 안함
     }
 
-    private void processValidAccessToken(ServletRequest request, ServletResponse response,
-        FilterChain chain,
-        String accessToken, HttpServletRequest httpRequest) throws IOException, ServletException {
-
-        String userId = jwtExtractor.extractUserIdByAccessToken(accessToken);
-        httpRequest.setAttribute("userId", userId);
-
-        chain.doFilter(request, response);
-    }
-
     private void processValidRefreshToken(
-        String refreshToken, HttpServletResponse httpResponse, HttpServletRequest httpRequest) {
+        String refreshToken, HttpServletResponse httpResponse) {
 
-        String userId = jwtExtractor.extractUserIdByRefreshToken(refreshToken);
+        Long userId = jwtExtractor.extractUserIdByRefreshToken(refreshToken);
         String newAccessToken = jwtGenerator.generateAccessToken(userId);
 
-        httpRequest.setAttribute("userId", userId);
         httpResponse.setHeader(AuthConstants.AUTHORIZATION_HEADER.getValue(),
             AuthConstants.BEARER_PREFIX.getValue() + newAccessToken);
 
