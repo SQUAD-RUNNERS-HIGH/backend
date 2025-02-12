@@ -1,20 +1,23 @@
 package runnershigh.capstone.course.service;
 
-import lombok.Getter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.course.domain.Course;
-import runnershigh.capstone.course.dto.CourseResponse;
+import runnershigh.capstone.course.dto.CourseCoordinate;
+import runnershigh.capstone.course.dto.CourseLocationResponse;
 import runnershigh.capstone.course.repository.CourseRepository;
+import runnershigh.capstone.course.service.mapper.CourseMapper;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
-    public Course getCourse(final String courseId){
-        return courseRepository.findById(new ObjectId(courseId)).get();
+    public List<Course> getCourse(final double longitude, final double latitude){
+        return  courseRepository.findByCurrentCoordinates(longitude,
+            latitude, 3 / 3963.2);
     }
 }
