@@ -46,10 +46,6 @@ public class CrewService {
         return new CrewCreateResponse(crew.getId());
     }
 
-    public Crew getCrew(Long crewId) {
-        return crewRepository.findById(crewId).orElse(null);
-    }
-
     public CrewSearchResponse searchCrew(Long userId) {
         UserLocation userLocation = userService.getUser(userId).getUserLocation();
 
