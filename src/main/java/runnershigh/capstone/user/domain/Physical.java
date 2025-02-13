@@ -4,7 +4,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
-import runnershigh.capstone.user.enums.Gender;
 
 @Getter
 @Embeddable

@@ -16,6 +16,8 @@ import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
+import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.domain.UserLocation;
 import runnershigh.capstone.user.service.UserService;
 
@@ -34,11 +36,18 @@ public class CrewService {
 
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
 
-        Crew crew = crewMapper.toCrew(userService.getUser(crewLeaderId), crewCreateRequest);
+        User crewLeader = userService.getUser(crewLeaderId);
+
+        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest);
+        crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
 
         return new CrewCreateResponse(crew.getId());
+    }
+
+    public Crew getCrew(Long crewId) {
+        return crewRepository.findById(crewId).orElse(null);
     }
 
     public CrewSearchResponse searchCrew(Long userId) {

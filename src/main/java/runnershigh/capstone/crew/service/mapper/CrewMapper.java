@@ -1,5 +1,6 @@
 package runnershigh.capstone.crew.service.mapper;
 
+import java.util.HashSet;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.domain.CrewLocation;
@@ -17,6 +18,7 @@ public class CrewMapper {
             .crewLocation(
                 new CrewLocation(crewCreateRequest.latitude(), crewCreateRequest.longitude()))
             .crewLeader(crewLeader)
+            .crewParticipant(new HashSet<>())
             .build();
     }
 }
