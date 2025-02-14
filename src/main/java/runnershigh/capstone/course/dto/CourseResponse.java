@@ -1,5 +1,10 @@
 package runnershigh.capstone.course.dto;
 
-public class CourseResponse {
+import java.util.List;
+
+public record CourseResponse(
+    List<List<List<Double>>> coordinates,
+    String courseId
+) {
 
 }

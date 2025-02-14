@@ -8,7 +8,7 @@ import lombok.Getter;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "course")
+@Document(collection = "courses")
 @AllArgsConstructor
 @Getter
 public class Course {

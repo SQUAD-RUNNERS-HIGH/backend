@@ -11,4 +11,6 @@ public class CourseProperties {
     private String id;
     private String leisure;
     private String type;
+    @Field(name = "name")
+    private String name;
 }
