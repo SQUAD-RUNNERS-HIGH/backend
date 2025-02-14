@@ -1,10 +1,9 @@
-package runnershigh.capstone.elevation;
+package runnershigh.capstone.course.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
 import runnershigh.capstone.course.domain.Course;
-import runnershigh.capstone.elevation.dto.ElevationRequest;
-import runnershigh.capstone.elevation.dto.Location;
+import runnershigh.capstone.course.consts.GeoJsonType;
 
 public class ElevationRequestParameterGenerator {
 

@@ -1,4 +1,4 @@
-package runnershigh.capstone.elevation.infrastructure;
+package runnershigh.capstone.course.infrastructure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

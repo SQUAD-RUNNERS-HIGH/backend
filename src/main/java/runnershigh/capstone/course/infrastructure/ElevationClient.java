@@ -1,9 +1,7 @@
-package runnershigh.capstone.elevation.infrastructure;
+package runnershigh.capstone.course.infrastructure;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.PostExchange;
-import runnershigh.capstone.elevation.dto.ElevationRequest;
-import runnershigh.capstone.elevation.dto.ElevationResponse;
 
 public interface ElevationClient {
 

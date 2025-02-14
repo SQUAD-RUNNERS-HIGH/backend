@@ -1,4 +1,4 @@
-package runnershigh.capstone.elevation.dto;
+package runnershigh.capstone.course.infrastructure;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

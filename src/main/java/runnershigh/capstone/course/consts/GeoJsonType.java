@@ -1,4 +1,4 @@
-package runnershigh.capstone.elevation;
+package runnershigh.capstone.course.consts;
 
 import lombok.Getter;
 

@@ -13,4 +13,5 @@ public class CourseProperties {
     private String type;
     @Field(name = "name")
     private String name;
+    private double perimeter;
 }

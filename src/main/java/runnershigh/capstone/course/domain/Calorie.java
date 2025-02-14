@@ -7,7 +7,11 @@ import runnershigh.capstone.user.domain.Physical;
 public class Calorie {
     private double expectedCalories;
 
-    public Calorie(final double expectedCalories, final Physical physical) {
+    public Calorie(final Slope slope, final Physical physical) {
+        this.expectedCalories = calculate();
+    }
 
+    private double calculate(){
+        return 0;
     }
 }

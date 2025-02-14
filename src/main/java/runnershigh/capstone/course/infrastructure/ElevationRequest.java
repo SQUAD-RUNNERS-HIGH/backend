@@ -1,4 +1,4 @@
-package runnershigh.capstone.elevation.dto;
+package runnershigh.capstone.course.infrastructure;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
