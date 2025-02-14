@@ -13,7 +13,7 @@ import runnershigh.capstone.crewapplication.service.CrewApplicationService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
 @RestController
-@RequestMapping("/apply/crew")
+@RequestMapping("/crew/crew-applicant")
 @RequiredArgsConstructor
 public class CrewApplicationController {
 

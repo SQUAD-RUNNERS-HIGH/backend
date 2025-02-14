@@ -33,6 +33,12 @@ public class CrewParticipant {
     @JoinColumn
     private Crew crew;
 
+    @Builder
+    public CrewParticipant(User participant, Crew crew) {
+        this.participant = participant;
+        this.crew = crew;
+    }
+
     public CrewParticipant(User applicant) {
         this.participant = applicant;
     }

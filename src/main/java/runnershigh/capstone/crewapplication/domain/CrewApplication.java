@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +18,7 @@ import runnershigh.capstone.user.domain.User;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class CrewApplication {
 
     @Id
@@ -38,6 +35,13 @@ public class CrewApplication {
 
     @Enumerated(EnumType.STRING)
     private CrewApplicationStatus status;
+
+    @Builder
+    public CrewApplication(Crew crew, User applicant) {
+        this.crew = crew;
+        this.applicant = applicant;
+        this.status = CrewApplicationStatus.PENDING;
+    }
 
     public void approve(Long crewLeaderId) {
         crew.validationCrewLeader(crewLeaderId);

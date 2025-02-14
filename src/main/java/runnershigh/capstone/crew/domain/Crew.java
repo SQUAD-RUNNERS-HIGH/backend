@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +43,7 @@ public class Crew {
     private User crewLeader;
 
     @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CrewParticipant> crewParticipant = new HashSet<>();
+    private Set<CrewParticipant> crewParticipant;
 
     public void addToCrewAsParticipant(CrewParticipant crewParticipant) {
         this.crewParticipant.add(crewParticipant);
@@ -53,7 +52,7 @@ public class Crew {
 
     public void validationCrewLeader(Long crewLeaderId) {
         if (!crewLeader.getId().equals(crewLeaderId)) {
-            throw new IllegalArgumentException("해당 크루에 맞지 않는 크루 리더입니다");
+            throw new IllegalArgumentException("해당 크루의 크루 리더 외엔 접근이 불가능합니다.");
         }
     }
 }
