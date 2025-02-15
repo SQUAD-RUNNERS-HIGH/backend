@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +13,7 @@ import runnershigh.capstone.user.dto.UserProfileRequest;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -35,6 +32,18 @@ public class User {
 
     @Embedded
     private UserLocation userLocation;
+
+    @Builder
+    public User(String loginId, String password, String passwordSalt, String username,
+        Physical physical, Goal goal, UserLocation userLocation) {
+        this.loginId = loginId;
+        this.password = password;
+        this.passwordSalt = passwordSalt;
+        this.username = username;
+        this.physical = physical;
+        this.goal = goal;
+        this.userLocation = userLocation;
+    }
 
     public void updateProfile(UserProfileRequest userProfileRequest) {
         this.password = userProfileRequest.password();

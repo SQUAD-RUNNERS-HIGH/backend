@@ -1,12 +1,10 @@
 package runnershigh.capstone.crew.dto;
 
-public record CrewCreateRequest(
+public record CrewUpdateRequest(
     String name,
     String description,
     int maxCapacity,
-    String image,
-    double latitude,
-    double longitude
+    String image
 ) {
 
 }

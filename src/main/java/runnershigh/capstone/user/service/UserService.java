@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.dto.UserLocationRequest;
@@ -11,6 +12,7 @@ import runnershigh.capstone.user.dto.UserLocationResponse;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
+import runnershigh.capstone.user.exception.UserNotFoundException;
 import runnershigh.capstone.user.repository.UserRepository;
 import runnershigh.capstone.user.service.mapper.UserMapper;
 
@@ -60,9 +62,8 @@ public class UserService {
     }
 
     public User getUser(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        assert user != null;
-        return user;
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(
+            ErrorCode.USER_NOT_FOUND));
     }
 
 

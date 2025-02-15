@@ -1,12 +1,16 @@
 package runnershigh.capstone.crew.dto;
 
-public record CrewCreateRequest(
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public record CrewDetailResponse(
     String name,
     String description,
     int maxCapacity,
     String image,
-    double latitude,
-    double longitude
+    String crewLeaderName
 ) {
 
 }

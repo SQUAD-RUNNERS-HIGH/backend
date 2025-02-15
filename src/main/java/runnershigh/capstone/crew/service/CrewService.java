@@ -13,10 +13,16 @@ import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
+import runnershigh.capstone.crew.dto.CrewDeleteResponse;
+import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
+import runnershigh.capstone.crew.dto.CrewUpdateRequest;
+import runnershigh.capstone.crew.dto.CrewUpdateResponse;
+import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.domain.UserLocation;
 import runnershigh.capstone.user.service.UserService;
@@ -46,9 +52,36 @@ public class CrewService {
         return new CrewCreateResponse(crew.getId());
     }
 
-    public Crew getCrew(Long crewId) {
-        return crewRepository.findById(crewId).orElse(null);
+    public CrewDetailResponse getCrewDetail(Long crewId) {
+        Crew crew = getCrewById(crewId);
+        return crewMapper.toCrewDetailResponse(crew);
     }
+
+    public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest) {
+        Crew crew = getCrewByLeaderId(crewLeaderId);
+
+        crew.updateCrew(crewUpdateRequest);
+        crewRepository.save(crew);
+        return new CrewUpdateResponse(crew.getId());
+    }
+
+    public CrewDeleteResponse deleteCrew(Long crewLeaderId) {
+        Crew crew = getCrewByLeaderId(crewLeaderId);
+
+        crewRepository.delete(crew);
+        return new CrewDeleteResponse(crew.getId());
+    }
+
+    private Crew getCrewByLeaderId(Long crewLeaderId) {
+        return crewRepository.findByCrewLeaderId(crewLeaderId)
+            .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+    }
+
+    public Crew getCrewById(Long crewId) {
+        return crewRepository.findById(crewId)
+            .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+    }
+
 
     public CrewSearchResponse searchCrew(Long userId) {
         UserLocation userLocation = userService.getUser(userId).getUserLocation();
