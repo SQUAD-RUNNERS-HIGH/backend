@@ -9,8 +9,10 @@ import runnershigh.capstone.crewapplication.domain.CrewApplication;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationApprovalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationRefusalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationResponse;
+import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewapplication.repository.CrewApplicationRepository;
 import runnershigh.capstone.crewapplication.service.mapper.CrewApplicationMapper;
+import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
 
@@ -28,7 +30,7 @@ public class CrewApplicationService {
 
         validateDuplicatedApplication(applicantId, crewId);
         User applicant = userService.getUser(applicantId);
-        Crew crew = crewService.getCrew(crewId);
+        Crew crew = crewService.getCrewById(crewId);
         CrewApplication crewApplication = crewApplicationMapper.toCrewApplication(applicant, crew);
         crewApplicationRepository.save(crewApplication);
 
@@ -51,12 +53,13 @@ public class CrewApplicationService {
     private CrewApplication getCrewApplication(Long applicantId, Long crewId) {
         return crewApplicationRepository.findByApplicantIdAndCrewId(
                 applicantId, crewId)
-            .orElseThrow(() -> new IllegalArgumentException("찾는 지원자 or 크루가 존재하지 않습니다."));
+            .orElseThrow(
+                () -> new CrewApplicationNotFoundException(ErrorCode.CREW_APPLICATION_NOT_FOUND));
     }
 
     private void validateDuplicatedApplication(Long applicantId, Long crewId) {
         if (crewApplicationRepository.existsByApplicantIdAndCrewId(applicantId, crewId)) {
-            throw new IllegalArgumentException("이미 신청한 크루입니다");
+            throw new CrewApplicationNotFoundException(ErrorCode.CREW_APPLICATION_DUPLICATED);
         }
     }
 

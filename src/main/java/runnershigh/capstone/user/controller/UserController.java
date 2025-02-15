@@ -1,7 +1,8 @@
 package runnershigh.capstone.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,23 +19,26 @@ import runnershigh.capstone.user.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
-@Slf4j
+@RequestMapping("/api/user")
+@Tag(name = "유저 [유저 CRUD & 위치]")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/register")
+    @Operation(summary = "회원 가입", description = "유저 정보를 받아, 유저 정보를 반환합니다.")
     public UserResponse register(@RequestBody UserRegisterRequest userRegisterRequest) {
         return userService.register(userRegisterRequest);
     }
 
     @GetMapping
+    @Operation(summary = "유저 프로필 조회", description = "유저 ID를 받아, 프로필 정보를 반환합니다.")
     public UserResponse getProfile(@AuthUser Long userId) {
         return userService.getProfile(userId);
     }
 
     @PutMapping
+    @Operation(summary = "유저 프로필 수정", description = "유저 ID & 수정할 유저 정보를 받아, 수정된 프로필 정보를 반환합니다.")
     public UserResponse updateProfile(@AuthUser Long userId,
         @RequestBody UserProfileRequest userProfileRequest) {
 
@@ -42,6 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/location")
+    @Operation(summary = "유저 위치정보 저장", description = "유저 ID & 위치정보를 받아, CellToken 반환합니다.")
     public UserLocationResponse saveUserLocation(@AuthUser Long userId,
         @RequestBody UserLocationRequest userLocationRequest) {
 
