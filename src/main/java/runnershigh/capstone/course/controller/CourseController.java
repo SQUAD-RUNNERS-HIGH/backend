@@ -32,7 +32,7 @@ public class CourseController {
     @GetMapping("/{courseId}")
     @Operation(summary = "코스 단건 상세 조회 [미완성]", description = "고도, 예상 칼로리, 거리를 반환합니다.")
     @ApiErrorCodeExamples({ErrorCode.COURSE_NOT_FOUND})
-    public ElevationResponse getCourseDetail(@PathVariable final String courseId) {
-        return courseService.getCourseDetail(courseId);
+    public void getCourseDetail(@PathVariable final String courseId) {
+        courseService.getCourseDetail(courseId);
     }
 }

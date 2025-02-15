@@ -26,12 +26,11 @@ public class CourseService {
         return courseMapper.toCourseLocationResponse(courses);
     }
 
-    public ElevationResponse getCourseDetail(final String courseObjectId) {
+    public void getCourseDetail(final String courseObjectId) {
         Course course =
             courseRepository.findById(new ObjectId(courseObjectId))
                 .orElseThrow(() -> new CourseNotFoundException(
                     ErrorCode.COURSE_NOT_FOUND
                 ));
-        slopeService.getSlope(course);
     }
 }
