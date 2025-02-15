@@ -35,7 +35,6 @@ public enum ErrorCode {
      * User 관련 에러 코드 400~499
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "존재하지 않는 유저입니다.");
-
     private final HttpStatus httpStatus;
     private final String code;
     private final String msg;
