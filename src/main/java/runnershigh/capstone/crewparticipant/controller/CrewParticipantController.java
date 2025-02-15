@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/crew/crew-participant")
+@RequestMapping("/api/crew/crew-participant")
 public class CrewParticipantController {
 
 

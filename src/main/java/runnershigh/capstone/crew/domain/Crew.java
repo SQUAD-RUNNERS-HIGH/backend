@@ -11,18 +11,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.Set;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import runnershigh.capstone.crew.dto.CrewUpdateRequest;
+import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.user.domain.User;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Crew {
 
     @Id
@@ -45,6 +45,25 @@ public class Crew {
     @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CrewParticipant> crewParticipant;
 
+    @Builder
+    public Crew(String name, String description, int maxCapacity, String image,
+        CrewLocation crewLocation, User crewLeader, Set<CrewParticipant> crewParticipant) {
+        this.name = name;
+        this.description = description;
+        this.maxCapacity = maxCapacity;
+        this.image = image;
+        this.crewLocation = crewLocation;
+        this.crewLeader = crewLeader;
+        this.crewParticipant = crewParticipant;
+    }
+
+    public void updateCrew(CrewUpdateRequest crewUpdateRequest) {
+        this.name = crewUpdateRequest.name();
+        this.description = crewUpdateRequest.description();
+        this.maxCapacity = crewUpdateRequest.maxCapacity();
+        this.image = crewUpdateRequest.image();
+    }
+
     public void addToCrewAsParticipant(CrewParticipant crewParticipant) {
         this.crewParticipant.add(crewParticipant);
         crewParticipant.addCrew(this);
@@ -52,7 +71,7 @@ public class Crew {
 
     public void validationCrewLeader(Long crewLeaderId) {
         if (!crewLeader.getId().equals(crewLeaderId)) {
-            throw new IllegalArgumentException("해당 크루의 크루 리더 외엔 접근이 불가능합니다.");
+            throw new CrewNotFoundException(ErrorCode.CREW_LEADER_VALIDATION_FAILED);
         }
     }
 }

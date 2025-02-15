@@ -21,7 +21,7 @@ import runnershigh.capstone.jwt.util.CookieUtil;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Slf4j
 public class JwtController {
 
