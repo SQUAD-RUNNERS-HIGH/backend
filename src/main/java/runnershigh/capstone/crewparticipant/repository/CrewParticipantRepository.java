@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 
 @Repository
-public interface crewParticipantRepository extends JpaRepository<CrewParticipant, Long> {
+public interface CrewParticipantRepository extends JpaRepository<CrewParticipant, Long> {
 
 }

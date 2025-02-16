@@ -29,6 +29,7 @@ public class CrewMapper {
             .name(crew.getName())
             .description(crew.getDescription())
             .maxCapacity(crew.getMaxCapacity())
+            .userCount(crew.getUserCount())
             .image(crew.getImage())
             .crewLeaderName(crew.getCrewLeader().getUsername())
             .build();

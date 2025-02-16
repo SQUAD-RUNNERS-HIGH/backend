@@ -7,6 +7,7 @@ public record CrewDetailResponse(
     String name,
     String description,
     int maxCapacity,
+    int userCount,
     String image,
     String crewLeaderName
 ) {

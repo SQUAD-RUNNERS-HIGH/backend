@@ -39,6 +39,6 @@ public class CrewApplicationController {
     @Operation(summary = "크루 지원 거절", description = "크루 리더 ID & 크루 지원자 ID & 크루 ID를 받아, ~~를 반환합니다.")
     public CrewApplicationRefusalResponse refuse(@AuthUser Long crewLeaderId,
         @PathVariable Long applicantId, @PathVariable Long crewId) {
-        return crewApplicationService.refuse(crewLeaderId, crewId, applicantId);
+        return crewApplicationService.refuse(crewLeaderId, applicantId, crewId);
     }
 }
