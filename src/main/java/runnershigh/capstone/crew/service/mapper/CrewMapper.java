@@ -1,11 +1,15 @@
 package runnershigh.capstone.crew.service.mapper;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.user.domain.User;
 
 @Component
@@ -33,5 +37,14 @@ public class CrewMapper {
             .image(crew.getImage())
             .crewLeaderName(crew.getCrewLeader().getUsername())
             .build();
+    }
+
+    public Set<CrewParticipantsDetailsResponse> toCrewParticipantsDetailsResponse(
+        Set<CrewParticipant> crewParticipants) {
+        return crewParticipants.stream()
+            .map(participant -> CrewParticipantsDetailsResponse.builder()
+                .username(participant.getParticipant().getUsername())
+                .build())
+            .collect(Collectors.toSet());
     }
 }

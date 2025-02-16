@@ -18,7 +18,6 @@ import runnershigh.capstone.user.service.mapper.UserMapper;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class UserService {
 
@@ -27,6 +26,8 @@ public class UserService {
 
     @Transactional
     public UserResponse register(UserRegisterRequest userRegisterRequest) {
+
+        validateRegisterRequest(userRegisterRequest);
 
         String salt = PBKDF2Util.generateSalt();
         String hashedPassword = PBKDF2Util.hashPassword(userRegisterRequest.password(), salt);
@@ -44,6 +45,7 @@ public class UserService {
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getProfile(Long userId) {
         User user = getUser(userId);
         return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical());
@@ -62,9 +64,18 @@ public class UserService {
     }
 
     public User getUser(Long userId) {
-
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(
             ErrorCode.USER_NOT_FOUND));
+    }
+
+    private void validateRegisterRequest(UserRegisterRequest userRegisterRequest) {
+        if (userRepository.existsByLoginId(userRegisterRequest.loginId())) {
+            throw new UserNotFoundException(ErrorCode.LOGIN_ID_DUPLICATION);
+        }
+
+        if (userRepository.existsByUsername(userRegisterRequest.username())) {
+            throw new UserNotFoundException(ErrorCode.USERNAME_DUPLICATION);
+        }
     }
 
 

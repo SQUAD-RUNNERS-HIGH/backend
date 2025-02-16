@@ -15,7 +15,7 @@ import runnershigh.capstone.crewapplication.service.CrewApplicationService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
 @RestController
-@RequestMapping("/api/crew/crew-applicant")
+@RequestMapping("/api/crew-applicant/crew")
 @RequiredArgsConstructor
 @Tag(name = "크루 지원 [승인 & 거절]")
 public class CrewApplicationController {
