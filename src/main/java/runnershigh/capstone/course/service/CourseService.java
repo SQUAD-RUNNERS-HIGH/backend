@@ -8,6 +8,7 @@ import runnershigh.capstone.course.domain.Calorie;
 import runnershigh.capstone.course.domain.Course;
 import runnershigh.capstone.course.domain.Mets;
 import runnershigh.capstone.course.domain.Slope;
+import runnershigh.capstone.course.dto.CourseDetailResponse;
 import runnershigh.capstone.course.dto.CourseListResponse;
 import runnershigh.capstone.course.exception.CourseNotFoundException;
 import runnershigh.capstone.course.repository.CourseRepository;
@@ -31,12 +32,12 @@ public class CourseService {
         return courseMapper.toCourseLocationResponse(courses);
     }
 
-    public void getCourseDetail(final String courseObjectId, final Long userId) {
+    public CourseDetailResponse getCourseDetail(final String courseObjectId, final Long userId) {
         Course course = getCourse(courseObjectId);
         User user = userService.getUser(userId);
         Slope slope = slopeService.getSlope(course);
         Calorie calorie = new Calorie(new Mets(slope), user.getPhysical(), course);
-
+        return courseMapper.toCourseDetailResponse(slope.getResponse(),course,calorie);
     }
 
     public Course getCourse(final String courseObjectId) {

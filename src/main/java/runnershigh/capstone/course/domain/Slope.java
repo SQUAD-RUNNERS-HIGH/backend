@@ -11,8 +11,10 @@ public class Slope {
 
     private final double grade;
     private static final Integer NONE_DIFFERENCE = 0;
+    private final ElevationResponse response;
 
     public Slope(final ElevationResponse response, final Course course) {
+        this.response = response;
         this.grade = calculate(response.results(),course.getProperties().getPerimeter());
     }
 
