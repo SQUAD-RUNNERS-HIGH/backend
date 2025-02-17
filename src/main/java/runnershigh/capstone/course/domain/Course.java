@@ -1,12 +1,11 @@
 package runnershigh.capstone.course.domain;
 
-import com.mongodb.client.model.geojson.Geometry;
 import jakarta.persistence.Id;
-import java.util.Properties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import runnershigh.capstone.course.consts.Velocity;
 
 @Document(collection = "courses")
 @AllArgsConstructor
@@ -17,4 +16,12 @@ public class Course {
     private ObjectId id;
     private CourseProperties properties;
     private CourseGeometry geometry;
+
+    public double calculateMinRunningTimeMinute(){
+        return properties.getPerimeter() / Velocity.MIN_METER_PER_MINUTE.getScala();
+    }
+
+    public double calculateMaxRunningTimeMinute(){
+        return properties.getPerimeter() / Velocity.MAX_METER_PER_MINUTE.getScala();
+    }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.course.dto.CourseListResponse;
 import runnershigh.capstone.course.service.CourseService;
-import runnershigh.capstone.course.infrastructure.ElevationResponse;
+import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.global.response.ApiErrorCodeExamples;
 
@@ -26,13 +26,13 @@ public class CourseController {
     @Operation(summary = "주변 코스 조회", description = "중심 좌표 기준 3km 근방 코스를 반환합니다.")
     public CourseListResponse getCourse(@RequestParam final double longitude,
         @RequestParam final double latitude) {
-        return courseService.getCourse(longitude, latitude);
+        return courseService.getNearByCourses(longitude, latitude);
     }
 
     @GetMapping("/{courseId}")
     @Operation(summary = "코스 단건 상세 조회 [미완성]", description = "고도, 예상 칼로리, 거리를 반환합니다.")
     @ApiErrorCodeExamples({ErrorCode.COURSE_NOT_FOUND})
-    public void getCourseDetail(@PathVariable final String courseId) {
-        courseService.getCourseDetail(courseId);
+    public void getCourseDetail(@AuthUser Long userId, @PathVariable final String courseId) {
+        courseService.getCourseDetail(userId,courseId);
     }
 }
