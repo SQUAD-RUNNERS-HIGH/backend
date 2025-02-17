@@ -18,7 +18,7 @@ import runnershigh.capstone.global.argumentresolver.AuthUser;
 public class CrewParticipantController {
 
     private final CrewParticipantService crewParticipantService;
-    
+
     @DeleteMapping("/{crewId}")
     @Operation(summary = "크루 참가자 탈퇴", description = "크루 ID를 요청받아, 탈퇴한 크루 참가자 ID를 반환한다.")
     public CrewParticipantDeleteResponse withdrawCrewParticipant(@AuthUser Long participantId,
@@ -26,7 +26,7 @@ public class CrewParticipantController {
         return crewParticipantService.withdrawCrewParticipant(participantId, crewId);
     }
 
-    @DeleteMapping("/{crewId}/applicant/{participantId}")
+    @DeleteMapping("/{crewId}/participant/{participantId}")
     @Operation(summary = "크루 참가자 추방", description = "크루 ID & 추방할 참가자 ID를 받아, 추방한 크루 참가자 ID를 반환한다.")
     public CrewParticipantDeleteResponse kickCrewParticipant(@AuthUser Long crewLeaderId,
         @PathVariable Long crewId, @PathVariable Long participantId) {
