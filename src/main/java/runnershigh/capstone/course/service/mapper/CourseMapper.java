@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.course.domain.Calorie;
 import runnershigh.capstone.course.domain.Course;
+import runnershigh.capstone.course.domain.Elevation;
 import runnershigh.capstone.course.dto.CourseDetailResponse;
 import runnershigh.capstone.course.dto.CourseListResponse;
 import runnershigh.capstone.course.dto.CourseResponse;
@@ -19,10 +20,10 @@ public class CourseMapper {
         return new CourseListResponse(courseResponses);
     }
 
-    public CourseDetailResponse toCourseDetailResponse(final ElevationResponse elevationResponse,
+    public CourseDetailResponse toCourseDetailResponse(final Elevation elevation,
         final Course course,final Calorie calorie){
         return CourseDetailResponse.builder()
-            .elevationResponse(elevationResponse)
+            .courseElevations(elevation.getCourseElevations())
             .courseName(course.getProperties().getName())
             .perimeter(course.getProperties().getPerimeter())
             .maxCalorie(calorie.getMaxCalorie())

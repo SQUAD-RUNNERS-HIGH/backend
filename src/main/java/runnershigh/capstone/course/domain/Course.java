@@ -18,10 +18,10 @@ public class Course {
     private CourseGeometry geometry;
 
     public double calculateMinRunningTimeMinute(){
-        return properties.getPerimeter() / Velocity.MIN_METER_PER_MINUTE.getScala();
+        return properties.getPerimeter() / Velocity.MAX_METER_PER_MINUTE.getScala();
     }
 
     public double calculateMaxRunningTimeMinute(){
-        return properties.getPerimeter() / Velocity.MAX_METER_PER_MINUTE.getScala();
+        return properties.getPerimeter() / Velocity.MIN_METER_PER_MINUTE.getScala();
     }
 }

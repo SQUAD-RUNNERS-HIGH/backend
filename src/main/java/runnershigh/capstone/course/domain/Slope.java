@@ -11,20 +11,20 @@ public class Slope {
 
     private final double grade;
     private static final Integer NONE_DIFFERENCE = 0;
-    private final ElevationResponse response;
+    private final Elevation elevation;
 
-    public Slope(final ElevationResponse response, final Course course) {
-        this.response = response;
-        this.grade = calculate(response.results(),course.getProperties().getPerimeter());
+    public Slope(final Elevation elevation, final Course course) {
+        this.elevation = elevation;
+        this.grade = calculate(elevation.getCourseElevations(),course.getProperties().getPerimeter());
     }
 
-    private double calculate(final List<LocationResponse> results, final double perimeter){
+    private double calculate(final List<CourseElevation> results, final double perimeter){
         double totalAscent = IntStream.range(1, results.size())
             .mapToDouble(i -> {
                 double diff = results.get(i).elevation() - results.get(i - 1).elevation();
                 return diff > NONE_DIFFERENCE ? diff : NONE_DIFFERENCE;
             })
             .sum();
-        return (totalAscent/perimeter)*100;
+        return (totalAscent/perimeter)/100;
     }
 }

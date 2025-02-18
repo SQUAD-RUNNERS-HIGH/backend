@@ -31,7 +31,7 @@ public class CourseController {
     }
 
     @GetMapping("/{courseId}")
-    @Operation(summary = "코스 단건 상세 조회 [미완성]", description = "고도, 예상 칼로리, 거리를 반환합니다.")
+    @Operation(summary = "코스 단건 상세 조회", description = "코스 이름, 고도 정보, 예상 칼로리(최소,최대 2가지 반환), 거리(미터 단위)를 반환합니다.")
     @ApiErrorCodeExamples({ErrorCode.COURSE_NOT_FOUND})
     public CourseDetailResponse getCourseDetail(@AuthUser Long userId, @PathVariable final String courseId) {
         return courseService.getCourseDetail(courseId,userId);

@@ -37,7 +37,7 @@ public class CourseService {
         User user = userService.getUser(userId);
         Slope slope = slopeService.getSlope(course);
         Calorie calorie = new Calorie(new Mets(slope), user.getPhysical(), course);
-        return courseMapper.toCourseDetailResponse(slope.getResponse(),course,calorie);
+        return courseMapper.toCourseDetailResponse(slope.getElevation(),course,calorie);
     }
 
     public Course getCourse(final String courseObjectId) {
