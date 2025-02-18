@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
+import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.user.domain.User;
@@ -33,6 +34,7 @@ public class Crew {
     private String description;
 
     private int maxCapacity;
+    private int userCount;
     private String image;
 
     @Embedded
@@ -51,6 +53,7 @@ public class Crew {
         this.name = name;
         this.description = description;
         this.maxCapacity = maxCapacity;
+        this.userCount = crewParticipant.size();
         this.image = image;
         this.crewLocation = crewLocation;
         this.crewLeader = crewLeader;
@@ -67,11 +70,25 @@ public class Crew {
     public void addToCrewAsParticipant(CrewParticipant crewParticipant) {
         this.crewParticipant.add(crewParticipant);
         crewParticipant.addCrew(this);
+        this.userCount = this.crewParticipant.size();
     }
 
     public void validationCrewLeader(Long crewLeaderId) {
         if (!crewLeader.getId().equals(crewLeaderId)) {
             throw new CrewNotFoundException(ErrorCode.CREW_LEADER_VALIDATION_FAILED);
+        }
+    }
+
+    public void validationCrewParticipant(Long applicantId) {
+        this.crewParticipant.stream().filter(c -> c.getParticipant().getId().equals(applicantId))
+            .findFirst().ifPresent(c -> {
+                throw new CrewApplicationNotFoundException(ErrorCode.EXISTED_CREW_PARTICIPANT);
+            });
+    }
+
+    public void validationCrewAvailableCapacity() {
+        if (this.userCount == this.maxCapacity) {
+            throw new CrewApplicationNotFoundException(ErrorCode.FULL_CREW_PARTICIPANT);
         }
     }
 }

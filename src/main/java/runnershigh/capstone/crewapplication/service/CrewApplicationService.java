@@ -31,6 +31,7 @@ public class CrewApplicationService {
         validateDuplicatedApplication(applicantId, crewId);
         User applicant = userService.getUser(applicantId);
         Crew crew = crewService.getCrewById(crewId);
+        crew.validationCrewParticipant(applicantId);
         CrewApplication crewApplication = crewApplicationMapper.toCrewApplication(applicant, crew);
         crewApplicationRepository.save(crewApplication);
 
@@ -59,7 +60,7 @@ public class CrewApplicationService {
 
     private void validateDuplicatedApplication(Long applicantId, Long crewId) {
         if (crewApplicationRepository.existsByApplicantIdAndCrewId(applicantId, crewId)) {
-            throw new CrewApplicationNotFoundException(ErrorCode.CREW_APPLICATION_DUPLICATED);
+            throw new CrewApplicationNotFoundException(ErrorCode.CREW_APPLICATION_DUPLICATION);
         }
     }
 

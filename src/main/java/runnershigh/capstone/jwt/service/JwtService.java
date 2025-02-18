@@ -1,15 +1,16 @@
 package runnershigh.capstone.jwt.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.domain.RefreshToken;
 import runnershigh.capstone.jwt.dto.TokenResponse;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
+import runnershigh.capstone.user.exception.UserNotFoundException;
 import runnershigh.capstone.user.repository.UserRepository;
 
 @Service
@@ -24,13 +25,13 @@ public class JwtService {
 
     public TokenResponse login(String loginId, String password) {
 
-        Optional<User> existUser = userRepository.findByLoginId(loginId);
+        User existUser = userRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new UserNotFoundException(
+                ErrorCode.USER_NOT_FOUND));
 
-        boolean isPasswordValid = isPasswordValid(password, existUser);
+        if (isPasswordValid(password, existUser)) {
 
-        if (isPasswordValid) {
-
-            Long userId = existUser.get().getId();
+            Long userId = existUser.getId();
 
             return generateAndReturnToken(userId);
         }
@@ -38,11 +39,9 @@ public class JwtService {
         return null;
     }
 
-    private static boolean isPasswordValid(String password, Optional<User> existUser) {
-        boolean isUserPresent = existUser.isPresent();
-        return isUserPresent && PBKDF2Util.verifyPassword(password,
-            existUser.get().getPasswordSalt(),
-            existUser.get().getPassword()
+    private static boolean isPasswordValid(String password, User existUser) {
+        return PBKDF2Util.verifyPassword(password, existUser.getPasswordSalt(),
+            existUser.getPassword()
         );
     }
 

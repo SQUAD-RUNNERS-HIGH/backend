@@ -2,6 +2,7 @@ package runnershigh.capstone.crew.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
@@ -40,6 +42,12 @@ public class CrewController {
     @Operation(summary = "크루 조회", description = "크루 ID를 받아, 크루 관련 정보들을 반환합니다.")
     public CrewDetailResponse getCrewDetail(@PathVariable Long crewId) {
         return crewService.getCrewDetail(crewId);
+    }
+
+    @GetMapping("/{crewId}/participants")
+    @Operation(summary = "크루 참가자들 조회", description = "크루 ID를 받아, 해당 크루 참가자들의 정보들을 반환합니다.")
+    public Set<CrewParticipantsDetailsResponse> getCrewParticipants(@PathVariable Long crewId) {
+        return crewService.getCrewParticipants(crewId);
     }
 
     @PatchMapping

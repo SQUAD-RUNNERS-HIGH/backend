@@ -29,12 +29,26 @@ public enum ErrorCode {
      */
     CREW_APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "300", "존재하지 않는 크루 지원입니다. 요청파라미터를 확인해주세요."),
 
-    CREW_APPLICATION_DUPLICATED(HttpStatus.BAD_REQUEST, "301", "이미 존재하는 크루 지원입니다."),
+    CREW_APPLICATION_DUPLICATION(HttpStatus.BAD_REQUEST, "301", "해당 크루에 이미 지원했습니다."),
+
+    EXISTED_CREW_PARTICIPANT(HttpStatus.BAD_REQUEST, "302", "해당 크루에 이미 참가하여 있습니다."),
+
+    FULL_CREW_PARTICIPANT(HttpStatus.BAD_REQUEST, "303", "해당 크루는 수용인원이 모두 채워져있습니다."),
 
     /**
-     * User 관련 에러 코드 400~499
+     * CrewParticipant 관련 에러 코드 400~499
      */
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "존재하지 않는 유저입니다.");
+    CREW_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "존재하지 않는 크루 참가자입니다."),
+
+    /**
+     * User 관련 에러 코드 500~599
+     */
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "500", "존재하지 않는 유저입니다."),
+
+    LOGIN_ID_DUPLICATION(HttpStatus.BAD_REQUEST, "501", "이미 존재하는 ID 입니다."),
+
+    USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "502", "이미 존재하는 이름입니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String msg;

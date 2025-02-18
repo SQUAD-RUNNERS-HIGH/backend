@@ -9,4 +9,8 @@ import runnershigh.capstone.user.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByLoginId(String loginId);
+
+    Boolean existsByLoginId(String loginId);
+
+    Boolean existsByUsername(String username);
 }

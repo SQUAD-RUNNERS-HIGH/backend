@@ -4,6 +4,7 @@ import com.google.common.geometry.S1Angle;
 import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2LatLng;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
@@ -29,7 +31,6 @@ import runnershigh.capstone.user.service.UserService;
 
 @Service
 @AllArgsConstructor
-@Transactional
 @Slf4j
 public class CrewService {
 
@@ -40,6 +41,7 @@ public class CrewService {
     private static final double EARTH_RADIUS = 6378.137;
     private static final double MAX_SEARCH_KM = 10.0;
 
+    @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
 
         User crewLeader = userService.getUser(crewLeaderId);
@@ -52,11 +54,19 @@ public class CrewService {
         return new CrewCreateResponse(crew.getId());
     }
 
+    @Transactional(readOnly = true)
     public CrewDetailResponse getCrewDetail(Long crewId) {
         Crew crew = getCrewById(crewId);
         return crewMapper.toCrewDetailResponse(crew);
     }
 
+    @Transactional(readOnly = true)
+    public Set<CrewParticipantsDetailsResponse> getCrewParticipants(Long crewId) {
+        Crew crew = getCrewById(crewId);
+        return crewMapper.toCrewParticipantsDetailsResponse(crew.getCrewParticipant());
+    }
+
+    @Transactional
     public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
@@ -65,6 +75,7 @@ public class CrewService {
         return new CrewUpdateResponse(crew.getId());
     }
 
+    @Transactional
     public CrewDeleteResponse deleteCrew(Long crewLeaderId) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
