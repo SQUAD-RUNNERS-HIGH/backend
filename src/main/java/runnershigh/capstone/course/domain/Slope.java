@@ -3,8 +3,6 @@ package runnershigh.capstone.course.domain;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Getter;
-import runnershigh.capstone.course.infrastructure.ElevationResponse;
-import runnershigh.capstone.course.infrastructure.ElevationResponse.LocationResponse;
 
 @Getter
 public class Slope {
