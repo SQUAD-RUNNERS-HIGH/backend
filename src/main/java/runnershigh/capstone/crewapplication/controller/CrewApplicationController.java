@@ -15,7 +15,7 @@ import runnershigh.capstone.crewapplication.service.CrewApplicationService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
 @RestController
-@RequestMapping("/api/crew/crew-applicant")
+@RequestMapping("/api/crew-applicant/crew")
 @RequiredArgsConstructor
 @Tag(name = "크루 지원 [승인 & 거절]")
 public class CrewApplicationController {
@@ -39,6 +39,6 @@ public class CrewApplicationController {
     @Operation(summary = "크루 지원 거절", description = "크루 리더 ID & 크루 지원자 ID & 크루 ID를 받아, ~~를 반환합니다.")
     public CrewApplicationRefusalResponse refuse(@AuthUser Long crewLeaderId,
         @PathVariable Long applicantId, @PathVariable Long crewId) {
-        return crewApplicationService.refuse(crewLeaderId, crewId, applicantId);
+        return crewApplicationService.refuse(crewLeaderId, applicantId, crewId);
     }
 }

@@ -44,6 +44,7 @@ public class CrewApplication {
     }
 
     public void approve(Long crewLeaderId) {
+        crew.validationCrewAvailableCapacity();
         crew.validationCrewLeader(crewLeaderId);
         this.status = CrewApplicationStatus.APPROVAL;
         crew.addToCrewAsParticipant(new CrewParticipant(applicant));
@@ -53,4 +54,5 @@ public class CrewApplication {
         crew.validationCrewLeader(crewLeaderId);
         this.status = CrewApplicationStatus.REFUSAL;
     }
+
 }
