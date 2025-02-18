@@ -25,7 +25,7 @@ public class CourseMapper {
         return CourseDetailResponse.builder()
             .courseElevations(elevation.getCourseElevations())
             .courseName(course.getProperties().getName())
-            .perimeter(course.getProperties().getPerimeter())
+            .perimeter(course.getProperties().getPerimeter()/1000)
             .maxCalorie(calorie.getMaxCalorie())
             .minCalorie(calorie.getMinCalorie())
             .build();
