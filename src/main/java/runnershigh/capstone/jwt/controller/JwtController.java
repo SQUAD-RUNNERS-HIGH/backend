@@ -1,6 +1,7 @@
 package runnershigh.capstone.jwt.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -55,7 +56,8 @@ public class JwtController {
 
     @DeleteMapping("/logout")
     @Operation(summary = "로그아웃", description = "JWT 로그아웃")
-    public LogoutResponse logout(@AuthUser Long userId, HttpServletResponse response) {
+    public LogoutResponse logout(@Parameter(hidden = true) @AuthUser Long userId,
+        HttpServletResponse response) {
         if (Objects.isNull(userId)) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
@@ -69,7 +71,8 @@ public class JwtController {
 
     @PostMapping("/refresh")
     @Operation(summary = "AccessToken 재발급", description = "현재 토큰을 바탕으로 AccessToken 재발급")
-    public TokenResponse refresh(@AuthUser Long userId, HttpServletResponse response) {
+    public TokenResponse refresh(@Parameter(hidden = true) @AuthUser Long userId,
+        HttpServletResponse response) {
         TokenResponse tokenResponse = jwtService.refresh(userId);
 
         setHeaderAndRefreshTokenCookie(response, tokenResponse);
