@@ -56,7 +56,8 @@ public class JwtController {
 
     @DeleteMapping("/logout")
     @Operation(summary = "로그아웃", description = "JWT 로그아웃")
-    public LogoutResponse logout(@AuthUser Long userId, HttpServletResponse response) {
+    public LogoutResponse logout(@Parameter(hidden = true) @AuthUser Long userId,
+        HttpServletResponse response) {
         if (Objects.isNull(userId)) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }

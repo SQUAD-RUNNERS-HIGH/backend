@@ -1,6 +1,7 @@
 package runnershigh.capstone.crew.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class CrewController {
 
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
-    public CrewCreateResponse createCrew(@AuthUser Long crewLeaderId,
+    public CrewCreateResponse createCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
         @RequestBody CrewCreateRequest crewCreateRequest) {
         return crewService.createCrew(crewLeaderId, crewCreateRequest);
     }
@@ -52,14 +53,14 @@ public class CrewController {
 
     @PatchMapping
     @Operation(summary = "크루 정보 수정", description = "크루 리더 ID & 크루 수정 정보를 받아, 크루 ID를 반환합니다.")
-    public CrewUpdateResponse updateCrew(@AuthUser Long crewLeaderId,
+    public CrewUpdateResponse updateCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
         @RequestBody CrewUpdateRequest crewUpdateRequest) {
         return crewService.updateCrew(crewLeaderId, crewUpdateRequest);
     }
 
     @DeleteMapping
     @Operation(summary = "크루 삭제", description = "크루 리더 ID를 받아, 삭제된 크루 ID를 반환합니다.")
-    public CrewDeleteResponse deleteCrew(@AuthUser Long crewLeaderId) {
+    public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId) {
         return crewService.deleteCrew(crewLeaderId);
     }
 
