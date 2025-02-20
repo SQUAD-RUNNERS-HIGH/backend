@@ -1,6 +1,7 @@
 package runnershigh.capstone.crewparticipant.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,14 +22,16 @@ public class CrewParticipantController {
 
     @DeleteMapping("/{crewId}")
     @Operation(summary = "크루 참가자 탈퇴", description = "크루 ID를 요청받아, 탈퇴한 크루 참가자 ID를 반환한다.")
-    public CrewParticipantDeleteResponse withdrawCrewParticipant(@AuthUser Long participantId,
+    public CrewParticipantDeleteResponse withdrawCrewParticipant(
+        @Parameter(hidden = true) @AuthUser Long participantId,
         @PathVariable Long crewId) {
         return crewParticipantService.withdrawCrewParticipant(participantId, crewId);
     }
 
     @DeleteMapping("/{crewId}/participant/{participantId}")
     @Operation(summary = "크루 참가자 추방", description = "크루 ID & 추방할 참가자 ID를 받아, 추방한 크루 참가자 ID를 반환한다.")
-    public CrewParticipantDeleteResponse kickCrewParticipant(@AuthUser Long crewLeaderId,
+    public CrewParticipantDeleteResponse kickCrewParticipant(
+        @Parameter(hidden = true) @AuthUser Long crewLeaderId,
         @PathVariable Long crewId, @PathVariable Long participantId) {
         return crewParticipantService.kickCrewParticipant(crewLeaderId, crewId, participantId);
     }

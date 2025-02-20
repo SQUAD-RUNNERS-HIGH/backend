@@ -1,6 +1,7 @@
 package runnershigh.capstone.course.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,8 @@ public class CourseController {
     @Operation(summary = "코스 단건 상세 조회", description = "코스 이름, 고도 정보, 예상 칼로리(최소,최대 2가지 반환), 거리(KM "
         + "단위)를 반환합니다.")
     @ApiErrorCodeExamples({ErrorCode.COURSE_NOT_FOUND})
-    public CourseDetailResponse getCourseDetail(@AuthUser Long userId, @PathVariable final String courseId) {
-        return courseService.getCourseDetail(courseId,userId);
+    public CourseDetailResponse getCourseDetail(@Parameter(hidden = true) @AuthUser Long userId,
+        @PathVariable final String courseId) {
+        return courseService.getCourseDetail(courseId, userId);
     }
 }
