@@ -1,4 +1,4 @@
-package runnershigh.capstone.global.config;
+package runnershigh.capstone.global.config.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
+import runnershigh.capstone.global.config.swagger.ExampleHolder;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.global.response.ApiErrorCodeExample;
 import runnershigh.capstone.global.response.ApiErrorCodeExamples;

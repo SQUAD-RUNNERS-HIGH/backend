@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import runnershigh.capstone.global.argumentresolver.AuthUser;
-import runnershigh.capstone.personalrank.domain.PersonalRank;
 import runnershigh.capstone.personalrank.dto.PersonalRankSliceResponse;
 import runnershigh.capstone.personalrank.service.PersonalRankService;
 

@@ -1,4 +1,4 @@
-package runnershigh.capstone.global.config;
+package runnershigh.capstone.global.config.swagger;
 
 
 import io.swagger.v3.oas.models.examples.Example;
