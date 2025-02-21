@@ -5,6 +5,6 @@ import org.springframework.web.service.annotation.PostExchange;
 
 public interface ElevationClient {
 
-    @PostExchange("https://api.open-elevation.com/api/v1/lookup")
+    @PostExchange
     ElevationResponse getElevation(@RequestBody ElevationRequest locations);
 }
