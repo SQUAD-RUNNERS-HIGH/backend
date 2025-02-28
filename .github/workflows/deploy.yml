@@ -25,6 +25,9 @@ jobs:
       - name: Build JAR file
         run: ./gradlew clean build
 
+      - name: Change built file name
+        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
+
       - name: Log in to Docker Hub (GitHub Actions)
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
@@ -45,9 +48,9 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
             
-            docker stop my-app || true
-            docker rm my-app || true
-
+            docker stop capstone-hub || true
+            docker rm capstone-hub || true
+            
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
             
-            docker run -d --name my-app -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
+            docker run -d --name capstone-hub -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
