@@ -1,4 +1,4 @@
-name: Deloy to GCP
+name: Deploy to GCP
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Load a file from github repository
+      - name: Load code from GitHub repository
         uses: actions/checkout@v4
 
       - name: Install JDK 17
@@ -20,24 +20,21 @@ jobs:
           java-version: 17
 
       - name: Make application.yml
-        run: echo "${{secrets.APPLICATION_PROPERTIES}}" > src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.yml
 
       - name: Build JAR file
         run: ./gradlew clean build
 
+      - name: Log in to Docker Hub (GitHub Actions)
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:latest .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest .
 
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Push Docker image to GCR
+      - name: Push Docker image to Docker Hub
         run: |
-          gcloud auth configure-docker
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
 
       - name: SSH into GCP VM and deploy
         uses: appleboy/ssh-action@master
@@ -46,8 +43,11 @@ jobs:
           username: ${{ secrets.GCP_VM_USER }}
           key: ${{ secrets.GCP_SSH_KEY }}
           script: |
-            cd ~/app
+            echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+            
             docker stop my-app || true
             docker rm my-app || true
-            docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:latest
-            docker run -d --name my-app -p 8080:8080 gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:latest
+
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
+            
+            docker run -d --name my-app -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
