@@ -2,33 +2,34 @@ version: '3.8'
 
 services:
   backend:
-    depends_on:
-      - mysql
     build: ./
     container_name: backend
     ports:
       - "8080:8080"
-    networks:
-      runnershigh:
     restart: always
     tty: true
     environment:
       SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - mysql
+    networks:
+      runnershigh:
 
   mysql:
     image: mysql:latest
     container_name: mysql
     ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: runnershigh
-      TZ: Asia/Seoul
+      - "3306:3306"
     restart: always
+    environment:
+      MYSQL_DATABASE: runnershigh
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: Asia/Seoul
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       runnershigh:
+
 volumes:
   mysql_data:
 
