@@ -9,7 +9,9 @@ services:
     restart: always
     tty: true
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/runnershigh
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
       - mysql
     networks:
