@@ -20,7 +20,7 @@ jobs:
           java-version: 17
 
       - name: Make application.yml
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
       - name: Build JAR file
         run: ./gradlew clean build
