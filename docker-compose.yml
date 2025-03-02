@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   backend:
-    build: ./
+    image: jjinbok/capstone-hub:latest
     container_name: backend
     ports:
       - "8080:8080"
