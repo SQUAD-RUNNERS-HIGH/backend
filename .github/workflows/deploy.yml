@@ -48,8 +48,8 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
             
-            sudo docker compose down || true
+            docker compose down || true
             
-            sudo docker compose pull
+            docker compose pull
             
-            sudo docker compose up -d --build
+            docker compose up -d --build
