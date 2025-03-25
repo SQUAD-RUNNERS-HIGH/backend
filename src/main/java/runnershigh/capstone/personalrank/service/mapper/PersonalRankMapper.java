@@ -5,15 +5,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.personalrank.domain.PersonalRank;
 import runnershigh.capstone.personalrank.dto.PersonalRankSliceResponse;
-import runnershigh.capstone.personalrank.dto.PersonalRunningTime;
+import runnershigh.capstone.personalrank.dto.PersonalRankResponse;
 
 @Component
 public class PersonalRankMapper {
 
-    private List<PersonalRunningTime> getPersonalRunningTimes(
+    private List<PersonalRankResponse> createPersonalRankResponse(
         final Slice<PersonalRank> personalRanks) {
         return personalRanks.getContent().stream()
-            .map(r -> new PersonalRunningTime(r.getUserName(), r.toRunningTimeStringFormat()))
+            .map(r -> new PersonalRankResponse(r.getUserName(), r.toRunningTimeStringFormat(),r.getHistoryId()))
             .toList();
     }
 
@@ -24,7 +24,7 @@ public class PersonalRankMapper {
             .page(personalRanks.getNumber())
             .size(personalRanks.getContent().size())
             .personalRunningTimes(
-                getPersonalRunningTimes(personalRanks)
+                createPersonalRankResponse(personalRanks)
             )
             .build();
     }

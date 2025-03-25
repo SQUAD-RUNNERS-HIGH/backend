@@ -47,7 +47,12 @@ public enum ErrorCode {
 
     LOGIN_ID_DUPLICATION(HttpStatus.BAD_REQUEST, "501", "이미 존재하는 ID 입니다."),
 
-    USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "502", "이미 존재하는 이름입니다.");
+    USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "502", "이미 존재하는 이름입니다."),
+
+    /**
+     * Personal Running History 관련 에러 코드 600~699
+     */
+    HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND,"600","러닝기록을 찾을 수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -19,9 +19,6 @@ public class PersonalRankService {
     private final PersonalRankRepository personalRankRepository;
     private final PersonalRankMapper personalRankMapper;
 
-    public void updateRank(){
-    }
-
     public PersonalRankSliceResponse findPersonalRankSlice(final String courseId,
         final Integer page, final Integer size){
         PageRequest pageRequest = PageRequest.of(page, size,

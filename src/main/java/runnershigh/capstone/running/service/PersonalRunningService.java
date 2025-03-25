@@ -27,11 +27,6 @@ public class PersonalRunningService {
     private final MongoTemplate mongoTemplate;
 
     public PersonalRunningResponse calculatePersonalRunning(final PersonalRunningInfo info){
-        Double mySpeed = info.mySpeed();
-        double remainTime = info.coursePerimeter() / mySpeed;
-        if(remainTime < info.competitorRemainTime()){
-            return new PersonalRunningResponse(RunningStatus.LEADING);
-        }
         return new PersonalRunningResponse(RunningStatus.LAGGING);
     }
 
@@ -42,13 +37,11 @@ public class PersonalRunningService {
         Geometry geometry;
         try{
             geometry = r.read(course.toJson());
-            log.info(geometry.getGeometryType());
             Coordinate[] coordinates = DistanceOp.nearestPoints(geometry,
                 geometryFactory.createPoint(new Coordinate(126.7388
                     , 37.54143)));
-            log.info(String.valueOf(coordinates[0]));
         }catch (ParseException p){
-            log.error(p.getLocalizedMessage());
+
         }
     }
 }

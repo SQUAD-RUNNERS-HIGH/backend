@@ -25,5 +25,4 @@ public class PersonalRankController {
         @PathVariable String courseId, @RequestParam Integer page, @RequestParam Integer size){
         return personalRankService.findPersonalRankSlice(courseId,page,size);
     }
-
 }

@@ -27,6 +27,7 @@ public class PersonalRank {
     private Long id;
 
     private String courseId;
+    private String historyId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
