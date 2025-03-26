@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
+import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
-import runnershigh.capstone.user.dto.UserLocationRequest;
-import runnershigh.capstone.user.dto.UserLocationResponse;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
@@ -25,6 +27,7 @@ import runnershigh.capstone.user.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final GeocodingService geocodingService;
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "유저 정보를 받아, 유저 정보를 반환합니다.")
@@ -46,11 +49,19 @@ public class UserController {
         return userService.updateProfile(userId, userProfileRequest);
     }
 
-    @PostMapping("/location")
-    @Operation(summary = "유저 위치정보 저장", description = "유저 ID & 위치정보를 받아, CellToken 반환합니다.")
-    public UserLocationResponse saveUserLocation(@Parameter(hidden = true) @AuthUser Long userId,
-        @RequestBody UserLocationRequest userLocationRequest) {
+//    @PostMapping("/location")
+//    @Operation(summary = "유저 위치정보 저장", description = "유저 ID & 위치정보를 받아, CellToken 반환합니다.")
+//    public UserLocationResponse saveUserLocation(@Parameter(hidden = true) @AuthUser Long userId,
+//        @RequestBody UserLocationRequest userLocationRequest) {
+//
+//        return userService.saveUserLocation(userId, userLocationRequest);
+//    }
 
-        return userService.saveUserLocation(userId, userLocationRequest);
+    @GetMapping("/location-test")
+    @Operation(summary = "위치정보 -> 주소 변환 조회", description = "위도, 고도를 받아, 주소를 반환합니다. [임시 컨트롤러]")
+    public Mono<FormattedAddressResponse> getAddress(@RequestParam double latitude,
+        double longitude) {
+        return geocodingService.getFormattedAddress(latitude, longitude);
     }
+
 }

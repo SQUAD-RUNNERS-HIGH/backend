@@ -18,7 +18,6 @@ import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
-import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
 import runnershigh.capstone.crew.service.CrewService;
@@ -64,9 +63,9 @@ public class CrewController {
         return crewService.deleteCrew(crewLeaderId);
     }
 
-    @GetMapping("/surround")
-    @Operation(summary = "주변 크루 검색", description = "유저 ID를 받아 주변 크루들을 반환합니다.")
-    public CrewSearchResponse searchCrew(@AuthUser Long userId) {
-        return crewService.searchCrew(userId);
-    }
+//    @GetMapping("/surround")
+//    @Operation(summary = "주변 크루 검색", description = "유저 ID를 받아 주변 크루들을 반환합니다.")
+//    public CrewSearchResponse searchCrew(@AuthUser Long userId) {
+//        return crewService.searchCrew(userId);
+//    }
 }
