@@ -6,7 +6,9 @@ public record UserRegisterRequest(
     String loginId,
     String password,
     String username,
-    Physical physical
+    Physical physical,
+    double latitude,
+    double longitude
 ) {
 
 }
