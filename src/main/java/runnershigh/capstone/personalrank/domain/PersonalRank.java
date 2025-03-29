@@ -33,12 +33,20 @@ public class PersonalRank {
     @JoinColumn
     private User user;
 
-    private Long runningTime;
+    private Double runningTime;
+
+    public PersonalRank(final String courseId, final String historyId, final User user,
+        final Double runningTime) {
+        this.courseId = courseId;
+        this.historyId = historyId;
+        this.user = user;
+        this.runningTime = runningTime;
+    }
 
     public String toRunningTimeStringFormat(){
-        long minutes = (runningTime / TO_MINUTES) % 60;
-        long seconds = (runningTime / TO_SECONDS) % 60;
-        long milliseconds = runningTime % TO_MILLISECONDS;
+        double minutes = (runningTime / TO_MINUTES) % 60;
+        double seconds = (runningTime / TO_SECONDS) % 60;
+        double milliseconds = runningTime % TO_MILLISECONDS;
         return String.format(RUNNING_TIME_FORMAT, minutes, seconds, milliseconds);
     }
 

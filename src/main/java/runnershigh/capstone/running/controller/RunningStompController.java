@@ -1,14 +1,13 @@
 package runnershigh.capstone.running.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.running.dto.PersonalRunningInfo;
 import runnershigh.capstone.running.dto.PersonalRunningResponse;
 import runnershigh.capstone.running.service.PersonalRunningService;
