@@ -14,13 +14,14 @@ import runnershigh.capstone.personalrank.service.PersonalRankService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/personal-ranks")
-@Tag(name = "혼자 뛰기 랭킹 [랭킹 페이징 조회]")
+@Tag(name = "경쟁자와 뛰기 경쟁자 랭킹")
 public class PersonalRankController {
 
     private final PersonalRankService personalRankService;
 
     @GetMapping("/courses/{courseId}")
-    @Operation(summary = "혼자 뛰기 랭킹 조회", description = "랭킹을 무한 스크롤 방식으로 방식으로 제공합니다. 페이지는 0부터 시작합니다.")
+    @Operation(summary = "경쟁자와 뛰기 경쟁자 랭킹 조회", description = "랭킹을 무한 스크롤 방식으로 방식으로 제공합니다. 페이지는 0부터 "
+        + "시작합니다.")
     public PersonalRankSliceResponse findPersonalRanks(
         @PathVariable String courseId, @RequestParam Integer page, @RequestParam Integer size){
         return personalRankService.findPersonalRankSlice(courseId,page,size);

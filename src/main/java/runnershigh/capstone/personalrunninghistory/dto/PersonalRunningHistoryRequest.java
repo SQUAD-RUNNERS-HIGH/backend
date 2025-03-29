@@ -2,10 +2,9 @@ package runnershigh.capstone.personalrunninghistory.dto;
 
 import java.util.List;
 
-public record PersonalRunningHistoryResponse(
+public record PersonalRunningHistoryRequest(
     List<List<Double>> progress,
-    double runningTime,
-    String competitorUserName
+    double runningTime
 ) {
 
 }

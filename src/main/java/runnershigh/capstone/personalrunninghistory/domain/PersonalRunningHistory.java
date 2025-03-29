@@ -15,9 +15,14 @@ public class PersonalRunningHistory {
 
     private List<List<Double>> progress;
     private Double runningTime;
+    private Long userId;
+    private String userName;
 
-    public PersonalRunningHistory(final List<List<Double>> progress, final Double runningTime) {
+    public PersonalRunningHistory(final List<List<Double>> progress, final Double runningTime,
+        Long userId, String userName) {
         this.progress = progress;
         this.runningTime = runningTime;
+        this.userId = userId;
+        this.userName = userName;
     }
 }
