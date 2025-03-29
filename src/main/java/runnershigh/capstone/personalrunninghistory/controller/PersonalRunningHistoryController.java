@@ -3,6 +3,7 @@ package runnershigh.capstone.personalrunninghistory.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
@@ -16,11 +17,15 @@ public class PersonalRunningHistoryController {
 
     private final PersonalRunningHistoryService personalRunningHistoryService;
 
-    @GetMapping("/histories/{historyId}/courses/{courseId}/")
-    public PersonalRunningHistoryResponse createPersonalRunning(@AuthUser Long userId,
+    @PostMapping("/histories/{historyId}/courses/{courseId}/")
+    public PersonalRunningHistoryResponse getCompetitorRunningHistory(@AuthUser Long userId,
         @PathVariable String courseId,
         @PathVariable String historyId) {
-        return personalRunningHistoryService.getPersonalRunningHistory(historyId);
+        return personalRunningHistoryService.getCompetitorRunningHistory(historyId);
     }
 
+    @PostMapping
+    public void createPersonalRunningHistory(@AuthUser Long userId){
+
+    }
 }

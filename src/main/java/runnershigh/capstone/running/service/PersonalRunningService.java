@@ -26,22 +26,29 @@ public class PersonalRunningService {
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final MongoTemplate mongoTemplate;
 
-    public PersonalRunningResponse calculatePersonalRunning(final PersonalRunningInfo info){
-        return new PersonalRunningResponse(RunningStatus.LAGGING);
+    public PersonalRunningResponse calculatePersonalRunning(
+        final PersonalRunningInfo info, final String courseId) {
+        Coordinate coordinate = projectToCourse(new ObjectId(courseId), info.longitude(),
+            info.latitude());
+        return new PersonalRunningResponse(RunningStatus.ONGOING,coordinate.x,coordinate.y);
     }
 
-    public void project(ObjectId objectId){
-        Query query = new Query(Criteria.where("_id").is(objectId));
-        Document course = mongoTemplate.findOne(query, Document.class, "courses");
+    public Coordinate projectToCourse(final ObjectId objectId, final double longitude,
+        final double latitude) {
+        Document course = mongoTemplate.findOne(new Query(Criteria.where("_id").is(objectId)),
+            Document.class, "courses");
         GeoJsonReader r = new GeoJsonReader(geometryFactory);
         Geometry geometry;
-        try{
+        try {
             geometry = r.read(course.toJson());
             Coordinate[] coordinates = DistanceOp.nearestPoints(geometry,
-                geometryFactory.createPoint(new Coordinate(126.7388
-                    , 37.54143)));
-        }catch (ParseException p){
-
+                geometryFactory.createPoint(new Coordinate(longitude
+                    , latitude)));
+            return coordinates[0];
+        } catch (ParseException p) {
+            log.error("GeoJson Parse Error! Course Id : {}, Request Coordinates : {},{}",
+                objectId, latitude, longitude);
         }
+        return new Coordinate(longitude, latitude);
     }
 }

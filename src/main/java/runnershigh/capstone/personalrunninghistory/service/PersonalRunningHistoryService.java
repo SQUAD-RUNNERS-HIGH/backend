@@ -15,7 +15,7 @@ public class PersonalRunningHistoryService {
 
     private final PersonalRunningHistoryRepository personalRunningHistoryRepository;
 
-    public PersonalRunningHistoryResponse getPersonalRunningHistory(final String historyId){
+    public PersonalRunningHistoryResponse getCompetitorRunningHistory(final String historyId){
         final PersonalRunningHistory history =
             personalRunningHistoryRepository.findById(
                 new ObjectId(historyId))
