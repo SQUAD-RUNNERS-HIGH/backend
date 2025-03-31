@@ -41,23 +41,29 @@ public class UserService {
 
         userRepository.save(user);
 
-        return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical(),
-            user.getUserLocation());
+        return new UserResponse(user.getLoginId(), user.getUsername(),
+            userMapper.toUserPhysicalResponse(user.getPhysical()),
+            userMapper.toUserLocationResponse(user.getUserLocation()));
     }
 
     @Transactional
     public UserResponse updateProfile(Long userId, UserProfileRequest userProfileRequest) {
         User user = getUser(userId);
-        user.updateProfile(userProfileRequest);
-        return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical(),
-            user.getUserLocation());
+
+        user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
+            userMapper.toPhysical(userProfileRequest.physical()));
+
+        return new UserResponse(user.getLoginId(), user.getUsername(),
+            userMapper.toUserPhysicalResponse(user.getPhysical()),
+            userMapper.toUserLocationResponse(user.getUserLocation()));
     }
 
     @Transactional(readOnly = true)
     public UserResponse getProfile(Long userId) {
         User user = getUser(userId);
-        return new UserResponse(user.getLoginId(), user.getUsername(), user.getPhysical(),
-            user.getUserLocation());
+        return new UserResponse(user.getLoginId(), user.getUsername(),
+            userMapper.toUserPhysicalResponse(user.getPhysical()),
+            userMapper.toUserLocationResponse(user.getUserLocation()));
     }
 
     public User getUser(Long userId) {

@@ -10,4 +10,7 @@ public class GeocodingProperties {
 
     @Value("${geocoding.key}")
     private String key;
+
+    @Value("${geocoding.baseurl}")
+    private String baseUrl;
 }

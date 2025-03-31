@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
@@ -21,8 +20,8 @@ public class CrewMapper {
             .description(crewCreateRequest.description())
             .maxCapacity(crewCreateRequest.maxCapacity())
             .image(crewCreateRequest.image())
-            .crewLocation(
-                new CrewLocation(crewCreateRequest.latitude(), crewCreateRequest.longitude()))
+//            .crewLocation(
+//                new CrewLocation(crewCreateRequest.latitude(), crewCreateRequest.longitude()))
             .crewLeader(crewLeader)
             .crewParticipant(new HashSet<>())
             .build();

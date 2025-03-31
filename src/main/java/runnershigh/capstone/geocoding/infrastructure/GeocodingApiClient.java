@@ -14,13 +14,14 @@ public class GeocodingApiClient {
 
     public GeocodingApiClient(WebClient.Builder webClientBuilder,
         GeocodingProperties geocodingProperties) {
-        this.webClient = webClientBuilder.baseUrl(
-            "https://maps.googleapis.com/maps/api/geocode/json").build();
+        this.webClient = webClientBuilder.baseUrl(geocodingProperties.getBaseUrl()).build();
         this.geocodingProperties = geocodingProperties;
     }
 
     public Mono<GeocodingApiResponse> fetchAddress(double latitude, double longitude) {
-        String url = String.format("?latlng=%f,%f&key=%s&language=ko", latitude, longitude,
+        String API_REQUEST_PARAM = "?latlng=%f,%f&key=%s&language=ko";
+
+        String url = String.format(API_REQUEST_PARAM, latitude, longitude,
             geocodingProperties.getKey());
 
         return webClient.get()

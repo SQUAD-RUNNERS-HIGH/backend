@@ -49,14 +49,6 @@ public class UserController {
         return userService.updateProfile(userId, userProfileRequest);
     }
 
-//    @PostMapping("/location")
-//    @Operation(summary = "유저 위치정보 저장", description = "유저 ID & 위치정보를 받아, CellToken 반환합니다.")
-//    public UserLocationResponse saveUserLocation(@Parameter(hidden = true) @AuthUser Long userId,
-//        @RequestBody UserLocationRequest userLocationRequest) {
-//
-//        return userService.saveUserLocation(userId, userLocationRequest);
-//    }
-
     @GetMapping("/location-test")
     @Operation(summary = "위치정보 -> 주소 변환 조회", description = "위도, 고도를 받아, 주소를 반환합니다. [임시 컨트롤러]")
     public Mono<FormattedAddressResponse> getAddress(@RequestParam double latitude,
