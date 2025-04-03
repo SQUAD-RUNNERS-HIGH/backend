@@ -1,8 +1,9 @@
 package runnershigh.capstone.geocoding.service;
 
+import java.util.Objects;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
+import runnershigh.capstone.geocoding.dto.GeocodingApiResponse;
 import runnershigh.capstone.geocoding.exception.GeocodingNotFoundException;
 import runnershigh.capstone.geocoding.infrastructure.GeocodingApiClient;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -22,12 +23,15 @@ public class GeocodingService {
         this.addressExtractor = addressExtractor;
     }
 
-    public Mono<FormattedAddressResponse> getFormattedAddress(double latitude, double longitude) {
-        return geocodingApiClient.fetchAddress(latitude, longitude)
-            .flatMap(addressExtractor::extractFormattedAddress)
-            .map(this::parseAddress)
-            .switchIfEmpty(
-                Mono.error(() -> new GeocodingNotFoundException(ErrorCode.GEOCODING_NOT_FOUND)));
+    public FormattedAddressResponse getFormattedAddress(double latitude, double longitude) {
+        GeocodingApiResponse response = geocodingApiClient.fetchAddress(latitude, longitude);
+
+        if (Objects.isNull(response)) {
+            throw new GeocodingNotFoundException(ErrorCode.GEOCODING_NOT_FOUND);
+        }
+
+        String formattedAddress = addressExtractor.extractFormattedAddress(response);
+        return parseAddress(formattedAddress);
     }
 
     private FormattedAddressResponse parseAddress(String formattedAddress) {
@@ -39,6 +43,4 @@ public class GeocodingService {
 
         return new FormattedAddressResponse(parts[0], parts[1], parts[2], parts[3]);
     }
-
-
 }

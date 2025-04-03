@@ -1,12 +1,10 @@
 package runnershigh.capstone.user.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
-import runnershigh.capstone.geocoding.exception.GeocodingNotFoundException;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
@@ -84,13 +82,8 @@ public class UserService {
     private FormattedAddressResponse getFormattedAddressResponse(
         UserRegisterRequest userRegisterRequest) {
 
-        Optional<FormattedAddressResponse> formattedAddressResponse = geocodingService.getFormattedAddress(
-            userRegisterRequest.latitude(), userRegisterRequest.longitude()).blockOptional();
-
-        if (formattedAddressResponse.isEmpty()) {
-            throw new GeocodingNotFoundException(ErrorCode.GEOCODING_NOT_FOUND);
-        }
-        return formattedAddressResponse.get();
+        return geocodingService.getFormattedAddress(
+            userRegisterRequest.latitude(), userRegisterRequest.longitude());
     }
 
 

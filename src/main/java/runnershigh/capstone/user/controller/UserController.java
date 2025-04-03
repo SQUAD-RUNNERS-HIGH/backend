@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
@@ -51,7 +50,7 @@ public class UserController {
 
     @GetMapping("/location-test")
     @Operation(summary = "위치정보 -> 주소 변환 조회", description = "위도, 고도를 받아, 주소를 반환합니다. [임시 컨트롤러]")
-    public Mono<FormattedAddressResponse> getAddress(@RequestParam double latitude,
+    public FormattedAddressResponse getAddress(@RequestParam double latitude,
         double longitude) {
         return geocodingService.getFormattedAddress(latitude, longitude);
     }
