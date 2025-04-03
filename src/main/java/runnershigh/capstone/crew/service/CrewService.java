@@ -17,6 +17,8 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
+import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
@@ -29,16 +31,16 @@ public class CrewService {
     private final CrewRepository crewRepository;
     private final CrewMapper crewMapper;
     private final UserService userService;
-
-    private static final double EARTH_RADIUS = 6378.137;
-    private static final double MAX_SEARCH_KM = 10.0;
+    private final GeocodingService geocodingService;
 
     @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
-        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(crewCreateRequest);
+
+        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
@@ -85,30 +87,12 @@ public class CrewService {
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
     }
 
-//    public CrewSearchResponse searchCrew(Long userId) {
-//        UserLocation userLocation = userService.getUser(userId).getUserLocation();
-//
-//        List<Crew> surroundCrews = crewRepository.findByCellParentToken(
-//            userLocation.getCellParentToken());
-//        log.info("surroundCrews: {}", surroundCrews);
-//
-//        return new CrewSearchResponse(surroundCrews.stream()
-//            .filter(crew -> calculateDistance(crew.getCrewLocation(), userLocation.getCellToken())
-//                <= MAX_SEARCH_KM)
-//            .collect(Collectors.toList()));
-//    }
-//
-//    private double calculateDistance(CrewLocation crewLocation, String userCellToken) {
-//        S2LatLng crewS2LatLng = S2CellId.fromToken(crewLocation.getCellToken()).toLatLng();
-//        S2LatLng userS2LatLng = S2CellId.fromToken(userCellToken.toLowerCase()).toLatLng();
-//
-//        log.info("Crew Location: {}, User Location: {}", crewS2LatLng, userS2LatLng);
-//        S1Angle angle = crewS2LatLng.getDistance(userS2LatLng);
-//
-//        double distanceKM = angle.radians() * EARTH_RADIUS;
-//        log.info("{} km", distanceKM);
-//        return distanceKM;
-//    }
+    private FormattedAddressResponse getFormattedAddressResponse(
+        CrewCreateRequest crewCreateRequest) {
+
+        return geocodingService.getFormattedAddress(
+            crewCreateRequest.latitude(), crewCreateRequest.longitude());
+    }
 
 
 }
