@@ -17,11 +17,6 @@ import runnershigh.capstone.user.domain.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalRank {
 
-    private static final Integer TO_MINUTES = 6000;
-    private static final Integer TO_SECONDS = 1000;
-    private static final Integer TO_MILLISECONDS = 1000;
-    private static final String RUNNING_TIME_FORMAT = "%02d:%02d.%03d";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,13 +36,6 @@ public class PersonalRank {
         this.historyId = historyId;
         this.user = user;
         this.runningTime = runningTime;
-    }
-
-    public String toRunningTimeStringFormat(){
-        double minutes = (runningTime / TO_MINUTES) % 60;
-        double seconds = (runningTime / TO_SECONDS) % 60;
-        double milliseconds = runningTime % TO_MILLISECONDS;
-        return String.format(RUNNING_TIME_FORMAT, minutes, seconds, milliseconds);
     }
 
     public String getUserName(){

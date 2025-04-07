@@ -13,7 +13,7 @@ public class PersonalRankMapper {
     private List<PersonalRankResponse> createPersonalRankResponse(
         final Slice<PersonalRank> personalRanks) {
         return personalRanks.getContent().stream()
-            .map(r -> new PersonalRankResponse(r.getUserName(), r.toRunningTimeStringFormat(),r.getHistoryId()))
+            .map(r -> new PersonalRankResponse(r.getUserName(), r.getRunningTime(),r.getHistoryId()))
             .toList();
     }
 

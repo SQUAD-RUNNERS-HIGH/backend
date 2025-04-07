@@ -2,7 +2,7 @@ package runnershigh.capstone.personalrank.dto;
 
 public record PersonalRankResponse(
     String userName,
-    String runningTime,
+    Double runningTime,
     String historyId
 ) {
 }

@@ -28,6 +28,7 @@ public class PersonalRunningService {
 
     public PersonalRunningResponse calculatePersonalRunning(
         final PersonalRunningInfo info, final String courseId) {
+        log.info("{}",info);
         Coordinate coordinate = projectToCourse(new ObjectId(courseId), info.longitude(),
             info.latitude());
         return new PersonalRunningResponse(RunningStatus.ONGOING,coordinate.x,coordinate.y);
