@@ -52,8 +52,9 @@ dependencies {
     //Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // WebClient
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    //JTS 공간 라이브러리
+    implementation 'org.locationtech.jts:jts-core:1.19.0'
+    implementation 'org.locationtech.jts.io:jts-io-common:1.19.0'
 }
 
 tasks.named('test') {

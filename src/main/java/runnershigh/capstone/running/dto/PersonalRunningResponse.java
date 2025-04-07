@@ -1,7 +1,9 @@
 package runnershigh.capstone.running.dto;
 
 public record PersonalRunningResponse(
-    RunningStatus runningStatus
+    RunningStatus runningStatus,
+    Double longitude,
+    Double latitude
 ) {
 
 }

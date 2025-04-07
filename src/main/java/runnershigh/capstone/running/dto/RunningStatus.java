@@ -1,6 +1,7 @@
 package runnershigh.capstone.running.dto;
 
 public enum RunningStatus {
-    LAGGING,
-    LEADING
+    ESCAPED,
+    ONGOING,
+    COMPLETE
 }

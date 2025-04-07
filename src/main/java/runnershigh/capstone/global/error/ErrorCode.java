@@ -50,15 +50,18 @@ public enum ErrorCode {
     USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "502", "이미 존재하는 이름입니다."),
 
     /**
-     * Geocoding 관련 에러 코드 600~699
+     * Personal Running History 관련 에러 코드 600~699
      */
+    HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "600", "러닝기록을 찾을 수 없습니다"),
 
-    GEOCODING_NOT_FOUND(HttpStatus.NOT_FOUND, "600", "존재하지 않는 주소입니다."),
+    /**
+     * Geocoding 관련 에러 코드 700~799
+     */
+    GEOCODING_NOT_FOUND(HttpStatus.NOT_FOUND, "700", "존재하지 않는 주소입니다."),
 
-    INCORRECT_GEOCODING_FORMAT(HttpStatus.BAD_REQUEST, "601", "요청된 GeoCoding 포맷과 다릅니다."),
+    INCORRECT_GEOCODING_FORMAT(HttpStatus.BAD_REQUEST, "701", "요청된 GeoCoding 포맷과 다릅니다."),
 
-    GEOCODING_EXTRACT_FAILED(HttpStatus.BAD_REQUEST, "602", "GEOCODING 주소 추출을 실패했습니다.");
-
+    GEOCODING_EXTRACT_FAILED(HttpStatus.BAD_REQUEST, "702", "GEOCODING 주소 추출을 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
