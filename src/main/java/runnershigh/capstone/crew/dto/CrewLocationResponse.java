@@ -1,6 +1,6 @@
-package runnershigh.capstone.user.dto;
+package runnershigh.capstone.crew.dto;
 
-public record UserLocationResponse(
+public record CrewLocationResponse(
     String country,
     String province,
     String city,

@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import runnershigh.capstone.user.dto.UserProfileRequest;
 
 
 @Entity
@@ -45,9 +44,9 @@ public class User {
         this.userLocation = userLocation;
     }
 
-    public void updateProfile(UserProfileRequest userProfileRequest) {
-        this.password = userProfileRequest.password();
-        this.username = userProfileRequest.username();
-        this.physical = userProfileRequest.physical();
+    public void updateProfile(String password, String username, Physical physical) {
+        this.password = password;
+        this.username = username;
+        this.physical = physical;
     }
 }
