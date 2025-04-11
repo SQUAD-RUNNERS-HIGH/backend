@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +20,10 @@ import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
+import runnershigh.capstone.crew.dto.SearchResponse;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
@@ -57,15 +61,16 @@ public class CrewController {
         return crewService.updateCrew(crewLeaderId, crewUpdateRequest);
     }
 
+    @GetMapping("/search")
+    @Operation(summary = "크루 검색", description = "검색할 정보를 받아, 해당하는 크루들의 정보를 반환합니다.")
+    public SearchResponse<CrewDetailResponse> searchCrew(
+        @ModelAttribute CrewSearchRequest crewSearchRequest, Pageable pageable) {
+        return crewService.searchCrew(crewSearchRequest, pageable);
+    }
+
     @DeleteMapping
     @Operation(summary = "크루 삭제", description = "크루 리더 ID를 받아, 삭제된 크루 ID를 반환합니다.")
     public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId) {
         return crewService.deleteCrew(crewLeaderId);
     }
-
-//    @GetMapping("/surround")
-//    @Operation(summary = "주변 크루 검색", description = "유저 ID를 받아 주변 크루들을 반환합니다.")
-//    public CrewSearchResponse searchCrew(@AuthUser Long userId) {
-//        return crewService.searchCrew(userId);
-//    }
 }

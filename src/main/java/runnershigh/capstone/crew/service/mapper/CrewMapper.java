@@ -3,6 +3,7 @@ package runnershigh.capstone.crew.service.mapper;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.domain.CrewLocation;
@@ -10,6 +11,8 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewLocationResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.CrewSearchCondition;
+import runnershigh.capstone.crew.dto.CrewSearchRequest;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.user.domain.User;
@@ -52,8 +55,12 @@ public class CrewMapper {
     }
 
     public CrewLocationResponse toCrewLocationResponse(CrewLocation crewLocation) {
-        return new CrewLocationResponse(crewLocation.getCountry(), crewLocation.getProvince(),
-            crewLocation.getCity(), crewLocation.getDong());
+        return CrewLocationResponse.builder()
+            .country(crewLocation.getCountry())
+            .province(crewLocation.getProvince())
+            .city(crewLocation.getCity())
+            .dong(crewLocation.getDong())
+            .build();
     }
 
     public Set<CrewParticipantsDetailsResponse> toCrewParticipantsDetailsResponse(
@@ -64,4 +71,17 @@ public class CrewMapper {
                 .build())
             .collect(Collectors.toSet());
     }
+
+    public Page<CrewDetailResponse> toCrewSearchResponse(Page<Crew> crewPage) {
+        return crewPage.map(this::toCrewDetailResponse);
+    }
+
+    public CrewSearchCondition toCrewSearchCondition(CrewSearchRequest crewSearchRequest) {
+        return CrewSearchCondition.builder()
+            .region(crewSearchRequest.region())
+            .name(crewSearchRequest.name())
+            .build();
+    }
+
+
 }

@@ -3,6 +3,8 @@ package runnershigh.capstone.crew.service;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
@@ -11,8 +13,11 @@ import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.CrewSearchCondition;
+import runnershigh.capstone.crew.dto.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
+import runnershigh.capstone.crew.dto.SearchResponse;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
@@ -76,6 +81,22 @@ public class CrewService {
         crewRepository.delete(crew);
         return new CrewDeleteResponse(crew.getId());
     }
+
+    @Transactional
+    public SearchResponse<CrewDetailResponse> searchCrew(CrewSearchRequest crewSearchRequest,
+        Pageable pageable) {
+
+        CrewSearchCondition crewSearchCondition = crewMapper.toCrewSearchCondition(
+            crewSearchRequest);
+
+        Page<Crew> crews = crewRepository.findCrewByCondition(crewSearchCondition,
+            pageable);
+
+        Page<CrewDetailResponse> crewSearchResponse = crewMapper.toCrewSearchResponse(crews);
+
+        return SearchResponse.from(crewSearchResponse);
+    }
+
 
     private Crew getCrewByLeaderId(Long crewLeaderId) {
         return crewRepository.findByCrewLeaderId(crewLeaderId)

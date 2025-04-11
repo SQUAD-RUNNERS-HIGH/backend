@@ -48,12 +48,20 @@ public class UserMapper {
     }
 
     public UserPhysicalResponse toUserPhysicalResponse(Physical physical) {
-        return new UserPhysicalResponse(physical.getGender().toString(), physical.getAge(),
-            physical.getHeight(), physical.getWeight());
+        return UserPhysicalResponse.builder()
+            .gender(physical.getGender().toString())
+            .age(physical.getAge())
+            .height(physical.getHeight())
+            .weight(physical.getWeight())
+            .build();
     }
 
     public UserLocationResponse toUserLocationResponse(UserLocation userLocation) {
-        return new UserLocationResponse(userLocation.getCountry(), userLocation.getProvince(),
-            userLocation.getCity(), userLocation.getDong());
+        return UserLocationResponse.builder()
+            .country(userLocation.getCountry())
+            .province(userLocation.getProvince())
+            .city(userLocation.getCity())
+            .dong(userLocation.getDong())
+            .build();
     }
 }
