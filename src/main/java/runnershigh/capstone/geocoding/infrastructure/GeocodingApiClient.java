@@ -18,7 +18,7 @@ public class GeocodingApiClient {
     }
 
     public GeocodingApiResponse fetchAddress(double latitude, double longitude) {
-        String API_REQUEST_PARAM = "?latlng=%f,%f&key=%s&language=ko";
+        String API_REQUEST_PARAM = "?latlng=%.4f,%.4f&key=%s&language=ko";
 
         String url = String.format(API_REQUEST_PARAM, latitude, longitude,
             geocodingProperties.getKey());
