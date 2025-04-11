@@ -3,7 +3,7 @@ package runnershigh.capstone.crew.dto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
-public record SearchResponse<T>(
+public record CrewSearchResponse<T>(
     List<T> content,
     int page,
     int size,
@@ -12,8 +12,8 @@ public record SearchResponse<T>(
     boolean last
 ) {
 
-    public static <T> SearchResponse<T> from(Page<T> page) {
-        return new SearchResponse<>(
+    public static <T> CrewSearchResponse<T> from(Page<T> page) {
+        return new CrewSearchResponse<>(
             page.getContent(),
             page.getNumber(),
             page.getSize(),

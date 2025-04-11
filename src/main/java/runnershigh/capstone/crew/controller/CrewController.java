@@ -21,9 +21,9 @@ import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
-import runnershigh.capstone.crew.dto.SearchResponse;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
@@ -63,7 +63,7 @@ public class CrewController {
 
     @GetMapping("/search")
     @Operation(summary = "크루 검색", description = "검색할 정보를 받아, 해당하는 크루들의 정보를 반환합니다.")
-    public SearchResponse<CrewDetailResponse> searchCrew(
+    public CrewSearchResponse<CrewDetailResponse> searchCrew(
         @ModelAttribute CrewSearchRequest crewSearchRequest, Pageable pageable) {
         return crewService.searchCrew(crewSearchRequest, pageable);
     }

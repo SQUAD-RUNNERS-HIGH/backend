@@ -15,9 +15,9 @@ import runnershigh.capstone.crew.dto.CrewDetailResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.CrewSearchResponse;
 import runnershigh.capstone.crew.dto.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.CrewUpdateResponse;
-import runnershigh.capstone.crew.dto.SearchResponse;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
@@ -83,7 +83,7 @@ public class CrewService {
     }
 
     @Transactional
-    public SearchResponse<CrewDetailResponse> searchCrew(CrewSearchRequest crewSearchRequest,
+    public CrewSearchResponse<CrewDetailResponse> searchCrew(CrewSearchRequest crewSearchRequest,
         Pageable pageable) {
 
         CrewSearchCondition crewSearchCondition = crewMapper.toCrewSearchCondition(
@@ -94,7 +94,7 @@ public class CrewService {
 
         Page<CrewDetailResponse> crewSearchResponse = crewMapper.toCrewSearchResponse(crews);
 
-        return SearchResponse.from(crewSearchResponse);
+        return CrewSearchResponse.from(crewSearchResponse);
     }
 
 
