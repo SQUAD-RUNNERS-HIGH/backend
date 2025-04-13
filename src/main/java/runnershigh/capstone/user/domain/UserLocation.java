@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Embeddable
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserLocation {
 
     private String country;
     private String province;
     private String city;
     private String dong;
+
+
 }

@@ -44,9 +44,13 @@ public class User {
         this.userLocation = userLocation;
     }
 
-    public void updateProfile(String password, String username, Physical physical) {
+    public void updateProfile(String password, String username, Physical physical,
+        UserLocation userLocation) {
         this.password = password;
         this.username = username;
         this.physical = physical;
+        this.userLocation = userLocation;
     }
+
+
 }

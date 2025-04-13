@@ -8,7 +8,10 @@ import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
+import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
+import runnershigh.capstone.user.domain.UserLocation;
+import runnershigh.capstone.user.dto.UserLocationRequest;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
@@ -33,7 +36,8 @@ public class UserService {
         String salt = PBKDF2Util.generateSalt();
         String hashedPassword = PBKDF2Util.hashPassword(userRegisterRequest.password(), salt);
 
-        FormattedAddressResponse addressResponse = getFormattedAddressResponse(userRegisterRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            userRegisterRequest.location());
 
         User user = userMapper.toUser(userRegisterRequest, addressResponse, hashedPassword, salt);
 
@@ -47,9 +51,12 @@ public class UserService {
     @Transactional
     public UserResponse updateProfile(Long userId, UserProfileRequest userProfileRequest) {
         User user = getUser(userId);
-
+        Physical physicalRequest = userMapper.toPhysical(userProfileRequest.physical());
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            userProfileRequest.location());
+        UserLocation userLocation = userMapper.toUserLocation(addressResponse);
         user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
-            userMapper.toPhysical(userProfileRequest.physical()));
+            physicalRequest, userLocation);
 
         return new UserResponse(user.getLoginId(), user.getUsername(),
             userMapper.toUserPhysicalResponse(user.getPhysical()),
@@ -80,10 +87,10 @@ public class UserService {
     }
 
     private FormattedAddressResponse getFormattedAddressResponse(
-        UserRegisterRequest userRegisterRequest) {
+        UserLocationRequest userLocationRequest) {
 
         return geocodingService.getFormattedAddress(
-            userRegisterRequest.latitude(), userRegisterRequest.longitude());
+            userLocationRequest.latitude(), userLocationRequest.longitude());
     }
 
 
