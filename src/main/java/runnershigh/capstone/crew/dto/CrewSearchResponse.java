@@ -1,10 +1,25 @@
 package runnershigh.capstone.crew.dto;
 
 import java.util.List;
-import runnershigh.capstone.crew.domain.Crew;
+import org.springframework.data.domain.Page;
 
-public record CrewSearchResponse(
-    List<Crew> crews
+public record CrewSearchResponse<T>(
+    List<T> content,
+    int page,
+    int size,
+    long totalElements,
+    int totalPages,
+    boolean last
 ) {
 
+    public static <T> CrewSearchResponse<T> from(Page<T> page) {
+        return new CrewSearchResponse<>(
+            page.getContent(),
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.isLast()
+        );
+    }
 }

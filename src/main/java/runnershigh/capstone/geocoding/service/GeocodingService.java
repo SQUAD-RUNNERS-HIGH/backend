@@ -1,6 +1,5 @@
 package runnershigh.capstone.geocoding.service;
 
-import java.util.Arrays;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,11 +39,11 @@ public class GeocodingService {
     private FormattedAddressResponse parseAddress(String formattedAddress) {
         String[] parts = formattedAddress.split(SPLIT_STRING);
 
-        if (parts.length < TARGET_INDEX) {
-            log.warn("적절하지 않게 출력된 포맷 : {}", Arrays.toString(parts));
-            throw new GeocodingNotFoundException(ErrorCode.INCORRECT_GEOCODING_FORMAT);
-        }
+        String part1 = parts.length > 0 ? parts[0] : "";
+        String part2 = parts.length > 1 ? parts[1] : "";
+        String part3 = parts.length > 2 ? parts[2] : "";
+        String part4 = parts.length > 3 ? parts[3] : "";
 
-        return new FormattedAddressResponse(parts[0], parts[1], parts[2], parts[3]);
+        return new FormattedAddressResponse(part1, part2, part3, part4);
     }
 }
