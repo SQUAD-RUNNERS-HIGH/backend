@@ -25,7 +25,8 @@ public class UserMapper {
             .passwordSalt(salt)
             .username(userRegisterRequest.username())
             .physical(toPhysical(userRegisterRequest.physical()))
-            .userLocation(toUserLocation(formattedAddressResponse))
+            .userLocation(toUserLocation(formattedAddressResponse,
+                userRegisterRequest.location().specificLocation()))
             .build();
     }
 
@@ -38,12 +39,14 @@ public class UserMapper {
             .build();
     }
 
-    public UserLocation toUserLocation(FormattedAddressResponse formattedAddressResponse) {
+    public UserLocation toUserLocation(FormattedAddressResponse formattedAddressResponse,
+        String specificLocation) {
         return UserLocation.builder()
             .country(formattedAddressResponse.country())
             .province(formattedAddressResponse.province())
             .city(formattedAddressResponse.city())
             .dong(formattedAddressResponse.dong())
+            .specificLocation(specificLocation)
             .build();
     }
 

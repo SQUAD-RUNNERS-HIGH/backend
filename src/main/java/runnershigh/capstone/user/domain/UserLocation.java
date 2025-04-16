@@ -18,5 +18,5 @@ public class UserLocation {
     private String city;
     private String dong;
 
-
+    private String specificLocation;
 }

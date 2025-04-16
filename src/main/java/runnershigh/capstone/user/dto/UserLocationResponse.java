@@ -7,7 +7,9 @@ public record UserLocationResponse(
     String country,
     String province,
     String city,
-    String dong
+    String dong,
+
+    String specificLocation
 ) {
 
 }

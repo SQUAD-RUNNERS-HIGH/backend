@@ -5,7 +5,9 @@ import lombok.Builder;
 @Builder
 public record UserLocationRequest(
     double latitude,
-    double longitude
+    double longitude,
+
+    String specificLocation
 ) {
 
 }

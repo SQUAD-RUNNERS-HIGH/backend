@@ -82,6 +82,4 @@ public class CrewMapper {
             .name(crewSearchRequest.name())
             .build();
     }
-
-
 }

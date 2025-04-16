@@ -54,7 +54,9 @@ public class UserService {
         Physical physicalRequest = userMapper.toPhysical(userProfileRequest.physical());
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             userProfileRequest.location());
-        UserLocation userLocation = userMapper.toUserLocation(addressResponse);
+        UserLocation userLocation = userMapper.toUserLocation(addressResponse,
+            userProfileRequest.location()
+                .specificLocation());
         user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
             physicalRequest, userLocation);
 
