@@ -37,7 +37,7 @@ public class UserService {
         String hashedPassword = PBKDF2Util.hashPassword(userRegisterRequest.password(), salt);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
-            userRegisterRequest.location());
+            userRegisterRequest.userLocation());
 
         User user = userMapper.toUser(userRegisterRequest, addressResponse, hashedPassword, salt);
 
@@ -53,9 +53,9 @@ public class UserService {
         User user = getUser(userId);
         Physical physicalRequest = userMapper.toPhysical(userProfileRequest.physical());
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
-            userProfileRequest.location());
+            userProfileRequest.userLocation());
         Location userLocation = userMapper.toUserLocation(addressResponse,
-            userProfileRequest.location()
+            userProfileRequest.userLocation()
                 .specificLocation());
         user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
             physicalRequest, userLocation);

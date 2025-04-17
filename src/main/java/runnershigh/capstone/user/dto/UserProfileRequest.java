@@ -6,7 +6,7 @@ public record UserProfileRequest(
     String password,
     String username,
     UserPhysicalRequest physical,
-    LocationRequest location
+    LocationRequest userLocation
 ) {
 
 }

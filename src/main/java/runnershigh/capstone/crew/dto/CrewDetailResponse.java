@@ -11,7 +11,7 @@ public record CrewDetailResponse(
     int userCount,
     String image,
     String crewLeaderName,
-    LocationResponse location
+    LocationResponse crewLocation
 ) {
 
 }

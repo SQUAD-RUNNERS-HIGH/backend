@@ -46,7 +46,7 @@ public class CrewService {
         User crewLeader = userService.getUser(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
-            crewCreateRequest.location());
+            crewCreateRequest.crewLocation());
 
         Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
@@ -73,10 +73,10 @@ public class CrewService {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
-            crewUpdateRequest.location());
+            crewUpdateRequest.crewLocation());
 
         Location crewLocation = crewMapper.toCrewLocation(addressResponse,
-            crewUpdateRequest.location().specificLocation());
+            crewUpdateRequest.crewLocation().specificLocation());
         crew.updateCrew(crewUpdateRequest, crewLocation);
         crewRepository.save(crew);
         return new CrewUpdateResponse(crew.getId());

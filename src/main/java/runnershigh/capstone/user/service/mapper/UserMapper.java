@@ -26,7 +26,7 @@ public class UserMapper {
             .username(userRegisterRequest.username())
             .physical(toPhysical(userRegisterRequest.physical()))
             .userLocation(toUserLocation(formattedAddressResponse,
-                userRegisterRequest.location().specificLocation()))
+                userRegisterRequest.userLocation().specificLocation()))
             .build();
     }
 

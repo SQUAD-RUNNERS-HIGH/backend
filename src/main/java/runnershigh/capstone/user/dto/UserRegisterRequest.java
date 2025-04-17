@@ -7,7 +7,7 @@ public record UserRegisterRequest(
     String password,
     String username,
     UserPhysicalRequest physical,
-    LocationRequest location
+    LocationRequest userLocation
 ) {
 
 }

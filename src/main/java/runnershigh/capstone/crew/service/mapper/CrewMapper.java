@@ -27,7 +27,7 @@ public class CrewMapper {
             .description(crewCreateRequest.description())
             .maxCapacity(crewCreateRequest.maxCapacity())
             .image(crewCreateRequest.image())
-            .crewLocation(toCrewLocation(formattedAddressResponse, crewCreateRequest.location()
+            .crewLocation(toCrewLocation(formattedAddressResponse, crewCreateRequest.crewLocation()
                 .specificLocation()))
             .crewLeader(crewLeader)
             .crewParticipant(new HashSet<>())
@@ -53,7 +53,7 @@ public class CrewMapper {
             .userCount(crew.getUserCount())
             .image(crew.getImage())
             .crewLeaderName(crew.getCrewLeader().getUsername())
-            .location(toCrewLocationResponse(crew.getCrewLocation()))
+            .crewLocation(toCrewLocationResponse(crew.getCrewLocation()))
             .build();
     }
 

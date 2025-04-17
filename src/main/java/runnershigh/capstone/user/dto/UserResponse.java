@@ -7,7 +7,7 @@ public record UserResponse(
     String loginId,
     String username,
     UserPhysicalResponse physical,
-    LocationResponse location
+    LocationResponse userLocation
 ) {
 
 }
