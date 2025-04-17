@@ -3,11 +3,11 @@ package runnershigh.capstone.user.service.mapper;
 
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
+import runnershigh.capstone.location.domain.Location;
+import runnershigh.capstone.location.dto.LocationResponse;
 import runnershigh.capstone.user.domain.Gender;
 import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
-import runnershigh.capstone.user.domain.UserLocation;
-import runnershigh.capstone.user.dto.UserLocationResponse;
 import runnershigh.capstone.user.dto.UserPhysicalRequest;
 import runnershigh.capstone.user.dto.UserPhysicalResponse;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
@@ -39,9 +39,9 @@ public class UserMapper {
             .build();
     }
 
-    public UserLocation toUserLocation(FormattedAddressResponse formattedAddressResponse,
+    public Location toUserLocation(FormattedAddressResponse formattedAddressResponse,
         String specificLocation) {
-        return UserLocation.builder()
+        return Location.builder()
             .country(formattedAddressResponse.country())
             .province(formattedAddressResponse.province())
             .city(formattedAddressResponse.city())
@@ -59,8 +59,8 @@ public class UserMapper {
             .build();
     }
 
-    public UserLocationResponse toUserLocationResponse(UserLocation userLocation) {
-        return UserLocationResponse.builder()
+    public LocationResponse toUserLocationResponse(Location userLocation) {
+        return LocationResponse.builder()
             .country(userLocation.getCountry())
             .province(userLocation.getProvince())
             .city(userLocation.getCity())

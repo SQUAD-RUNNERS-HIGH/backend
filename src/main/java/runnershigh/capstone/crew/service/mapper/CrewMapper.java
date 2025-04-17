@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.CrewLocationResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
+import runnershigh.capstone.location.domain.Location;
+import runnershigh.capstone.location.dto.LocationResponse;
 import runnershigh.capstone.user.domain.User;
 
 @Component
@@ -34,9 +34,9 @@ public class CrewMapper {
             .build();
     }
 
-    public CrewLocation toCrewLocation(FormattedAddressResponse formattedAddressResponse,
+    public Location toCrewLocation(FormattedAddressResponse formattedAddressResponse,
         String specificLocation) {
-        return CrewLocation.builder()
+        return Location.builder()
             .country(formattedAddressResponse.country())
             .city(formattedAddressResponse.city())
             .province(formattedAddressResponse.province())
@@ -53,12 +53,12 @@ public class CrewMapper {
             .userCount(crew.getUserCount())
             .image(crew.getImage())
             .crewLeaderName(crew.getCrewLeader().getUsername())
-            .crewLocation(toCrewLocationResponse(crew.getCrewLocation()))
+            .location(toCrewLocationResponse(crew.getCrewLocation()))
             .build();
     }
 
-    public CrewLocationResponse toCrewLocationResponse(CrewLocation crewLocation) {
-        return CrewLocationResponse.builder()
+    public LocationResponse toCrewLocationResponse(Location crewLocation) {
+        return LocationResponse.builder()
             .country(crewLocation.getCountry())
             .province(crewLocation.getProvince())
             .city(crewLocation.getCity())

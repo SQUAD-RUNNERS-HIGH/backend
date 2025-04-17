@@ -8,10 +8,10 @@ import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
+import runnershigh.capstone.location.domain.Location;
+import runnershigh.capstone.location.dto.LocationRequest;
 import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
-import runnershigh.capstone.user.domain.UserLocation;
-import runnershigh.capstone.user.dto.UserLocationRequest;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
@@ -54,7 +54,7 @@ public class UserService {
         Physical physicalRequest = userMapper.toPhysical(userProfileRequest.physical());
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             userProfileRequest.location());
-        UserLocation userLocation = userMapper.toUserLocation(addressResponse,
+        Location userLocation = userMapper.toUserLocation(addressResponse,
             userProfileRequest.location()
                 .specificLocation());
         user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
@@ -89,7 +89,7 @@ public class UserService {
     }
 
     private FormattedAddressResponse getFormattedAddressResponse(
-        UserLocationRequest userLocationRequest) {
+        LocationRequest userLocationRequest) {
 
         return geocodingService.getFormattedAddress(
             userLocationRequest.latitude(), userLocationRequest.longitude());

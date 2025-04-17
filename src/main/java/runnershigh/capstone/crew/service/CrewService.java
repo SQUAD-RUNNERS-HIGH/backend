@@ -8,12 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.CrewLocationRequest;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
@@ -27,6 +25,8 @@ import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
+import runnershigh.capstone.location.domain.Location;
+import runnershigh.capstone.location.dto.LocationRequest;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
 
@@ -75,7 +75,7 @@ public class CrewService {
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewUpdateRequest.location());
 
-        CrewLocation crewLocation = crewMapper.toCrewLocation(addressResponse,
+        Location crewLocation = crewMapper.toCrewLocation(addressResponse,
             crewUpdateRequest.location().specificLocation());
         crew.updateCrew(crewUpdateRequest, crewLocation);
         crewRepository.save(crew);
@@ -117,10 +117,10 @@ public class CrewService {
     }
 
     private FormattedAddressResponse getFormattedAddressResponse(
-        CrewLocationRequest crewLocationRequest) {
+        LocationRequest locationRequest) {
 
         return geocodingService.getFormattedAddress(
-            crewLocationRequest.latitude(), crewLocationRequest.longitude());
+            locationRequest.latitude(), locationRequest.longitude());
     }
 
 

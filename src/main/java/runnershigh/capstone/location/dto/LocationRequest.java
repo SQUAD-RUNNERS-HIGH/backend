@@ -1,9 +1,9 @@
-package runnershigh.capstone.crew.dto;
+package runnershigh.capstone.location.dto;
 
 import lombok.Builder;
 
 @Builder
-public record CrewLocationRequest(
+public record LocationRequest(
     double latitude,
     double longitude,
 

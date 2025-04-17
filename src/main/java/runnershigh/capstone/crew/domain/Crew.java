@@ -19,6 +19,7 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.global.error.ErrorCode;
+import runnershigh.capstone.location.domain.Location;
 import runnershigh.capstone.user.domain.User;
 
 @Entity
@@ -38,7 +39,7 @@ public class Crew {
     private String image;
 
     @Embedded
-    private CrewLocation crewLocation;
+    private Location crewLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
@@ -49,7 +50,7 @@ public class Crew {
 
     @Builder
     public Crew(String name, String description, int maxCapacity, String image,
-        CrewLocation crewLocation, User crewLeader, Set<CrewParticipant> crewParticipant) {
+        Location crewLocation, User crewLeader, Set<CrewParticipant> crewParticipant) {
         this.name = name;
         this.description = description;
         this.maxCapacity = maxCapacity;
@@ -60,7 +61,7 @@ public class Crew {
         this.crewParticipant = crewParticipant;
     }
 
-    public void updateCrew(CrewUpdateRequest crewUpdateRequest, CrewLocation crewLocation) {
+    public void updateCrew(CrewUpdateRequest crewUpdateRequest, Location crewLocation) {
         this.name = crewUpdateRequest.name();
         this.description = crewUpdateRequest.description();
         this.maxCapacity = crewUpdateRequest.maxCapacity();

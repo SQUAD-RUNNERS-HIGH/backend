@@ -1,9 +1,9 @@
-package runnershigh.capstone.user.dto;
+package runnershigh.capstone.location.dto;
 
 import lombok.Builder;
 
 @Builder
-public record UserLocationResponse(
+public record LocationResponse(
     String country,
     String province,
     String city,
