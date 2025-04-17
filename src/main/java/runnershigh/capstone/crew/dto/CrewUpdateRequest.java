@@ -4,7 +4,8 @@ public record CrewUpdateRequest(
     String name,
     String description,
     int maxCapacity,
-    String image
+    String image,
+    CrewLocationRequest location
 ) {
 
 }

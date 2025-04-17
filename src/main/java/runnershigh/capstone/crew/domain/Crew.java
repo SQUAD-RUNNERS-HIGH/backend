@@ -60,11 +60,12 @@ public class Crew {
         this.crewParticipant = crewParticipant;
     }
 
-    public void updateCrew(CrewUpdateRequest crewUpdateRequest) {
+    public void updateCrew(CrewUpdateRequest crewUpdateRequest, CrewLocation crewLocation) {
         this.name = crewUpdateRequest.name();
         this.description = crewUpdateRequest.description();
         this.maxCapacity = crewUpdateRequest.maxCapacity();
         this.image = crewUpdateRequest.image();
+        this.crewLocation = crewLocation;
     }
 
     public void addToCrewAsParticipant(CrewParticipant crewParticipant) {

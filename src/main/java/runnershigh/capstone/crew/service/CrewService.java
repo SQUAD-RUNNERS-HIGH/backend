@@ -8,10 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
+import runnershigh.capstone.crew.domain.CrewLocation;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewLocationRequest;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
@@ -43,7 +45,8 @@ public class CrewService {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
-        FormattedAddressResponse addressResponse = getFormattedAddressResponse(crewCreateRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            crewCreateRequest.location());
 
         Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
@@ -69,7 +72,12 @@ public class CrewService {
     public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
-        crew.updateCrew(crewUpdateRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            crewUpdateRequest.location());
+
+        CrewLocation crewLocation = crewMapper.toCrewLocation(addressResponse,
+            crewUpdateRequest.location().specificLocation());
+        crew.updateCrew(crewUpdateRequest, crewLocation);
         crewRepository.save(crew);
         return new CrewUpdateResponse(crew.getId());
     }
@@ -109,10 +117,10 @@ public class CrewService {
     }
 
     private FormattedAddressResponse getFormattedAddressResponse(
-        CrewCreateRequest crewCreateRequest) {
+        CrewLocationRequest crewLocationRequest) {
 
         return geocodingService.getFormattedAddress(
-            crewCreateRequest.latitude(), crewCreateRequest.longitude());
+            crewLocationRequest.latitude(), crewLocationRequest.longitude());
     }
 
 

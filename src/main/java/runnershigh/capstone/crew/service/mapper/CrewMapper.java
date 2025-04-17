@@ -27,18 +27,21 @@ public class CrewMapper {
             .description(crewCreateRequest.description())
             .maxCapacity(crewCreateRequest.maxCapacity())
             .image(crewCreateRequest.image())
-            .crewLocation(toCrewLocation(formattedAddressResponse))
+            .crewLocation(toCrewLocation(formattedAddressResponse, crewCreateRequest.location()
+                .specificLocation()))
             .crewLeader(crewLeader)
             .crewParticipant(new HashSet<>())
             .build();
     }
 
-    public CrewLocation toCrewLocation(FormattedAddressResponse formattedAddressResponse) {
+    public CrewLocation toCrewLocation(FormattedAddressResponse formattedAddressResponse,
+        String specificLocation) {
         return CrewLocation.builder()
             .country(formattedAddressResponse.country())
             .city(formattedAddressResponse.city())
             .province(formattedAddressResponse.province())
             .dong(formattedAddressResponse.dong())
+            .specificLocation(specificLocation)
             .build();
     }
 
@@ -60,6 +63,7 @@ public class CrewMapper {
             .province(crewLocation.getProvince())
             .city(crewLocation.getCity())
             .dong(crewLocation.getDong())
+            .specificLocation(crewLocation.getSpecificLocation())
             .build();
     }
 

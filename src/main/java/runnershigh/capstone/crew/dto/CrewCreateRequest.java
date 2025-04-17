@@ -5,8 +5,7 @@ public record CrewCreateRequest(
     String description,
     int maxCapacity,
     String image,
-    double latitude,
-    double longitude
+    CrewLocationRequest location
 ) {
 
 }

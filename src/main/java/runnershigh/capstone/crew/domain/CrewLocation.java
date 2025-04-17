@@ -18,4 +18,6 @@ public class CrewLocation {
     private String province;
     private String city;
     private String dong;
+
+    private String specificLocation;
 }

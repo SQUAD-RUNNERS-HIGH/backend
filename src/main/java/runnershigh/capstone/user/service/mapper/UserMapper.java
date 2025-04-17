@@ -65,6 +65,7 @@ public class UserMapper {
             .province(userLocation.getProvince())
             .city(userLocation.getCity())
             .dong(userLocation.getDong())
+            .specificLocation(userLocation.getSpecificLocation())
             .build();
     }
 }
