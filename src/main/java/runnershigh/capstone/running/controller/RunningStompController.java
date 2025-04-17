@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.running.dto.PersonalRunningInfo;
 import runnershigh.capstone.running.dto.PersonalRunningResponse;
+import runnershigh.capstone.running.service.CrewRunningService;
 import runnershigh.capstone.running.service.PersonalRunningService;
 
 @RestController
@@ -16,6 +17,7 @@ import runnershigh.capstone.running.service.PersonalRunningService;
 public class RunningStompController {
 
     private final PersonalRunningService personalRunningService;
+    private final CrewRunningService crewRunningService;
 
     @MessageMapping("/course/{courseId}")
     @SendToUser("/queue/reply")

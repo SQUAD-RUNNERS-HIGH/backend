@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class PersonalRank {
     private String courseId;
     private String historyId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
 
@@ -40,5 +40,11 @@ public class PersonalRank {
 
     public String getUserName(){
         return user.getUsername();
+    }
+
+    public void changeRunningTime(double newRunningTime){
+        if(newRunningTime < runningTime){
+            this.runningTime = newRunningTime;
+        }
     }
 }

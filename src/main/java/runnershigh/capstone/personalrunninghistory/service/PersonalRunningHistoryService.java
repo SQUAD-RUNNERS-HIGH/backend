@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.global.error.ErrorCode;
-import runnershigh.capstone.personalrank.domain.PersonalRank;
 import runnershigh.capstone.personalrank.service.PersonalRankService;
 import runnershigh.capstone.personalrunninghistory.domain.PersonalRunningHistory;
 import runnershigh.capstone.personalrunninghistory.dto.PersonalRunningHistoryRequest;
@@ -38,6 +37,6 @@ public class PersonalRunningHistoryService {
             request.progress(), request.runningTime(), userId,
             user.getUsername());
         personalRunningHistoryRepository.save(history);
-        personalRankService.savePersonalRank(history.getId().toString(),request,user);
+        personalRankService.compareRunningTime(history.getId().toString(),request,user);
     }
 }
