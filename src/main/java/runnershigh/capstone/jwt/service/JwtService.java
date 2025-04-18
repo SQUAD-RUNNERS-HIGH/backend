@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.domain.RefreshToken;
+import runnershigh.capstone.jwt.dto.LoginResponse;
 import runnershigh.capstone.jwt.dto.TokenResponse;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
+import runnershigh.capstone.jwt.service.mapper.JwtMapper;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.exception.UserNotFoundException;
@@ -22,8 +24,9 @@ public class JwtService {
     private final JwtGenerator jwtGenerator;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtMapper jwtMapper;
 
-    public TokenResponse login(String loginId, String password) {
+    public LoginResponse login(String loginId, String password) {
 
         User existUser = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new UserNotFoundException(
@@ -33,7 +36,7 @@ public class JwtService {
 
             Long userId = existUser.getId();
 
-            return generateAndReturnToken(userId);
+            return jwtMapper.toLoginResponse(generateAndReturnToken(userId), userId);
         }
 
         return null;
