@@ -1,5 +1,4 @@
-package runnershigh.capstone.crew.domain;
-
+package runnershigh.capstone.location.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -10,12 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Embeddable
-@NoArgsConstructor
 @AllArgsConstructor
-public class CrewLocation {
+@NoArgsConstructor
+public class Location {
 
     private String country;
     private String province;
     private String city;
     private String dong;
+
+    private String specificLocation;
 }

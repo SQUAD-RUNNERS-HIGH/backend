@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.course.domain.Course;
 import runnershigh.capstone.course.repository.CourseRepository;
 import runnershigh.capstone.course.service.CourseService;
-import runnershigh.capstone.global.argumentresolver.AuthUser;
+import runnershigh.capstone.location.domain.Location;
 import runnershigh.capstone.personalrunninghistory.dto.PersonalRunningHistoryRequest;
 import runnershigh.capstone.personalrunninghistory.service.PersonalRunningHistoryService;
 import runnershigh.capstone.user.domain.Goal;
 import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
-import runnershigh.capstone.user.domain.UserLocation;
 import runnershigh.capstone.user.repository.UserRepository;
 
 @RestController
@@ -33,11 +32,11 @@ public class TestDataGenerator {
     public void saveTestData(@PathVariable String courseId) {
         User user = userRepository.save(
             new User("test", "test", "t", "러너스하이", new Physical(), new Goal(),
-                new UserLocation()));
+                new Location()));
         Course course = courseService.getCourse(courseId);
         double perimeter = course.getProperties().getPerimeter();
         int size = course.getGeometry().getCoordinates().get(0).size();
-        double runningTime = (perimeter / 7000.0)*3600;
+        double runningTime = (perimeter / 7000.0) * 3600;
         List<Double> list = new ArrayList<>();
         list.add(0.0);
         Random rand = new Random();
@@ -48,7 +47,7 @@ public class TestDataGenerator {
         Collections.sort(list);
         PersonalRunningHistoryRequest personalRunningHistoryRequest =
             new PersonalRunningHistoryRequest(
-            list, runningTime, courseId);
+                list, runningTime, courseId);
         personalRunningHistoryService.savePersonalRunningHistory(personalRunningHistoryRequest,
             user.getId());
     }
