@@ -1,6 +1,7 @@
 package runnershigh.capstone.crew.dto;
 
 import lombok.Builder;
+import runnershigh.capstone.location.dto.LocationResponse;
 
 @Builder
 public record CrewDetailResponse(
@@ -10,7 +11,7 @@ public record CrewDetailResponse(
     int userCount,
     String image,
     String crewLeaderName,
-    CrewLocationResponse crewLocation
+    LocationResponse crewLocation
 ) {
 
 }

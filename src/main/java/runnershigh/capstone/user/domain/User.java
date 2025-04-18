@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import runnershigh.capstone.location.domain.Location;
 
 
 @Entity
@@ -30,11 +31,11 @@ public class User {
     private Goal goal;
 
     @Embedded
-    private UserLocation userLocation;
+    private Location userLocation;
 
     @Builder
     public User(String loginId, String password, String passwordSalt, String username,
-        Physical physical, Goal goal, UserLocation userLocation) {
+        Physical physical, Goal goal, Location userLocation) {
         this.loginId = loginId;
         this.password = password;
         this.passwordSalt = passwordSalt;
@@ -44,9 +45,13 @@ public class User {
         this.userLocation = userLocation;
     }
 
-    public void updateProfile(String password, String username, Physical physical) {
+    public void updateProfile(String password, String username, Physical physical,
+        Location userLocation) {
         this.password = password;
         this.username = username;
         this.physical = physical;
+        this.userLocation = userLocation;
     }
+
+
 }

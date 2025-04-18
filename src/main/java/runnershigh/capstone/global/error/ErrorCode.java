@@ -41,13 +41,20 @@ public enum ErrorCode {
     CREW_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "존재하지 않는 크루 참가자입니다."),
 
     /**
-     * User 관련 에러 코드 500~599
+     * User 관련 에러 코드 500~549
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "500", "존재하지 않는 유저입니다."),
 
     LOGIN_ID_DUPLICATION(HttpStatus.BAD_REQUEST, "501", "이미 존재하는 ID 입니다."),
 
     USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "502", "이미 존재하는 이름입니다."),
+
+    /**
+     * UserLocation 관련 에러 코드 550 ~ 599
+     */
+    USER_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "550", "존재하지 않는 유저 위치입니다."),
+
+    IS_SAME_USER_LOCATION(HttpStatus.BAD_REQUEST, "551", "메인 위치는 삭제할 수 없습니다."),
 
     /**
      * Personal Running History 관련 에러 코드 600~699

@@ -25,6 +25,8 @@ import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
+import runnershigh.capstone.location.domain.Location;
+import runnershigh.capstone.location.dto.LocationRequest;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
 
@@ -43,7 +45,8 @@ public class CrewService {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
-        FormattedAddressResponse addressResponse = getFormattedAddressResponse(crewCreateRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            crewCreateRequest.crewLocation());
 
         Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
@@ -69,7 +72,12 @@ public class CrewService {
     public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
-        crew.updateCrew(crewUpdateRequest);
+        FormattedAddressResponse addressResponse = getFormattedAddressResponse(
+            crewUpdateRequest.crewLocation());
+
+        Location crewLocation = crewMapper.toCrewLocation(addressResponse,
+            crewUpdateRequest.crewLocation().specificLocation());
+        crew.updateCrew(crewUpdateRequest, crewLocation);
         crewRepository.save(crew);
         return new CrewUpdateResponse(crew.getId());
     }
@@ -109,10 +117,10 @@ public class CrewService {
     }
 
     private FormattedAddressResponse getFormattedAddressResponse(
-        CrewCreateRequest crewCreateRequest) {
+        LocationRequest locationRequest) {
 
         return geocodingService.getFormattedAddress(
-            crewCreateRequest.latitude(), crewCreateRequest.longitude());
+            locationRequest.latitude(), locationRequest.longitude());
     }
 
 

@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +40,7 @@ public class UserController {
         return userService.getProfile(userId);
     }
 
-    @PutMapping
+    @PatchMapping
     @Operation(summary = "유저 프로필 수정", description = "유저 ID & 수정할 유저 정보를 받아, 수정된 프로필 정보를 반환합니다.")
     public UserResponse updateProfile(@Parameter(hidden = true) @AuthUser Long userId,
         @RequestBody UserProfileRequest userProfileRequest) {
