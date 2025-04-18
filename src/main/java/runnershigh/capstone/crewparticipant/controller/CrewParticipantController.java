@@ -5,10 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.crewparticipant.dto.CrewParticipantDeleteResponse;
+import runnershigh.capstone.crewparticipant.dto.MyCrewResponse;
 import runnershigh.capstone.crewparticipant.service.CrewParticipantService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
@@ -36,5 +38,9 @@ public class CrewParticipantController {
         return crewParticipantService.kickCrewParticipant(crewLeaderId, crewId, participantId);
     }
 
-
+    @GetMapping
+    @Operation(summary = "나의 크루 조회", description = "사용자가 가입된 크루를 조회합니다.")
+    public MyCrewResponse findMyCrews(@Parameter(hidden = true) @AuthUser Long userId){
+        return crewParticipantService.findMyCrews(userId);
+    }
 }

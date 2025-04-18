@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public class PersonalRunningRedisRepository {
 
     private final RedisTemplate<String,Object> redisTemplate;
-
 }

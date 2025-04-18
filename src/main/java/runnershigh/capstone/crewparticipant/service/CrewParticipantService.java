@@ -1,10 +1,13 @@
 package runnershigh.capstone.crewparticipant.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.crewparticipant.dto.CrewParticipantDeleteResponse;
+import runnershigh.capstone.crewparticipant.dto.MyCrewResponse;
+import runnershigh.capstone.crewparticipant.dto.MyCrewResponse.MyCrew;
 import runnershigh.capstone.crewparticipant.exception.CrewParticipantNotFoundException;
 import runnershigh.capstone.crewparticipant.repository.CrewParticipantRepository;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -33,6 +36,12 @@ public class CrewParticipantService {
         crewParticipantRepository.delete(crewParticipant);
 
         return new CrewParticipantDeleteResponse(crewParticipant.getParticipant().getId());
+    }
+
+    public MyCrewResponse findMyCrews(final Long userId) {
+        List<MyCrew> myCrews = crewParticipantRepository.findByUserId(userId).stream()
+            .map(cp -> new MyCrew(cp.getCrew().getId(), cp.getCrew().getName())).toList();
+        return new MyCrewResponse(myCrews);
     }
 
     private CrewParticipant getCrewParticipant(Long participantId, Long crewId) {
