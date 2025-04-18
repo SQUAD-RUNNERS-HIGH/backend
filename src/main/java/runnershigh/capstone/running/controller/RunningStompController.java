@@ -1,7 +1,6 @@
 package runnershigh.capstone.running.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -10,6 +9,8 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.running.dto.CrewParticipantInfoRequest;
 import runnershigh.capstone.running.dto.CrewParticipantInfoResponse;
+import runnershigh.capstone.running.dto.CrewRunningInfoRequest;
+import runnershigh.capstone.running.dto.CrewRunningResponse;
 import runnershigh.capstone.running.dto.PersonalRunningInfoRequest;
 import runnershigh.capstone.running.dto.PersonalRunningResponse;
 import runnershigh.capstone.running.service.RunningService;
@@ -28,18 +29,18 @@ public class RunningStompController {
     }
 
 //    @MessageMapping("/crew-run/course/{courseId}/crew/{crewId}")
-//    @SendTo("/crew-run/course/{courseId}/crew/{crewId}")
+//    @SendTo("/topic/crew-run/course/{courseId}/crew/{crewId}")
 //    public CrewRunningResponse crewRunning(@DestinationVariable("courseId") String courseId,
 //        @DestinationVariable("crewId") Long crewId,
-//        @Payload CrewRunningInfo personalRunningInfo){
-//        return runningService.calculateCrewRunning(personalRunningInfo,courseId);
+//        @Payload CrewRunningInfoRequest request){
+//        return runningService.calculateCrewRunning(request,courseId,crewId);
 //    }
 
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
     @SendTo("/topic/crew-participant/course/{courseId}/crew/{crewId}")
-    public CrewParticipantInfoResponse findNearByCrewParticipants(@DestinationVariable("courseId") String courseId,
+    public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,
         @DestinationVariable("crewId") String crewId,
-        @Payload CrewParticipantInfoRequest crewParticipantInfoRequest){
-        return runningService.findNearByCrewParticipants(crewParticipantInfoRequest,courseId,crewId);
+        @Payload CrewParticipantInfoRequest request){
+        return runningService.sendLocation(request,courseId,crewId);
     }
 }

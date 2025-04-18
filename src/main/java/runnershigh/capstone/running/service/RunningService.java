@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.running.dto.CrewParticipantInfoRequest;
 import runnershigh.capstone.running.dto.CrewParticipantInfoResponse;
+import runnershigh.capstone.running.dto.CrewRunningInfoRequest;
 import runnershigh.capstone.running.dto.PersonalRunningInfoRequest;
 import runnershigh.capstone.running.dto.PersonalRunningResponse;
 import runnershigh.capstone.running.dto.RunningStatus;
@@ -43,7 +44,12 @@ public class RunningService {
             info.latitude()));
     }
 
-    public CrewParticipantInfoResponse findNearByCrewParticipants(
+    public void calculateCrewRunning(final CrewRunningInfoRequest request,
+        final String courseId, final String crewId){
+
+    }
+
+    public CrewParticipantInfoResponse sendLocation(
         final CrewParticipantInfoRequest request,
         final String courseId, final String crewId) {
         crewRunningRedisRepository.addLocation(request, courseId, crewId);
