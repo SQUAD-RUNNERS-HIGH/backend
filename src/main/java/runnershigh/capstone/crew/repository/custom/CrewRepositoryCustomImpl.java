@@ -28,9 +28,7 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (request.region() != null && !request.region().isBlank()) {
-            builder.or(crew.crewLocation.province.containsIgnoreCase(request.region()))
-                .or(crew.crewLocation.city.containsIgnoreCase(request.region()))
-                .or(crew.crewLocation.dong.containsIgnoreCase(request.region()));
+            builder.and(crew.crewLocation.specificLocation.containsIgnoreCase(request.region()));
         }
 
         if (request.name() != null && !request.name().isBlank()) {

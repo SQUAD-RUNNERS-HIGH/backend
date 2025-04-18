@@ -15,6 +15,7 @@ import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.config.JwtProperties;
 import runnershigh.capstone.jwt.dto.LoginRequest;
+import runnershigh.capstone.jwt.dto.LoginResponse;
 import runnershigh.capstone.jwt.dto.LogoutResponse;
 import runnershigh.capstone.jwt.dto.TokenResponse;
 import runnershigh.capstone.jwt.enums.AuthConstants;
@@ -34,15 +35,15 @@ public class JwtController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "JWT 로그인")
-    public TokenResponse login(@RequestBody LoginRequest loginRequest,
+    public LoginResponse login(@RequestBody LoginRequest loginRequest,
         HttpServletResponse response) {
 
-        TokenResponse tokenResponse = jwtService.login(loginRequest.loginId(),
+        LoginResponse loginResponse = jwtService.login(loginRequest.loginId(),
             loginRequest.password());
 
-        setHeaderAndRefreshTokenCookie(response, tokenResponse);
+        setHeaderAndRefreshTokenCookie(response, loginResponse.tokenResponse());
 
-        return tokenResponse;
+        return loginResponse;
     }
 
 //    @GetMapping("/user")
