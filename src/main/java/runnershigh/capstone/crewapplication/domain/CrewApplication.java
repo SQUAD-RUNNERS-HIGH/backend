@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,11 +37,14 @@ public class CrewApplication {
     @Enumerated(EnumType.STRING)
     private CrewApplicationStatus status;
 
+    private LocalDate applicationDate;
+
     @Builder
     public CrewApplication(Crew crew, User applicant) {
         this.crew = crew;
         this.applicant = applicant;
         this.status = CrewApplicationStatus.PENDING;
+        this.applicationDate = LocalDate.now();
     }
 
     public void approve(Long crewLeaderId) {

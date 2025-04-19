@@ -1,5 +1,6 @@
 package runnershigh.capstone.crewapplication.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import runnershigh.capstone.crewapplication.domain.CrewApplication;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationApprovalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationRefusalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationResponse;
+import runnershigh.capstone.crewapplication.dto.CrewApplicationsListResponse;
 import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewapplication.repository.CrewApplicationRepository;
 import runnershigh.capstone.crewapplication.service.mapper.CrewApplicationMapper;
@@ -40,22 +42,33 @@ public class CrewApplicationService {
 
     public CrewApplicationApprovalResponse approve(Long crewLeaderId, Long applicantId,
         Long crewId) {
-        CrewApplication crewApplication = getCrewApplication(applicantId, crewId);
+        CrewApplication crewApplication = getCrewApplicationByApplicant(applicantId, crewId);
         crewApplication.approve(crewLeaderId);
         return new CrewApplicationApprovalResponse();
     }
 
     public CrewApplicationRefusalResponse refuse(Long crewLeaderId, Long applicantId, Long crewId) {
-        CrewApplication crewApplication = getCrewApplication(applicantId, crewId);
+        CrewApplication crewApplication = getCrewApplicationByApplicant(applicantId, crewId);
         crewApplication.refuse(crewLeaderId);
         return new CrewApplicationRefusalResponse();
     }
 
-    private CrewApplication getCrewApplication(Long applicantId, Long crewId) {
+    public CrewApplicationsListResponse getCrewApplicants(Long crewLeaderId, Long crewId) {
+        Crew crew = crewService.getCrewById(crewId);
+        crew.validationCrewLeader(crewLeaderId);
+        List<CrewApplication> crewApplications = getCrewApplications(crewId);
+        return crewApplicationMapper.toCrewApplicationsListResponse(crewApplications);
+    }
+
+    private CrewApplication getCrewApplicationByApplicant(Long applicantId, Long crewId) {
         return crewApplicationRepository.findByApplicantIdAndCrewId(
                 applicantId, crewId)
             .orElseThrow(
                 () -> new CrewApplicationNotFoundException(ErrorCode.CREW_APPLICATION_NOT_FOUND));
+    }
+
+    private List<CrewApplication> getCrewApplications(Long crewId) {
+        return crewApplicationRepository.findCrewApplicationsByCrewId(crewId);
     }
 
     private void validateDuplicatedApplication(Long applicantId, Long crewId) {
