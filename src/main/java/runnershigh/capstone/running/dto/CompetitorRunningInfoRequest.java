@@ -1,7 +1,6 @@
 package runnershigh.capstone.running.dto;
 
-public record PersonalRunningResponse(
-    RunningStatus runningStatus,
+public record CompetitorRunningInfoRequest(
     Double longitude,
     Double latitude
 ) {

@@ -1,5 +1,9 @@
 package runnershigh.capstone.running.dto;
 
-public record CrewRunningInfoRequest() {
+public record CrewRunningInfoRequest(
+    String userId,
+    double longitude,
+    double latitude
+) {
 
 }

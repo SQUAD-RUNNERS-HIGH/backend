@@ -68,7 +68,12 @@ public enum ErrorCode {
 
     INCORRECT_GEOCODING_FORMAT(HttpStatus.BAD_REQUEST, "701", "요청된 GeoCoding 포맷과 다릅니다."),
 
-    GEOCODING_EXTRACT_FAILED(HttpStatus.BAD_REQUEST, "702", "GEOCODING 주소 추출을 실패했습니다.");
+    GEOCODING_EXTRACT_FAILED(HttpStatus.BAD_REQUEST, "702", "GEOCODING 주소 추출을 실패했습니다."),
+
+    /**
+     * Geometry 관련 에러 코드 800~899
+     */
+    COULD_NOT_PARSE_GEOMETRY(HttpStatus.BAD_REQUEST,"800","GeoJson데이터를 적절한 Geometry로 변환할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
