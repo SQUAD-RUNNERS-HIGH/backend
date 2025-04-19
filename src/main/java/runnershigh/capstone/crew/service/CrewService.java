@@ -12,6 +12,7 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
@@ -105,6 +106,20 @@ public class CrewService {
         return CrewSearchResponse.from(crewSearchResponse);
     }
 
+    @Transactional(readOnly = true)
+    public CrewSearchResponse<CrewNearbyResponse> getCrewNearby(Long userId, Pageable pageable) {
+
+        User user = userService.getUser(userId);
+        String city = user.getUserLocation().getCity();
+        String dong = user.getUserLocation().getDong();
+
+        Page<Crew> crews = crewRepository.findByCrewLocation_CityAndCrewLocation_Dong(city, dong,
+            pageable);
+
+        Page<CrewNearbyResponse> crewNearbyResponses = crewMapper.toCrewNearbyResponse(crews);
+
+        return CrewSearchResponse.from(crewNearbyResponses);
+    }
 
     private Crew getCrewByLeaderId(Long crewLeaderId) {
         return crewRepository.findByCrewLeaderId(crewLeaderId)

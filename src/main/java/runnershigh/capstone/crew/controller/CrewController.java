@@ -19,6 +19,7 @@ import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.CrewSearchResponse;
@@ -66,6 +67,14 @@ public class CrewController {
     public CrewSearchResponse<CrewDetailResponse> searchCrew(
         @ModelAttribute CrewSearchRequest crewSearchRequest, Pageable pageable) {
         return crewService.searchCrew(crewSearchRequest, pageable);
+    }
+
+    @GetMapping("/nearby")
+    @Operation(summary = "주변 크루 검색", description = "유저 ID를 받아, 주변 크루들의 정보를 반환합니다.")
+    public CrewSearchResponse<CrewNearbyResponse> getNearbyCrews(
+        @Parameter(hidden = true) @AuthUser Long userId,
+        Pageable pageable) {
+        return crewService.getCrewNearby(userId, pageable);
     }
 
     @DeleteMapping

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.dto.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.CrewSearchRequest;
@@ -67,6 +68,14 @@ public class CrewMapper {
             .build();
     }
 
+    public CrewNearbyResponse toCrewNearbyResponse(Crew crew) {
+        return CrewNearbyResponse.builder()
+            .name(crew.getName())
+            .description(crew.getDescription())
+            .userCount(crew.getUserCount())
+            .build();
+    }
+
     public Set<CrewParticipantsDetailsResponse> toCrewParticipantsDetailsResponse(
         Set<CrewParticipant> crewParticipants) {
         return crewParticipants.stream()
@@ -78,6 +87,10 @@ public class CrewMapper {
 
     public Page<CrewDetailResponse> toCrewSearchResponse(Page<Crew> crewPage) {
         return crewPage.map(this::toCrewDetailResponse);
+    }
+
+    public Page<CrewNearbyResponse> toCrewNearbyResponse(Page<Crew> crewPage) {
+        return crewPage.map(this::toCrewNearbyResponse);
     }
 
     public CrewSearchCondition toCrewSearchCondition(CrewSearchRequest crewSearchRequest) {
