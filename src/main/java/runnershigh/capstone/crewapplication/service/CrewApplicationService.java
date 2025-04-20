@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.crewapplication.domain.CrewApplication;
+import runnershigh.capstone.crewapplication.domain.CrewApplicationStatus;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationApprovalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationRefusalResponse;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationResponse;
@@ -27,6 +28,7 @@ public class CrewApplicationService {
     private final CrewService crewService;
     private final CrewApplicationMapper crewApplicationMapper;
     private final CrewApplicationRepository crewApplicationRepository;
+
 
     public CrewApplicationResponse apply(Long applicantId, Long crewId) {
 
@@ -68,7 +70,8 @@ public class CrewApplicationService {
     }
 
     private List<CrewApplication> getCrewApplications(Long crewId) {
-        return crewApplicationRepository.findCrewApplicationsByCrewId(crewId);
+        return crewApplicationRepository.findCrewApplicationsByCrewIdAndStatus(crewId,
+            CrewApplicationStatus.PENDING);
     }
 
     private void validateDuplicatedApplication(Long applicantId, Long crewId) {
