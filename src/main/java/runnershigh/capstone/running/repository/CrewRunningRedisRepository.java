@@ -13,7 +13,7 @@ import org.springframework.data.redis.connection.RedisGeoCommands.GeoLocation;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.domain.geo.GeoReference;
 import org.springframework.stereotype.Repository;
-import runnershigh.capstone.running.dto.CrewParticipantInfoRequest;
+import runnershigh.capstone.running.dto.request.CrewParticipantInfoRequest;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class CrewRunningRedisRepository {
     private final RedisTemplate<String,Object> redisTemplate;
     private static final String CREW_LOCATION_KEY = "location:course:%s:crew:%s";
     private static final String CREW_READY_STATUS_KEY = "ready:course:%s:crew:%s";
+    private static final String CREW_START_COORDINATE_KEY = "start:course:%s:crew:%s";
 
     public void addReadyStatus(final String courseId, final String crewId, final String userId, final boolean isReady){
         String readyKey = CREW_READY_STATUS_KEY.formatted(courseId, crewId);

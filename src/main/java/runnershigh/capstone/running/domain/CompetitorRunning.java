@@ -1,6 +1,6 @@
 package runnershigh.capstone.running.domain;
 
-import runnershigh.capstone.running.dto.CompetitorRunningResponse;
+import runnershigh.capstone.running.dto.response.CompetitorRunningResponse;
 
 public class CompetitorRunning {
 

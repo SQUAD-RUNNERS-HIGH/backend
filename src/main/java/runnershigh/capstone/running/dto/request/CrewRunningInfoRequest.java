@@ -1,4 +1,4 @@
-package runnershigh.capstone.running.dto;
+package runnershigh.capstone.running.dto.request;
 
 public record CrewRunningInfoRequest(
     String userId,

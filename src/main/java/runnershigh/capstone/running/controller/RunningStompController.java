@@ -7,12 +7,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.RestController;
-import runnershigh.capstone.running.dto.CompetitorRunningInfoRequest;
-import runnershigh.capstone.running.dto.CompetitorRunningResponse;
-import runnershigh.capstone.running.dto.CrewParticipantInfoRequest;
-import runnershigh.capstone.running.dto.CrewParticipantInfoResponse;
-import runnershigh.capstone.running.dto.CrewRunningInfoRequest;
-import runnershigh.capstone.running.dto.CrewRunningResponse;
+import runnershigh.capstone.running.dto.request.CompetitorRunningInfoRequest;
+import runnershigh.capstone.running.dto.response.CompetitorRunningResponse;
+import runnershigh.capstone.running.dto.request.CrewParticipantInfoRequest;
+import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse;
+import runnershigh.capstone.running.dto.request.CrewRunningInfoRequest;
+import runnershigh.capstone.running.dto.response.CrewRunningResponse;
 import runnershigh.capstone.running.service.CompetitorRunningService;
 import runnershigh.capstone.running.service.CrewRunningService;
 
@@ -35,7 +35,7 @@ public class RunningStompController {
     public CrewRunningResponse crewRunning(@DestinationVariable("courseId") String courseId,
         @DestinationVariable("crewId") String crewId,
         @Payload CrewRunningInfoRequest request) {
-        return competitorRunningService.calculateCrewRunning(request, courseId, crewId);
+        return crewRunningService.calculateCrewRunning(request, courseId, crewId);
     }
 
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
