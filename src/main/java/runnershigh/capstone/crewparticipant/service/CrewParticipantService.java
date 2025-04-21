@@ -40,7 +40,8 @@ public class CrewParticipantService {
 
     public MyCrewResponse findMyCrews(final Long userId) {
         List<MyCrew> myCrews = crewParticipantRepository.findByUserId(userId).stream()
-            .map(cp -> new MyCrew(cp.getCrew().getId(), cp.getCrew().getName())).toList();
+            .map(cp -> new MyCrew(cp.getCrew().getId(), cp.getCrew().getName(),
+                cp.getCrew().getCrewParticipant().size())).toList();
         return new MyCrewResponse(myCrews);
     }
 

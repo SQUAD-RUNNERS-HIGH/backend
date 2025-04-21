@@ -93,8 +93,4 @@ public class Crew {
             throw new CrewApplicationNotFoundException(ErrorCode.FULL_CREW_PARTICIPANT);
         }
     }
-
-    public int getCrewParticipantSize(){
-        return crewParticipant.size();
-    }
 }

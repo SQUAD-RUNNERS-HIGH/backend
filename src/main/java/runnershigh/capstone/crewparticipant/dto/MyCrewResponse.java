@@ -7,7 +7,8 @@ public record MyCrewResponse(
 ) {
     public record MyCrew(
         Long crewId,
-        String crewName
+        String crewName,
+        Integer numberOfParticipants
     ){
 
     }

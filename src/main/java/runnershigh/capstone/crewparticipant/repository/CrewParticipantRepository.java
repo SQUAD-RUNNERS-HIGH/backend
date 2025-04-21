@@ -12,6 +12,7 @@ public interface CrewParticipantRepository extends JpaRepository<CrewParticipant
 
     Optional<CrewParticipant> findByParticipantIdAndCrewId(Long participantId, Long crewId);
 
-    @Query("select cp from CrewParticipant cp join fetch cp.crew where cp.participant.id = :userId")
+    @Query("select cp from CrewParticipant cp join fetch cp.crew join fetch cp.crew.crewParticipant where cp.participant.id = "
+        + ":userId")
     List<CrewParticipant> findByUserId(Long userId);
 }
