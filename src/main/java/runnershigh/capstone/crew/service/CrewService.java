@@ -23,6 +23,7 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.crewscore.service.CrewScoreService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -40,6 +41,7 @@ public class CrewService {
     private final CrewMapper crewMapper;
     private final UserService userService;
     private final GeocodingService geocodingService;
+    private final CrewScoreService crewScoreService;
 
     @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
@@ -53,6 +55,7 @@ public class CrewService {
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
+        crewScoreService.save(crew);
 
         return new CrewCreateResponse(crew.getId());
     }

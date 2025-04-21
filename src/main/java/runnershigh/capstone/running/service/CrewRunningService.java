@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.course.repository.CourseDocumentRepository;
 import runnershigh.capstone.running.domain.UserCoordinate;
@@ -35,7 +36,7 @@ public class CrewRunningService {
         final Document courseDocument = courseDocumentRepository.findByObjectId(new ObjectId(courseId));
         final GeometryProjectionHandler handler = projectionHandlerMapping.getHandler(courseDocument);
 
-        final UserCoordinate rawUserCoordinate = new UserCoordinate(request.longitude(), request.latitude());
+        final Coordinate rawUserCoordinate = new UserCoordinate(request.longitude(), request.latitude());
         final UserCoordinate projectedUserCoordinate = handler.project(courseDocument, rawUserCoordinate);
 
         if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {

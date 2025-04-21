@@ -11,6 +11,10 @@ public class UserCoordinate extends Coordinate {
         super(x, y);
     }
 
+    public UserCoordinate(final Coordinate coordinate){
+        super(coordinate.x,coordinate.y);
+    }
+
     private double haversineDistance(double lon1, double lat1, double lon2, double lat2) {
         double lat1Rad = Math.toRadians(lat1);
         double lon1Rad = Math.toRadians(lon1);
@@ -29,11 +33,11 @@ public class UserCoordinate extends Coordinate {
         return EARTH_RADIUS * c;
     }
 
-    public double distanceTo(final UserCoordinate userCoordinate) {
+    public double distanceTo(final Coordinate userCoordinate) {
         return haversineDistance(this.x,this.y,userCoordinate.x,userCoordinate.y);
     }
 
-    public boolean isUserEscapedCourse(final UserCoordinate rawUserCoordinate) {
+    public boolean isUserEscapedCourse(final Coordinate rawUserCoordinate) {
         double distance = this.distanceTo(rawUserCoordinate);
         return distance >= ESCAPED_COURSE_STANDARD;
     }

@@ -73,7 +73,12 @@ public enum ErrorCode {
     /**
      * Geometry 관련 에러 코드 800~899
      */
-    COULD_NOT_PARSE_GEOMETRY(HttpStatus.BAD_REQUEST,"800","GeoJson데이터를 적절한 Geometry로 변환할 수 없습니다.");
+    COULD_NOT_PARSE_GEOMETRY(HttpStatus.BAD_REQUEST,"800","GeoJson데이터를 적절한 Geometry로 변환할 수 없습니다."),
+
+    /**
+     * Crew Score 관련 에러 코드 900~999
+     */
+    CREW_SCORE_NOT_FOUND(HttpStatus.BAD_REQUEST,"900","크루 점수 정보를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
