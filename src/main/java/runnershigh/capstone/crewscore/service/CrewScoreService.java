@@ -34,7 +34,7 @@ public class CrewScoreService {
     @Transactional
     public void save(final Crew crew){
         final CrewScore crewScore = new CrewScore(crew);
-        redisTemplate.opsForZSet().add(RANK_KEY,crew.getId(),0);
+        redisTemplate.opsForZSet().add(RANK_KEY,crew.getId().toString(),0);
         crewScoreRepository.save(crewScore);
     }
 
@@ -44,7 +44,7 @@ public class CrewScoreService {
     }
 
     public long getCrewRank(final Long crewId){
-        Long rank = redisTemplate.opsForZSet().reverseRank(RANK_KEY, crewId);
+        Long rank = redisTemplate.opsForZSet().reverseRank(RANK_KEY, crewId.toString());
         return rank + 1; // 1등부터 시작
     }
 }
