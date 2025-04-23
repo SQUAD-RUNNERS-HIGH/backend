@@ -124,13 +124,18 @@ public class CrewService {
         return CrewSearchResponse.from(crewNearbyResponses);
     }
 
+    public Crew getCrewById(Long crewId) {
+        return crewRepository.findById(crewId)
+            .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+    }
+
     private Crew getCrewByLeaderId(Long crewLeaderId) {
         return crewRepository.findByCrewLeaderId(crewLeaderId)
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
     }
 
-    public Crew getCrewById(Long crewId) {
-        return crewRepository.findById(crewId)
+    private Crew getCrewByIdWithParticipants(Long crewId) {
+        return crewRepository.findByIdWithParticipants(crewId)
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
     }
 
