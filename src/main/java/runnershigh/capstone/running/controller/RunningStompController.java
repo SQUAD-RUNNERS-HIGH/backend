@@ -30,6 +30,7 @@ public class RunningStompController {
         return competitorRunningService.calculateCompetitorRunning(competitorRunningInfoRequest, courseId);
     }
 
+    //
     @MessageMapping("/crew-run/course/{courseId}/crew/{crewId}")
     @SendTo("/topic/crew-run/course/{courseId}/crew/{crewId}")
     public CrewRunningResponse crewRunning(@DestinationVariable("courseId") String courseId,
@@ -38,6 +39,9 @@ public class RunningStompController {
         return crewRunningService.calculateCrewRunning(request, courseId, crewId);
     }
 
+    // 주변 크루원 찾기
+    // Subscribe : /topic/crew-participant/course/{courseId}/crew/{crewId}
+    // Destination : /app/crew-participant/course/{courseId}/crew/{crewId}
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
     @SendTo("/topic/crew-participant/course/{courseId}/crew/{crewId}")
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,
