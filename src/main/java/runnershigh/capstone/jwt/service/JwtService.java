@@ -8,6 +8,7 @@ import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.jwt.domain.RefreshToken;
 import runnershigh.capstone.jwt.dto.LoginResponse;
 import runnershigh.capstone.jwt.dto.TokenResponse;
+import runnershigh.capstone.jwt.exception.JwtNotFoundException;
 import runnershigh.capstone.jwt.repository.RefreshTokenRepository;
 import runnershigh.capstone.jwt.service.mapper.JwtMapper;
 import runnershigh.capstone.jwt.util.PBKDF2Util;
@@ -37,9 +38,10 @@ public class JwtService {
             Long userId = existUser.getId();
 
             return jwtMapper.toLoginResponse(generateAndReturnToken(userId), userId);
+        } else {
+            log.error("Invalid password for loginId: {}", loginId);
+            throw new JwtNotFoundException(ErrorCode.INVALID_PASSWORD);
         }
-
-        return null;
     }
 
     private static boolean isPasswordValid(String password, User existUser) {
