@@ -1,4 +1,4 @@
-package runnershigh.capstone.crew.dto;
+package runnershigh.capstone.crew.dto.response;
 
 import lombok.Builder;
 import runnershigh.capstone.location.dto.LocationResponse;
@@ -10,6 +10,7 @@ public record CrewDetailResponse(
     int maxCapacity,
     int userCount,
     String image,
+    Long crewRank,
     String crewLeaderName,
     LocationResponse crewLocation
 ) {

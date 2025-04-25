@@ -14,7 +14,7 @@ import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import runnershigh.capstone.crew.dto.CrewUpdateRequest;
+import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
@@ -37,6 +37,7 @@ public class Crew {
     private int maxCapacity;
     private int userCount;
     private String image;
+    private Long crewRank;
 
     @Embedded
     private Location crewLocation;
@@ -59,6 +60,7 @@ public class Crew {
         this.crewLocation = crewLocation;
         this.crewLeader = crewLeader;
         this.crewParticipant = crewParticipant;
+        this.crewRank = 0L;
     }
 
     public void updateCrew(CrewUpdateRequest crewUpdateRequest, Location crewLocation) {
@@ -67,6 +69,10 @@ public class Crew {
         this.maxCapacity = crewUpdateRequest.maxCapacity();
         this.image = crewUpdateRequest.image();
         this.crewLocation = crewLocation;
+    }
+
+    public void saveCrewRank(Long crewRank) {
+        this.crewRank = crewRank;
     }
 
     public void addToCrewAsParticipant(CrewParticipant crewParticipant) {

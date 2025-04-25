@@ -1,4 +1,4 @@
-package runnershigh.capstone.crew.dto;
+package runnershigh.capstone.crew.dto.request;
 
 public record CrewSearchRequest(
     String region,

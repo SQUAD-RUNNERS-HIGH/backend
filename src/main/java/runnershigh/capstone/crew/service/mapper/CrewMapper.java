@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.dto.CrewCreateRequest;
-import runnershigh.capstone.crew.dto.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.CrewNearbyResponse;
-import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
-import runnershigh.capstone.crew.dto.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
+import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
+import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.location.domain.Location;
@@ -55,6 +55,7 @@ public class CrewMapper {
             .image(crew.getImage())
             .crewLeaderName(crew.getCrewLeader().getUsername())
             .crewLocation(toCrewLocationResponse(crew.getCrewLocation()))
+            .crewRank(crew.getCrewRank())
             .build();
     }
 

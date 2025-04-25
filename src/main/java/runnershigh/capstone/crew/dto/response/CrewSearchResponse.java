@@ -1,4 +1,4 @@
-package runnershigh.capstone.crew.dto;
+package runnershigh.capstone.crew.dto.response;
 
 import java.util.List;
 import org.springframework.data.domain.Page;
