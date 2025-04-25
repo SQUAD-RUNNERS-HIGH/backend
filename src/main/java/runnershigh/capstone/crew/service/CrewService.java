@@ -8,17 +8,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.dto.CrewCreateRequest;
-import runnershigh.capstone.crew.dto.CrewCreateResponse;
-import runnershigh.capstone.crew.dto.CrewDeleteResponse;
-import runnershigh.capstone.crew.dto.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.CrewNearbyResponse;
-import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
-import runnershigh.capstone.crew.dto.CrewSearchRequest;
-import runnershigh.capstone.crew.dto.CrewSearchResponse;
-import runnershigh.capstone.crew.dto.CrewUpdateRequest;
-import runnershigh.capstone.crew.dto.CrewUpdateResponse;
+import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
+import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
+import runnershigh.capstone.crew.dto.response.CrewCreateResponse;
+import runnershigh.capstone.crew.dto.response.CrewDeleteResponse;
+import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
+import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.response.CrewSearchResponse;
+import runnershigh.capstone.crew.dto.response.CrewUpdateResponse;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
@@ -63,12 +63,13 @@ public class CrewService {
     @Transactional(readOnly = true)
     public CrewDetailResponse getCrewDetail(Long crewId) {
         Crew crew = getCrewById(crewId);
+        crew.saveCrewRank(crewScoreService.getCrewRank(crewId));
         return crewMapper.toCrewDetailResponse(crew);
     }
 
     @Transactional(readOnly = true)
     public Set<CrewParticipantsDetailsResponse> getCrewParticipants(Long crewId) {
-        Crew crew = getCrewById(crewId);
+        Crew crew = getCrewByIdWithParticipants(crewId);
         return crewMapper.toCrewParticipantsDetailsResponse(crew.getCrewParticipant());
     }
 
@@ -103,7 +104,6 @@ public class CrewService {
 
         Page<Crew> crews = crewRepository.findCrewByCondition(crewSearchCondition,
             pageable);
-
         Page<CrewDetailResponse> crewSearchResponse = crewMapper.toCrewSearchResponse(crews);
 
         return CrewSearchResponse.from(crewSearchResponse);

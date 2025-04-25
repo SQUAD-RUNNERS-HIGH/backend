@@ -1,4 +1,4 @@
-package runnershigh.capstone.crew.dto;
+package runnershigh.capstone.crew.dto.response;
 
 import lombok.Builder;
 

@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import runnershigh.capstone.crew.dto.CrewCreateRequest;
-import runnershigh.capstone.crew.dto.CrewCreateResponse;
-import runnershigh.capstone.crew.dto.CrewDeleteResponse;
-import runnershigh.capstone.crew.dto.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.CrewNearbyResponse;
-import runnershigh.capstone.crew.dto.CrewParticipantsDetailsResponse;
-import runnershigh.capstone.crew.dto.CrewSearchRequest;
-import runnershigh.capstone.crew.dto.CrewSearchResponse;
-import runnershigh.capstone.crew.dto.CrewUpdateRequest;
-import runnershigh.capstone.crew.dto.CrewUpdateResponse;
+import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
+import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
+import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
+import runnershigh.capstone.crew.dto.response.CrewCreateResponse;
+import runnershigh.capstone.crew.dto.response.CrewDeleteResponse;
+import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
+import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
+import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.response.CrewSearchResponse;
+import runnershigh.capstone.crew.dto.response.CrewUpdateResponse;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
@@ -44,7 +44,7 @@ public class CrewController {
     }
 
     @GetMapping("/{crewId}")
-    @Operation(summary = "크루 조회", description = "크루 ID를 받아, 크루 관련 정보들을 반환합니다.")
+    @Operation(summary = "크루 정보 조회", description = "크루 ID를 받아, 크루 관련 정보들을 반환합니다.")
     public CrewDetailResponse getCrewDetail(@PathVariable Long crewId) {
         return crewService.getCrewDetail(crewId);
     }
