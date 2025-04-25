@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 import runnershigh.capstone.course.domain.Calorie;
 import runnershigh.capstone.course.domain.Course;
 import runnershigh.capstone.course.domain.Elevation;
-import runnershigh.capstone.course.dto.CourseDetailResponse;
-import runnershigh.capstone.course.dto.CourseListResponse;
-import runnershigh.capstone.course.dto.CourseResponse;
-import runnershigh.capstone.course.infrastructure.ElevationResponse;
+import runnershigh.capstone.course.dto.response.CourseDetailResponse;
+import runnershigh.capstone.course.dto.response.CourseListResponse;
+import runnershigh.capstone.course.dto.response.CourseResponse;
 
 @Component
 public class CourseMapper {

@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
-@AllArgsConstructor
 public class CourseProperties {
     @Field(name = "@id")
     private String id;
@@ -14,4 +13,9 @@ public class CourseProperties {
     @Field(name = "name")
     private String name;
     private double perimeter;
+
+    public CourseProperties(final String name, final double perimeter) {
+        this.name = name;
+        this.perimeter = perimeter;
+    }
 }
