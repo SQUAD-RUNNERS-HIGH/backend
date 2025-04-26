@@ -45,6 +45,6 @@ public class CrewScoreService {
 
     public long getCrewRank(final Long crewId){
         Long rank = redisTemplate.opsForZSet().reverseRank(RANK_KEY, crewId.toString());
-        return rank + 1; // 1등부터 시작
+        return rank + 1;
     }
 }
