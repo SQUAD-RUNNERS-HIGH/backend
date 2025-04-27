@@ -36,7 +36,7 @@ public class JwtService {
 
             Long userId = existUser.getId();
 
-            return jwtMapper.toLoginResponse(generateAndReturnToken(userId), userId);
+            return jwtMapper.toLoginResponse(generateAndReturnToken(userId), userId, existUser.getUsername());
         }
 
         return null;
