@@ -21,9 +21,9 @@ import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.response.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.response.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
-import runnershigh.capstone.crew.dto.response.CrewSearchResponse;
+import runnershigh.capstone.crew.dto.response.CrewSearchPagingResponse;
+import runnershigh.capstone.crew.dto.response.CrewSimpleResponse;
 import runnershigh.capstone.crew.dto.response.CrewUpdateResponse;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
@@ -45,8 +45,9 @@ public class CrewController {
 
     @GetMapping("/{crewId}")
     @Operation(summary = "크루 정보 조회", description = "크루 ID를 받아, 크루 관련 정보들을 반환합니다.")
-    public CrewDetailResponse getCrewDetail(@PathVariable Long crewId) {
-        return crewService.getCrewDetail(crewId);
+    public CrewDetailResponse getCrewDetail(@Parameter(hidden = true) @AuthUser Long userId,
+        @PathVariable Long crewId) {
+        return crewService.getCrewDetail(userId, crewId);
     }
 
     @GetMapping("/{crewId}/participants")
@@ -64,14 +65,14 @@ public class CrewController {
 
     @GetMapping("/search")
     @Operation(summary = "크루 검색", description = "검색할 정보를 받아, 해당하는 크루들의 정보를 반환합니다.")
-    public CrewSearchResponse<CrewDetailResponse> searchCrew(
+    public CrewSearchPagingResponse<CrewSimpleResponse> searchCrew(
         @ModelAttribute CrewSearchRequest crewSearchRequest, Pageable pageable) {
         return crewService.searchCrew(crewSearchRequest, pageable);
     }
 
     @GetMapping("/nearby")
     @Operation(summary = "주변 크루 검색", description = "유저 ID를 받아, 주변 크루들의 정보를 반환합니다.")
-    public CrewSearchResponse<CrewNearbyResponse> getNearbyCrews(
+    public CrewSearchPagingResponse<CrewSimpleResponse> getNearbyCrews(
         @Parameter(hidden = true) @AuthUser Long userId,
         Pageable pageable) {
         return crewService.getCrewNearby(userId, pageable);

@@ -15,10 +15,11 @@ import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
 import runnershigh.capstone.crew.dto.response.CrewCreateResponse;
 import runnershigh.capstone.crew.dto.response.CrewDeleteResponse;
 import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
-import runnershigh.capstone.crew.dto.response.CrewSearchResponse;
+import runnershigh.capstone.crew.dto.response.CrewSearchPagingResponse;
+import runnershigh.capstone.crew.dto.response.CrewSimpleResponse;
 import runnershigh.capstone.crew.dto.response.CrewUpdateResponse;
+import runnershigh.capstone.crew.enums.CrewUserRole;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
@@ -61,10 +62,11 @@ public class CrewService {
     }
 
     @Transactional(readOnly = true)
-    public CrewDetailResponse getCrewDetail(Long crewId) {
+    public CrewDetailResponse getCrewDetail(Long userId, Long crewId) {
         Crew crew = getCrewById(crewId);
         crew.saveCrewRank(crewScoreService.getCrewRank(crewId));
-        return crewMapper.toCrewDetailResponse(crew);
+        CrewUserRole userRole = crew.validateAndReturnUserRole(userId);
+        return crewMapper.toCrewDetailResponse(crew, userRole);
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +98,8 @@ public class CrewService {
     }
 
     @Transactional
-    public CrewSearchResponse<CrewDetailResponse> searchCrew(CrewSearchRequest crewSearchRequest,
+    public CrewSearchPagingResponse<CrewSimpleResponse> searchCrew(
+        CrewSearchRequest crewSearchRequest,
         Pageable pageable) {
 
         CrewSearchCondition crewSearchCondition = crewMapper.toCrewSearchCondition(
@@ -104,13 +107,14 @@ public class CrewService {
 
         Page<Crew> crews = crewRepository.findCrewByCondition(crewSearchCondition,
             pageable);
-        Page<CrewDetailResponse> crewSearchResponse = crewMapper.toCrewSearchResponse(crews);
+        Page<CrewSimpleResponse> crewSearchResponse = crewMapper.toCrewSimplePagingResponse(crews);
 
-        return CrewSearchResponse.from(crewSearchResponse);
+        return CrewSearchPagingResponse.from(crewSearchResponse);
     }
 
     @Transactional(readOnly = true)
-    public CrewSearchResponse<CrewNearbyResponse> getCrewNearby(Long userId, Pageable pageable) {
+    public CrewSearchPagingResponse<CrewSimpleResponse> getCrewNearby(Long userId,
+        Pageable pageable) {
 
         User user = userService.getUser(userId);
         String city = user.getUserLocation().getCity();
@@ -119,9 +123,9 @@ public class CrewService {
         Page<Crew> crews = crewRepository.findByCrewLocation_CityAndCrewLocation_Dong(city, dong,
             pageable);
 
-        Page<CrewNearbyResponse> crewNearbyResponses = crewMapper.toCrewNearbyResponse(crews);
+        Page<CrewSimpleResponse> crewNearbyResponses = crewMapper.toCrewSimplePagingResponse(crews);
 
-        return CrewSearchResponse.from(crewNearbyResponses);
+        return CrewSearchPagingResponse.from(crewNearbyResponses);
     }
 
     public Crew getCrewById(Long crewId) {

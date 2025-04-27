@@ -12,6 +12,7 @@ public record CrewDetailResponse(
     String image,
     Long crewRank,
     String crewLeaderName,
+    String crewUserRole,
     LocationResponse crewLocation
 ) {
 

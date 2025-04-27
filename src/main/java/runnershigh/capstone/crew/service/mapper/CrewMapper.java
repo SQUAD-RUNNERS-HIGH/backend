@@ -10,8 +10,9 @@ import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.response.CrewDetailResponse;
-import runnershigh.capstone.crew.dto.response.CrewNearbyResponse;
 import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
+import runnershigh.capstone.crew.dto.response.CrewSimpleResponse;
+import runnershigh.capstone.crew.enums.CrewUserRole;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.location.domain.Location;
@@ -46,7 +47,7 @@ public class CrewMapper {
             .build();
     }
 
-    public CrewDetailResponse toCrewDetailResponse(Crew crew) {
+    public CrewDetailResponse toCrewDetailResponse(Crew crew, CrewUserRole crewUserRole) {
         return CrewDetailResponse.builder()
             .name(crew.getName())
             .description(crew.getDescription())
@@ -56,6 +57,7 @@ public class CrewMapper {
             .crewLeaderName(crew.getCrewLeader().getUsername())
             .crewLocation(toCrewLocationResponse(crew.getCrewLocation()))
             .crewRank(crew.getCrewRank())
+            .crewUserRole(crewUserRole.toString())
             .build();
     }
 
@@ -69,8 +71,8 @@ public class CrewMapper {
             .build();
     }
 
-    public CrewNearbyResponse toCrewNearbyResponse(Crew crew) {
-        return CrewNearbyResponse.builder()
+    public CrewSimpleResponse toCrewSimpleResponse(Crew crew) {
+        return CrewSimpleResponse.builder()
             .name(crew.getName())
             .description(crew.getDescription())
             .userCount(crew.getUserCount())
@@ -86,12 +88,8 @@ public class CrewMapper {
             .collect(Collectors.toSet());
     }
 
-    public Page<CrewDetailResponse> toCrewSearchResponse(Page<Crew> crewPage) {
-        return crewPage.map(this::toCrewDetailResponse);
-    }
-
-    public Page<CrewNearbyResponse> toCrewNearbyResponse(Page<Crew> crewPage) {
-        return crewPage.map(this::toCrewNearbyResponse);
+    public Page<CrewSimpleResponse> toCrewSimplePagingResponse(Page<Crew> crewPage) {
+        return crewPage.map(this::toCrewSimpleResponse);
     }
 
     public CrewSearchCondition toCrewSearchCondition(CrewSearchRequest crewSearchRequest) {
