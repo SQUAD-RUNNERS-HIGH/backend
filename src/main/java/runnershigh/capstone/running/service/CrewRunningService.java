@@ -18,6 +18,7 @@ import runnershigh.capstone.running.dto.RunningStatus;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandler;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandlerMapping;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository;
+import runnershigh.capstone.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class CrewRunningService {
     private final CrewRunningRedisRepository crewRunningRedisRepository;
     private final CourseDocumentRepository courseDocumentRepository;
     private final GeometryProjectionHandlerMapping projectionHandlerMapping;
+    private final UserService userService;
 
     public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId,
         final String crewId) {
@@ -55,7 +57,7 @@ public class CrewRunningService {
         boolean startSignal = isAllCrewWithinStartDistance(request.userId(),
             courseId, crewId);
         return new CrewParticipantInfoResponse(
-            request.userId(), request.longitude(),
+            request.userId(),request.userName(), request.longitude(),
             request.latitude(), request.isReady(), startSignal);
     }
 

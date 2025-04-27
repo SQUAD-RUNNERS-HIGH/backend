@@ -1,4 +1,4 @@
-package runnershigh.capstone.course.dto;
+package runnershigh.capstone.course.dto.response;
 
 import java.util.List;
 

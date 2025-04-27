@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import runnershigh.capstone.course.consts.Velocity;
 
 @Document(collection = "courses")
-@AllArgsConstructor
 @Getter
 public class Course {
 
@@ -16,6 +15,11 @@ public class Course {
     private ObjectId id;
     private CourseProperties properties;
     private CourseGeometry geometry;
+
+    public Course(final CourseProperties properties, final CourseGeometry geometry) {
+        this.properties = properties;
+        this.geometry = geometry;
+    }
 
     public double calculateMinRunningTimeMinute(){
         return properties.getPerimeter() / Velocity.MAX_METER_PER_MINUTE.getScala();

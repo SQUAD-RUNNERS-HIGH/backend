@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import runnershigh.capstone.running.dto.request.CompetitorRunningInfoRequest;
 import runnershigh.capstone.running.dto.response.CompetitorRunningResponse;
@@ -38,6 +39,9 @@ public class RunningStompController {
         return crewRunningService.calculateCrewRunning(request, courseId, crewId);
     }
 
+    // 주변 크루원 찾기
+    // Subscribe : /topic/crew-participant/course/{courseId}/crew/{crewId}
+    // Destination : /app/crew-participant/course/{courseId}/crew/{crewId}
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
     @SendTo("/topic/crew-participant/course/{courseId}/crew/{crewId}")
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,

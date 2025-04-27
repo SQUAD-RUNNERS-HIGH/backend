@@ -7,10 +7,11 @@ import runnershigh.capstone.jwt.dto.TokenResponse;
 @Component
 public class JwtMapper {
 
-    public LoginResponse toLoginResponse(TokenResponse tokenResponse, Long userId) {
+    public LoginResponse toLoginResponse(TokenResponse tokenResponse, Long userId, String userName) {
         return LoginResponse.builder()
             .tokenResponse(tokenResponse)
             .userId(userId)
+            .userName(userName)
             .build();
     }
 }
