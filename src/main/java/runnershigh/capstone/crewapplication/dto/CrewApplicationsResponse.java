@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record CrewApplicationsResponse(
+    Long id,
     String username,
     LocalDate applicationDate
 ) {
