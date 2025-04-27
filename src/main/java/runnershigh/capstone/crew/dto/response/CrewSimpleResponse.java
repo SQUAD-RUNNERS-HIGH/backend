@@ -3,7 +3,7 @@ package runnershigh.capstone.crew.dto.response;
 import lombok.Builder;
 
 @Builder
-public record CrewNearbyResponse(
+public record CrewSimpleResponse(
     String name,
     String description,
     long userCount

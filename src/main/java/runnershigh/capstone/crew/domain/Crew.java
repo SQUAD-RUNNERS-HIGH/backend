@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
+import runnershigh.capstone.crew.enums.CrewUserRole;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
@@ -97,6 +98,17 @@ public class Crew {
     public void validationCrewAvailableCapacity() {
         if (this.userCount == this.maxCapacity) {
             throw new CrewApplicationNotFoundException(ErrorCode.FULL_CREW_PARTICIPANT);
+        }
+    }
+
+    public CrewUserRole validateAndReturnUserRole(Long userId) {
+        if (crewLeader.getId().equals(userId)) {
+            return CrewUserRole.LEADER;
+        } else if (crewParticipant.stream()
+            .anyMatch(c -> c.getParticipant().getId().equals(userId))) {
+            return CrewUserRole.MEMBER;
+        } else {
+            return CrewUserRole.VISITOR;
         }
     }
 }
