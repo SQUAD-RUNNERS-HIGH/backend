@@ -5,12 +5,13 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.gcs.exception.FileNotFoundException;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -65,9 +66,11 @@ public class GCSService {
     }
 
     private Storage getStorage() {
-        try (FileInputStream keyFileInputStream = new FileInputStream(keyFileName)) {
+        try {
+            InputStream keyFile = ResourceUtils.getURL(keyFileName).openStream();
+            
             return StorageOptions.newBuilder()
-                .setCredentials(GoogleCredentials.fromStream(keyFileInputStream))
+                .setCredentials(GoogleCredentials.fromStream(keyFile))
                 .build()
                 .getService();
         } catch (IOException e) {

@@ -22,16 +22,8 @@ jobs:
       - name: Make application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
-      - name: Copy GCP Key to VM and Set Permissions
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: ${{ secrets.GCP_VM_USER }}
-          key: ${{ secrets.GCP_SSH_KEY }}
-          script: |
-            echo "${{ secrets.GCP_KEY_JSON }}" > ~/gcp-key.json
-            
-            chmod 600 ~/gcp-key.json
+      - name: Copy GCP Key to resources
+        run: echo "${{ secrets.GCP_KEY_JSON }}" > src/main/resources/gcp-key.json
 
       - name: Build JAR file
         run: ./gradlew clean build
