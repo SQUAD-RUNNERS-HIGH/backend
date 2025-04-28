@@ -23,12 +23,12 @@ import runnershigh.capstone.user.domain.User;
 public class CrewMapper {
 
     public Crew toCrew(User crewLeader, CrewCreateRequest crewCreateRequest,
-        FormattedAddressResponse formattedAddressResponse) {
+        FormattedAddressResponse formattedAddressResponse, String imageUrl) {
         return Crew.builder()
             .name(crewCreateRequest.name())
             .description(crewCreateRequest.description())
             .maxCapacity(crewCreateRequest.maxCapacity())
-            .image(crewCreateRequest.image())
+            .image(imageUrl)
             .crewLocation(toCrewLocation(formattedAddressResponse, crewCreateRequest.crewLocation()
                 .specificLocation()))
             .crewLeader(crewLeader)
@@ -76,6 +76,7 @@ public class CrewMapper {
             .name(crew.getName())
             .description(crew.getDescription())
             .userCount(crew.getUserCount())
+            .image(crew.getImage())
             .build();
     }
 

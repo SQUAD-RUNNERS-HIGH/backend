@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.global.exception.EntityNotFoundException;
+import runnershigh.capstone.global.exception.FileException;
 import runnershigh.capstone.global.exception.InvalidCredentialsException;
 
 @RestControllerAdvice
@@ -15,7 +16,8 @@ import runnershigh.capstone.global.exception.InvalidCredentialsException;
 @Hidden
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, InvalidCredentialsException.class})
+    @ExceptionHandler({EntityNotFoundException.class, InvalidCredentialsException.class,
+        FileException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse retryFailed(final EntityNotFoundException e) {
         loggingError(e.getErrorCode());

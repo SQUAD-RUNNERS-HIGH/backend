@@ -64,11 +64,12 @@ public class Crew {
         this.crewRank = 0L;
     }
 
-    public void updateCrew(CrewUpdateRequest crewUpdateRequest, Location crewLocation) {
+    public void updateCrew(CrewUpdateRequest crewUpdateRequest, Location crewLocation,
+        String imageUrl) {
         this.name = crewUpdateRequest.name();
         this.description = crewUpdateRequest.description();
         this.maxCapacity = crewUpdateRequest.maxCapacity();
-        this.image = crewUpdateRequest.image();
+        this.image = imageUrl;
         this.crewLocation = crewLocation;
     }
 

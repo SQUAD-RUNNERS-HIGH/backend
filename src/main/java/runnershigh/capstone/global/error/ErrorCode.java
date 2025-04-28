@@ -67,13 +67,22 @@ public enum ErrorCode {
     HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "600", "러닝기록을 찾을 수 없습니다"),
 
     /**
-     * Geocoding 관련 에러 코드 700~799
+     * Geocoding 관련 에러 코드 700~749
      */
     GEOCODING_NOT_FOUND(HttpStatus.NOT_FOUND, "700", "존재하지 않는 주소입니다."),
 
     INCORRECT_GEOCODING_FORMAT(HttpStatus.BAD_REQUEST, "701", "요청된 GeoCoding 포맷과 다릅니다."),
 
     GEOCODING_EXTRACT_FAILED(HttpStatus.BAD_REQUEST, "702", "GEOCODING 주소 추출을 실패했습니다."),
+
+    /**
+     * File 관련 에러 코드 750~799
+     */
+    STORAGE_CREATE_FAILED(HttpStatus.NOT_FOUND, "750", "GCS Storage 생성 실패"),
+
+    FILE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "751", "파일 업로드 실패"),
+
+    FILE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "752", "파일 삭제 실패"),
 
     /**
      * Geometry 관련 에러 코드 800~899

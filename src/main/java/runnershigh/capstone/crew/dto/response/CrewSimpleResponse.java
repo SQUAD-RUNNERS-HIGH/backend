@@ -6,7 +6,8 @@ import lombok.Builder;
 public record CrewSimpleResponse(
     String name,
     String description,
-    long userCount
+    long userCount,
+    String image
 ) {
 
 }
