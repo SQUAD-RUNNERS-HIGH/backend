@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.connection.RedisGeoCommands.DistanceUnit;
 import org.springframework.data.redis.connection.RedisGeoCommands.GeoLocation;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -70,7 +71,9 @@ public class CrewRunningRedisRepository {
         GeoReference reference = GeoReference.fromMember(userId);
         Distance radius = new Distance(30, DistanceUnit.METERS);
         String geoKey = CREW_LOCATION_KEY.formatted(courseId, crewId);
-        GeoResults<GeoLocation<String>> results = redisTemplate.opsForGeo().search(geoKey, reference, radius);
+        RedisGeoCommands.GeoSearchCommandArgs args = RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs()
+            .includeCoordinates();
+        GeoResults<GeoLocation<String>> results = redisTemplate.opsForGeo().search(geoKey, reference, radius,args);
         return results.getContent()
             .stream().map(rs -> new ParticipantLocation(rs.getContent().getName(),rs.getContent().getPoint().getX(),
                 rs.getContent().getPoint().getY())).toList();

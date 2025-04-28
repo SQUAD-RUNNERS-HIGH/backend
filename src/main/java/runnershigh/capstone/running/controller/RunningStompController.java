@@ -1,6 +1,7 @@
 package runnershigh.capstone.running.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -19,6 +20,7 @@ import runnershigh.capstone.running.service.CrewRunningService;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class RunningStompController {
 
     private final CompetitorRunningService competitorRunningService;
@@ -47,6 +49,7 @@ public class RunningStompController {
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,
         @DestinationVariable("crewId") String crewId,
         @Payload CrewParticipantInfoRequest request) {
+        log.info("request:",request);
         return crewRunningService.sendReadyLocation(request, courseId, crewId);
     }
 }
