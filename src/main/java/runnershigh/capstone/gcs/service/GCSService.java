@@ -71,7 +71,7 @@ public class GCSService {
                 .build()
                 .getService();
         } catch (IOException e) {
-            log.warn("keyFileName : {}", keyFileName);
+            log.error("Failed to load GCP credentials file from path: {}", keyFileName, e);
             throw new FileNotFoundException(ErrorCode.STORAGE_CREATE_FAILED);
         }
     }
