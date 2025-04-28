@@ -34,7 +34,8 @@ public class CrewRunningService {
     private final GeometryProjectionHandlerMapping projectionHandlerMapping;
     private final UserService userService;
 
-    public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId) {
+    public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId,
+        final String crewId) {
         log.info("Crew Running Request {}", request);
 
         final Document courseDocument = courseDocumentRepository.findByObjectId(new ObjectId(courseId));
@@ -45,10 +46,10 @@ public class CrewRunningService {
 
         if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
             return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
-                rawUserCoordinate.y);
+                rawUserCoordinate.y, request.progress());
         }
         return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(), projectedUserCoordinate.x,
-            projectedUserCoordinate.y);
+            projectedUserCoordinate.y, request.progress());
     }
 
     public CrewParticipantInfoResponse sendReadyLocation(final CrewParticipantInfoRequest request,
