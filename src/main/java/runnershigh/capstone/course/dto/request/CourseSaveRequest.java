@@ -4,7 +4,9 @@ import java.util.List;
 
 public record CourseSaveRequest(
     List<List<List<Double>>> coordinates,
-    String courseName
+    String courseName,
+    List<Double> progress,
+    double runningTime
 ) {
 
 }

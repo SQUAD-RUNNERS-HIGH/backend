@@ -19,6 +19,8 @@ import runnershigh.capstone.course.repository.CourseRepository;
 import runnershigh.capstone.course.service.mapper.CourseMapper;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.global.util.HarversineCalculator;
+import runnershigh.capstone.personalrunninghistory.dto.PersonalRunningHistoryRequest;
+import runnershigh.capstone.personalrunninghistory.service.PersonalRunningHistoryService;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
 
@@ -31,6 +33,7 @@ public class CourseService {
     private final CourseMapper courseMapper;
     private final UserService userService;
     private final SlopeService slopeService;
+    private final PersonalRunningHistoryService runningHistoryService;
 
     public CourseListResponse getNearByCourses(final double longitude, final double latitude) {
         final List<Course> courses = courseRepository.findByCurrentCoordinates(longitude,
@@ -59,7 +62,9 @@ public class CourseService {
         final CourseGeometry polygon = new CourseGeometry("Polygon", coordinates);
         final CourseProperties courseProperties = new CourseProperties(request.courseName(), calculatePerimeter(coordinates));
         final Course course = new Course(courseProperties, polygon);
-        courseRepository.save(course);
+        Course savedCourse = courseRepository.save(course);
+        runningHistoryService.savePersonalRunningHistory(new PersonalRunningHistoryRequest(request.progress(),
+            request.runningTime(),savedCourse.getId().toString()),userId);
     }
 
     public static double calculatePerimeter(List<List<List<Double>>> coordinates) {
