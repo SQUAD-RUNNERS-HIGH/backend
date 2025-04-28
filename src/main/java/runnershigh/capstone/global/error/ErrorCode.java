@@ -25,7 +25,7 @@ public enum ErrorCode {
     CREW_LEADER_VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "201", "올바른 크루 리더가 아닙니다."),
 
     /**
-     * CrewApplication 관련 에러 코드 300~399
+     * CrewApplication 관련 에러 코드 300~349
      */
     CREW_APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "300", "존재하지 않는 크루 지원입니다. 요청파라미터를 확인해주세요."),
 
@@ -36,9 +36,14 @@ public enum ErrorCode {
     FULL_CREW_PARTICIPANT(HttpStatus.BAD_REQUEST, "303", "해당 크루는 수용인원이 모두 채워져있습니다."),
 
     /**
-     * CrewParticipant 관련 에러 코드 400~499
+     * CrewParticipant 관련 에러 코드 350~399
      */
-    CREW_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "존재하지 않는 크루 참가자입니다."),
+    CREW_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "350", "존재하지 않는 크루 참가자입니다."),
+
+    /**
+     * 인증 관련 에러 코드 400~499
+     */
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "400", "비밀번호가 일치하지 않습니다."),
 
     /**
      * User 관련 에러 코드 500~549
@@ -73,12 +78,13 @@ public enum ErrorCode {
     /**
      * Geometry 관련 에러 코드 800~899
      */
-    COULD_NOT_PARSE_GEOMETRY(HttpStatus.BAD_REQUEST,"800","GeoJson데이터를 적절한 Geometry로 변환할 수 없습니다."),
+    COULD_NOT_PARSE_GEOMETRY(HttpStatus.BAD_REQUEST, "800",
+        "GeoJson데이터를 적절한 Geometry로 변환할 수 없습니다."),
 
     /**
      * Crew Score 관련 에러 코드 900~999
      */
-    CREW_SCORE_NOT_FOUND(HttpStatus.BAD_REQUEST,"900","크루 점수 정보를 찾을 수 없습니다.");
+    CREW_SCORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "900", "크루 점수 정보를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
