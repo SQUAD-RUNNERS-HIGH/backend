@@ -22,6 +22,13 @@ jobs:
       - name: Make application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS
+        run: echo "${{ secrets.GCP_KEY_JSON }}" > gcp-key.json
+
+      - name: Export credential path
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
+
       - name: Build JAR file
         run: ./gradlew clean build
 

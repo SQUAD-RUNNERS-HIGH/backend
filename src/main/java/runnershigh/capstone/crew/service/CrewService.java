@@ -1,5 +1,6 @@
 package runnershigh.capstone.crew.service;
 
+import java.io.IOException;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
@@ -24,7 +26,9 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.crewscore.repository.CrewScoreRepository;
 import runnershigh.capstone.crewscore.service.CrewScoreService;
+import runnershigh.capstone.gcs.service.GCSService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -43,16 +47,20 @@ public class CrewService {
     private final UserService userService;
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
+    private final GCSService gcsService;
+    private final CrewScoreRepository crewScoreRepository;
 
     @Transactional
-    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
+    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest,
+        MultipartFile image) throws IOException {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewCreateRequest.crewLocation());
 
-        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
+        String imageUrl = gcsService.upload(image);
+        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse, imageUrl);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
@@ -76,7 +84,9 @@ public class CrewService {
     }
 
     @Transactional
-    public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest) {
+    public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest,
+        MultipartFile image)
+        throws IOException {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
@@ -84,15 +94,18 @@ public class CrewService {
 
         Location crewLocation = crewMapper.toCrewLocation(addressResponse,
             crewUpdateRequest.crewLocation().specificLocation());
-        crew.updateCrew(crewUpdateRequest, crewLocation);
+        String beforeImageUrl = crew.getImage();
+        String imageUrl = gcsService.update(beforeImageUrl, image);
+
+        crew.updateCrew(crewUpdateRequest, crewLocation, imageUrl);
         crewRepository.save(crew);
         return new CrewUpdateResponse(crew.getId());
     }
 
     @Transactional
-    public CrewDeleteResponse deleteCrew(Long crewLeaderId) {
+    public CrewDeleteResponse deleteCrew(Long crewLeaderId) throws IOException {
         Crew crew = getCrewByLeaderId(crewLeaderId);
-
+        gcsService.delete(crew.getImage());
         crewRepository.delete(crew);
         return new CrewDeleteResponse(crew.getId());
     }

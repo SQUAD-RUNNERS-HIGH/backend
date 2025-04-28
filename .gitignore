@@ -39,6 +39,7 @@ out/
 ### Senstive File ###
 application-*.yml
 .DS_Store
+*.json
 
 ### Q-Class ###
 /src/main/generated/

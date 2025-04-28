@@ -3,6 +3,7 @@ package runnershigh.capstone.crew.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
@@ -39,8 +41,9 @@ public class CrewController {
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
     public CrewCreateResponse createCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestBody CrewCreateRequest crewCreateRequest) {
-        return crewService.createCrew(crewLeaderId, crewCreateRequest);
+        @RequestPart CrewCreateRequest crewCreateRequest,
+        @RequestPart MultipartFile image) throws IOException {
+        return crewService.createCrew(crewLeaderId, crewCreateRequest, image);
     }
 
     @GetMapping("/{crewId}")
@@ -59,8 +62,9 @@ public class CrewController {
     @PatchMapping
     @Operation(summary = "크루 정보 수정", description = "크루 리더 ID & 크루 수정 정보를 받아, 크루 ID를 반환합니다.")
     public CrewUpdateResponse updateCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestBody CrewUpdateRequest crewUpdateRequest) {
-        return crewService.updateCrew(crewLeaderId, crewUpdateRequest);
+        @RequestPart CrewUpdateRequest crewUpdateRequest, @RequestPart MultipartFile image)
+        throws IOException {
+        return crewService.updateCrew(crewLeaderId, crewUpdateRequest, image);
     }
 
     @GetMapping("/search")
@@ -80,7 +84,8 @@ public class CrewController {
 
     @DeleteMapping
     @Operation(summary = "크루 삭제", description = "크루 리더 ID를 받아, 삭제된 크루 ID를 반환합니다.")
-    public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId) {
+    public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId)
+        throws IOException {
         return crewService.deleteCrew(crewLeaderId);
     }
 }
