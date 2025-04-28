@@ -23,7 +23,8 @@ jobs:
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
       - name: Copy GCP Key to resources
-        run: echo "${{ secrets.GCP_KEY_JSON }}" > src/main/resources/gcp-key.json
+        run: |
+          echo "${{ secrets.GCP_KEY_JSON }}" > src/main/resources/gcp-key.json
 
       - name: Build JAR file
         run: ./gradlew clean build
