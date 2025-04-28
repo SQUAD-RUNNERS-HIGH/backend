@@ -1,6 +1,5 @@
 package runnershigh.capstone.crew.service;
 
-import java.io.IOException;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,7 @@ public class CrewService {
 
     @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest,
-        MultipartFile image) throws IOException {
+        MultipartFile image) {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
@@ -85,8 +84,7 @@ public class CrewService {
 
     @Transactional
     public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest,
-        MultipartFile image)
-        throws IOException {
+        MultipartFile image) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
@@ -103,7 +101,7 @@ public class CrewService {
     }
 
     @Transactional
-    public CrewDeleteResponse deleteCrew(Long crewLeaderId) throws IOException {
+    public CrewDeleteResponse deleteCrew(Long crewLeaderId) {
         Crew crew = getCrewByLeaderId(crewLeaderId);
         gcsService.delete(crew.getImage());
         crewRepository.delete(crew);
