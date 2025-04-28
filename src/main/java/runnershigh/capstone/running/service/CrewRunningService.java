@@ -13,11 +13,14 @@ import runnershigh.capstone.running.domain.UserCoordinate;
 import runnershigh.capstone.running.dto.request.CrewParticipantInfoRequest;
 import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse;
 import runnershigh.capstone.running.dto.request.CrewRunningInfoRequest;
+import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse.CrewParticipantInfo;
 import runnershigh.capstone.running.dto.response.CrewRunningResponse;
 import runnershigh.capstone.running.dto.RunningStatus;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandler;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandlerMapping;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository;
+import runnershigh.capstone.running.repository.CrewRunningRedisRepository.ParticipantLocation;
+import runnershigh.capstone.running.repository.CrewRunningRedisRepository.ReadyStatus;
 import runnershigh.capstone.user.service.UserService;
 
 @Service
@@ -31,8 +34,7 @@ public class CrewRunningService {
     private final GeometryProjectionHandlerMapping projectionHandlerMapping;
     private final UserService userService;
 
-    public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId,
-        final String crewId) {
+    public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId) {
         log.info("Crew Running Request {}", request);
 
         final Document courseDocument = courseDocumentRepository.findByObjectId(new ObjectId(courseId));
@@ -53,32 +55,20 @@ public class CrewRunningService {
         final String courseId, final String crewId) {
         crewRunningRedisRepository.addLocation(request, courseId, crewId);
         crewRunningRedisRepository.addReadyStatus(courseId, crewId, request.userId(),
-            request.isReady());
-        boolean startSignal = isAllCrewWithinStartDistance(request.userId(),
-            courseId, crewId);
-        return new CrewParticipantInfoResponse(
-            request.userId(),request.userName(), request.longitude(),
-            request.latitude(), request.isReady(), startSignal);
+            request.isReady(),request.userName());
+        return new CrewParticipantInfoResponse(getCrewParticipantInfo(request.userId(),courseId,crewId));
     }
 
-    private boolean isAllCrewWithinStartDistance(final String userId,
+    private List<CrewParticipantInfo> getCrewParticipantInfo(final String userId,
         final String courseId, final String crewId) {
-        List<String> userIds = crewRunningRedisRepository.geoSearch(courseId, crewId, userId);
-        Map<String, Boolean> readyStatus = crewRunningRedisRepository.getReadyStatus(courseId,
+        List<ParticipantLocation> locations = crewRunningRedisRepository.geoSearch(courseId, crewId, userId);
+        Map<String, ReadyStatus> readyStatus = crewRunningRedisRepository.getReadyStatus(courseId,
             crewId);
-        if (userIds.size() >= MINIMUM_CREW_RUNNING_PARTICIPANTS &&
-            userIds.size() == readyStatus.size() && isAllReady(readyStatus, userIds)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isAllReady(final Map<String, Boolean> readyStatus, List<String> userIds) {
-        for (String userId : userIds) {
-            if (Boolean.FALSE.equals(readyStatus.get(userId))) {
-                return false;
-            }
-        }
-        return true;
+        return locations.stream().map(l->{
+            ReadyStatus status = readyStatus.get(userId);
+            return new CrewParticipantInfo(l.getUserId(), status.isReady(),
+                status.getUsername(), l.getLongitude(),
+                l.getLatitude());
+        }).toList();
     }
 }

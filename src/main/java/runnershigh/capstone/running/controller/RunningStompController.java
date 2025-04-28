@@ -43,7 +43,7 @@ public class RunningStompController {
     // Subscribe : /topic/crew-participant/course/{courseId}/crew/{crewId}
     // Destination : /app/crew-participant/course/{courseId}/crew/{crewId}
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
-    @SendTo("/topic/crew-participant/course/{courseId}/crew/{crewId}")
+    @SendToUser("/queue/reply")
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,
         @DestinationVariable("crewId") String crewId,
         @Payload CrewParticipantInfoRequest request) {
