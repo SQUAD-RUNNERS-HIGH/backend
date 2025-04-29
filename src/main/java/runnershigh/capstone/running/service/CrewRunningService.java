@@ -65,11 +65,12 @@ public class CrewRunningService {
         List<ParticipantLocation> locations = crewRunningRedisRepository.geoSearch(courseId, crewId, userId);
         Map<String, ReadyStatus> readyStatus = crewRunningRedisRepository.getReadyStatus(courseId,
             crewId);
-        return locations.stream().map(l->{
+        List<CrewParticipantInfo> list = locations.stream().map(l -> {
             ReadyStatus status = readyStatus.get(userId);
             return new CrewParticipantInfo(l.getUserId(), status.isReady(),
                 status.getUsername(), l.getLongitude(),
                 l.getLatitude());
         }).toList();
+        return list;
     }
 }

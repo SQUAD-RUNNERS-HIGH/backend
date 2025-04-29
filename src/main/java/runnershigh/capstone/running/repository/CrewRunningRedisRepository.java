@@ -83,7 +83,7 @@ public class CrewRunningRedisRepository {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ReadyStatus{
-        private boolean isReady;
+        private boolean ready;
         private String username;
     }
 
