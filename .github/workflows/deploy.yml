@@ -24,7 +24,7 @@ jobs:
 
       - name: Copy GCP Key to resources
         run: |
-          echo "${{ secrets.GCP_KEY_JSON }}" > src/main/resources/gcp-key.json
+          echo "${{ secrets.GCP_KEY_JSON }}"| base64 -d > src/main/resources/runnersHighBackend_GCS.json
 
       - name: Build JAR file
         run: ./gradlew clean build
