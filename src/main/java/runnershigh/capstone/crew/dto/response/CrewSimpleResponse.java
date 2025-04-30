@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record CrewSimpleResponse(
+    Long crewId,
     String name,
     String description,
     long userCount,

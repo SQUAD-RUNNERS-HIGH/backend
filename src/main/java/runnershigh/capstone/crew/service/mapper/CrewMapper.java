@@ -73,6 +73,7 @@ public class CrewMapper {
 
     public CrewSimpleResponse toCrewSimpleResponse(Crew crew) {
         return CrewSimpleResponse.builder()
+            .crewId(crew.getId())
             .name(crew.getName())
             .description(crew.getDescription())
             .userCount(crew.getUserCount())

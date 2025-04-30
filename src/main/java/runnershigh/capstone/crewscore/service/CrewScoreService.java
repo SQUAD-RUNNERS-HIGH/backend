@@ -1,7 +1,10 @@
 package runnershigh.capstone.crewscore.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.course.domain.Course;
@@ -9,6 +12,8 @@ import runnershigh.capstone.course.service.CourseService;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crewscore.domain.CrewScore;
 import runnershigh.capstone.crewscore.dto.request.CrewScoreRequest;
+import runnershigh.capstone.crewscore.dto.response.CrewRankListResponse;
+import runnershigh.capstone.crewscore.dto.response.CrewRankListResponse.CrewRankResponse;
 import runnershigh.capstone.crewscore.exception.CrewScoreNotFound;
 import runnershigh.capstone.crewscore.repository.CrewScoreRepository;
 import runnershigh.capstone.global.error.ErrorCode;
@@ -36,6 +41,16 @@ public class CrewScoreService {
         final CrewScore crewScore = new CrewScore(crew);
         redisTemplate.opsForZSet().add(RANK_KEY,crew.getId().toString(),0);
         crewScoreRepository.save(crewScore);
+    }
+
+    public CrewRankListResponse getRanks(final Long size){
+        List<TypedTuple<Object>> collect = redisTemplate.opsForZSet()
+            .reverseRangeWithScores(RANK_KEY, 0, size)
+            .stream()
+            .toList();
+        List<CrewRankResponse> crewRanks = collect.stream()
+            .map(u -> new CrewRankResponse((Long) u.getValue(), u.getScore())).collect(Collectors.toList());
+        return new CrewRankListResponse(crewRanks);
     }
 
     public CrewScore getCrewScore(final Long crewId){

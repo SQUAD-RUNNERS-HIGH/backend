@@ -28,11 +28,9 @@ import runnershigh.capstone.user.service.UserService;
 @Slf4j
 public class CrewRunningService {
 
-    private static final int MINIMUM_CREW_RUNNING_PARTICIPANTS = 3;
     private final CrewRunningRedisRepository crewRunningRedisRepository;
     private final CourseDocumentRepository courseDocumentRepository;
     private final GeometryProjectionHandlerMapping projectionHandlerMapping;
-    private final UserService userService;
 
     public CrewRunningResponse calculateCrewRunning(final CrewRunningInfoRequest request, final String courseId,
         final String crewId) {
