@@ -7,7 +7,9 @@ public record CrewRankListResponse(
 ) {
     public record CrewRankResponse(
         String crewId,
-        Double score
+        Double score,
+        String image,
+        String crewName
     ){
 
     }

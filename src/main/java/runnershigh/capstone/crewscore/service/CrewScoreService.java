@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.course.domain.Course;
 import runnershigh.capstone.course.service.CourseService;
 import runnershigh.capstone.crew.domain.Crew;
+import runnershigh.capstone.crew.exception.CrewNotFoundException;
+import runnershigh.capstone.crew.repository.CrewRepository;
+import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.crewscore.domain.CrewScore;
 import runnershigh.capstone.crewscore.dto.request.CrewScoreRequest;
 import runnershigh.capstone.crewscore.dto.response.CrewRankListResponse;
@@ -25,6 +28,7 @@ public class CrewScoreService {
 
     private final CrewScoreRepository crewScoreRepository;
     private final CourseService courseService;
+    private final CrewRepository crewRepository;
     private final RedisTemplate<String,Object> redisTemplate;
     private final static String RANK_KEY = "crew:rank";
 
@@ -49,7 +53,12 @@ public class CrewScoreService {
             .stream()
             .toList();
         List<CrewRankResponse> crewRanks = collect.stream()
-            .map(u -> new CrewRankResponse((String)u.getValue(), u.getScore())).collect(Collectors.toList());
+            .map(u -> {
+                Crew crew = crewRepository.findById(Long.parseLong((String) u.getValue()))
+                    .orElseThrow(()->new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+                return new CrewRankResponse((String) u.getValue(), u.getScore(),
+                    crew.getImage(),crew.getName());
+            }).collect(Collectors.toList());
         return new CrewRankListResponse(crewRanks);
     }
 
