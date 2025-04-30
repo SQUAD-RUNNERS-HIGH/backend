@@ -1,5 +1,7 @@
 package runnershigh.capstone.crewapplication.dto;
 
-public record CrewApplicationApprovalResponse() {
+public record CrewApplicationApprovalResponse(
+    Long applicantId
+) {
 
 }
