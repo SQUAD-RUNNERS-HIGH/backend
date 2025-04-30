@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +41,8 @@ public class CrewController {
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
     public CrewCreateResponse createCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestPart CrewCreateRequest crewCreateRequest,
-        @RequestPart MultipartFile image) {
-        return crewService.createCrew(crewLeaderId, crewCreateRequest, image);
+        @RequestBody CrewCreateRequest crewCreateRequest) {
+        return crewService.createCrew(crewLeaderId, crewCreateRequest);
     }
 
     @GetMapping("/{crewId}")
