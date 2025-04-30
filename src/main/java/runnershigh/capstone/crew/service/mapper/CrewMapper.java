@@ -47,7 +47,7 @@ public class CrewMapper {
             .build();
     }
 
-    public CrewDetailResponse toCrewDetailResponse(Crew crew, CrewUserRole crewUserRole) {
+    public CrewDetailResponse toCrewDetailResponse(Crew crew, CrewUserRole crewUserRole,Double crewScore) {
         return CrewDetailResponse.builder()
             .name(crew.getName())
             .description(crew.getDescription())
@@ -58,6 +58,7 @@ public class CrewMapper {
             .crewLocation(toCrewLocationResponse(crew.getCrewLocation()))
             .crewRank(crew.getCrewRank())
             .crewUserRole(crewUserRole.toString())
+            .crewScore(crewScore)
             .build();
     }
 

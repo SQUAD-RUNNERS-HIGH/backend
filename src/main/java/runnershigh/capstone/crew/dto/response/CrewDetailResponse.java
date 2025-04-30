@@ -11,6 +11,7 @@ public record CrewDetailResponse(
     int userCount,
     String image,
     Long crewRank,
+    Double crewScore,
     String crewLeaderName,
     String crewUserRole,
     LocationResponse crewLocation

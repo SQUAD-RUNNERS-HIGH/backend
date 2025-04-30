@@ -47,7 +47,6 @@ public class CrewService {
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
     private final GCSService gcsService;
-    private final CrewScoreRepository crewScoreRepository;
 
     @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
@@ -72,7 +71,8 @@ public class CrewService {
         Crew crew = getCrewById(crewId);
         crew.saveCrewRank(crewScoreService.getCrewRank(crewId));
         CrewUserRole userRole = crew.validateAndReturnUserRole(userId);
-        return crewMapper.toCrewDetailResponse(crew, userRole);
+        Double score = crewScoreService.getCrewScore(crewId).getScore();
+        return crewMapper.toCrewDetailResponse(crew, userRole,score);
     }
 
     @Transactional(readOnly = true)
