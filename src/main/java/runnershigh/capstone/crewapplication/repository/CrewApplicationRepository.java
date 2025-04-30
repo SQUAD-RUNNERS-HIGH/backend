@@ -10,7 +10,7 @@ import runnershigh.capstone.crewapplication.domain.CrewApplicationStatus;
 @Repository
 public interface CrewApplicationRepository extends JpaRepository<CrewApplication, Long> {
 
-    Optional<CrewApplication> findByApplicantIdAndCrewId(Long userId, Long crewId);
+    Optional<CrewApplication> findByApplicantIdAndCrewId(Long applicantId, Long crewId);
 
     List<CrewApplication> findCrewApplicationsByCrewIdAndStatus(Long crewId,
         CrewApplicationStatus status);

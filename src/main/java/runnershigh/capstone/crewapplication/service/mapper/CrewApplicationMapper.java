@@ -21,7 +21,7 @@ public class CrewApplicationMapper {
     public CrewApplicationsResponse toCrewApplicationsResponse(
         CrewApplication crewApplication) {
         return CrewApplicationsResponse.builder()
-            .id(crewApplication.getId())
+            .id(crewApplication.getApplicant().getId())
             .username(crewApplication.getApplicant().getUsername())
             .applicationDate(crewApplication.getApplicationDate())
             .build();

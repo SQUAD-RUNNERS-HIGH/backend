@@ -43,7 +43,7 @@ public class CrewApplicationController {
     @Operation(summary = "크루 지원 승인", description = "크루 리더 ID & 크루 지원자 ID & 크루 ID를 받아, ~~를 반환합니다.")
     public CrewApplicationApprovalResponse approve(
         @Parameter(hidden = true) @AuthUser Long crewLeaderId,
-         @PathVariable Long crewId,@PathVariable Long applicantId) {
+         @PathVariable Long crewId, @PathVariable Long applicantId) {
         return crewApplicationService.approve(crewLeaderId, applicantId, crewId);
     }
 
