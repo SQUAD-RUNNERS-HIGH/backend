@@ -33,7 +33,7 @@ public class CrewScoreService {
         final Course course = courseService.getCourse(request.courseId());
         CrewScore crewScore = getCrewScore(request.crewId());
         crewScore.updateScore(request.numberOfRunners(),course.getProperties().getPerimeter());
-        redisTemplate.opsForZSet().add(RANK_KEY,request.crewId(),crewScore.getScore());
+        redisTemplate.opsForZSet().add(RANK_KEY,request.crewId().toString(),crewScore.getScore());
     }
 
     @Transactional
@@ -49,7 +49,7 @@ public class CrewScoreService {
             .stream()
             .toList();
         List<CrewRankResponse> crewRanks = collect.stream()
-            .map(u -> new CrewRankResponse((Long) u.getValue(), u.getScore())).collect(Collectors.toList());
+            .map(u -> new CrewRankResponse((String)u.getValue(), u.getScore())).collect(Collectors.toList());
         return new CrewRankListResponse(crewRanks);
     }
 

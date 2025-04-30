@@ -6,7 +6,7 @@ public record CrewRankListResponse(
     List<CrewRankResponse> crewRankResponses
 ) {
     public record CrewRankResponse(
-        Long crewId,
+        String crewId,
         Double score
     ){
 
