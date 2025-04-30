@@ -112,4 +112,12 @@ public class Crew {
             return CrewUserRole.VISITOR;
         }
     }
+
+    public CrewUserRole crewUserRoleIsLeader(Long userId) {
+        if (crewLeader.getId().equals(userId)) {
+            return CrewUserRole.LEADER;
+        }
+        return CrewUserRole.MEMBER;
+    }
+
 }

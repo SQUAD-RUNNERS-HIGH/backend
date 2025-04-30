@@ -25,7 +25,6 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
-import runnershigh.capstone.crewscore.repository.CrewScoreRepository;
 import runnershigh.capstone.crewscore.service.CrewScoreService;
 import runnershigh.capstone.gcs.service.GCSService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
@@ -72,7 +71,7 @@ public class CrewService {
         crew.saveCrewRank(crewScoreService.getCrewRank(crewId));
         CrewUserRole userRole = crew.validateAndReturnUserRole(userId);
         Double score = crewScoreService.getCrewScore(crewId).getScore();
-        return crewMapper.toCrewDetailResponse(crew, userRole,score);
+        return crewMapper.toCrewDetailResponse(crew, userRole, score);
     }
 
     @Transactional(readOnly = true)
@@ -130,7 +129,7 @@ public class CrewService {
         String city = user.getUserLocation().getCity();
         String dong = user.getUserLocation().getDong();
 
-        Page<Crew> crews = crewRepository.findByCrewLocation_CityAndCrewLocation_Dong(city, dong,
+        Page<Crew> crews = crewRepository.findNearCrewWithoutParticipation(city, dong, userId,
             pageable);
 
         Page<CrewSimpleResponse> crewNearbyResponses = crewMapper.toCrewSimplePagingResponse(crews);

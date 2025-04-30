@@ -35,6 +35,27 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
             builder.and(crew.name.containsIgnoreCase(request.name()));
         }
 
+        return getCrewPage(pageable, crew, builder);
+    }
+
+    @Override
+    public Page<Crew> findNearCrewWithoutParticipation(String city, String dong, Long userId,
+        Pageable pageable) {
+        QCrew crew = QCrew.crew;
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(crew.crewLocation.city.eq(city))
+            .and(crew.crewLocation.dong.eq(dong));
+
+        builder.and(crew.crewLeader.id.ne(userId));
+
+        builder.and(crew.crewParticipant.any().participant.id.ne(userId));
+
+        return getCrewPage(pageable, crew, builder);
+    }
+
+    private PageImpl<Crew> getCrewPage(Pageable pageable, QCrew crew, BooleanBuilder builder) {
         List<Crew> content = queryFactory
             .selectFrom(crew)
             .where(builder)
