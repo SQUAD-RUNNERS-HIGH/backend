@@ -48,15 +48,16 @@ public class CrewService {
     private final GCSService gcsService;
 
     @Transactional
-    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
+    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest,
+        MultipartFile image) {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewCreateRequest.crewLocation());
 
-//        String imageUrl = gcsService.upload(image);
-        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
+        String imageUrl = gcsService.upload(image);
+        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse, imageUrl);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
