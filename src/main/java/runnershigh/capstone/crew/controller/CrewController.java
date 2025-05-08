@@ -41,8 +41,8 @@ public class CrewController {
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
     public CrewCreateResponse createCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestBody CrewCreateRequest crewCreateRequest) {
-        return crewService.createCrew(crewLeaderId, crewCreateRequest);
+        @RequestPart CrewCreateRequest crewCreateRequest, @RequestBody MultipartFile image) {
+        return crewService.createCrew(crewLeaderId, crewCreateRequest, image);
     }
 
     @GetMapping("/{crewId}")
