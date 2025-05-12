@@ -13,7 +13,7 @@ import runnershigh.capstone.crew.repository.custom.CrewRepositoryCustom;
 @Repository
 public interface CrewRepository extends JpaRepository<Crew, Long>, CrewRepositoryCustom {
 
-    Optional<Crew> findByCrewLeaderId(Long crewLeaderId);
+    Optional<Crew> findByIdAndCrewLeaderId(Long id, Long crewLeaderId);
 
     Page<Crew> findByCrewLocation_CityAndCrewLocation_Dong(String city, String dong,
         Pageable pageable);
