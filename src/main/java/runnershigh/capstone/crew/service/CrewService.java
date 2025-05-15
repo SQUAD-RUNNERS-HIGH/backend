@@ -25,7 +25,6 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
-import runnershigh.capstone.crewscore.repository.CrewScoreRepository;
 import runnershigh.capstone.crewscore.service.CrewScoreService;
 import runnershigh.capstone.gcs.service.GCSService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
@@ -49,15 +48,16 @@ public class CrewService {
     private final GCSService gcsService;
 
     @Transactional
-    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest) {
+    public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest,
+        MultipartFile image) {
 
         User crewLeader = userService.getUser(crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewCreateRequest.crewLocation());
 
-//        String imageUrl = gcsService.upload(image);
-        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse);
+        String imageUrl = gcsService.upload(image);
+        Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse, imageUrl);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
         crewRepository.save(crew);
@@ -72,7 +72,7 @@ public class CrewService {
         crew.saveCrewRank(crewScoreService.getCrewRank(crewId));
         CrewUserRole userRole = crew.validateAndReturnUserRole(userId);
         Double score = crewScoreService.getCrewScore(crewId).getScore();
-        return crewMapper.toCrewDetailResponse(crew, userRole,score);
+        return crewMapper.toCrewDetailResponse(crew, userRole, score);
     }
 
     @Transactional(readOnly = true)
@@ -83,8 +83,8 @@ public class CrewService {
 
     @Transactional
     public CrewUpdateResponse updateCrew(Long crewLeaderId, CrewUpdateRequest crewUpdateRequest,
-        MultipartFile image) {
-        Crew crew = getCrewByLeaderId(crewLeaderId);
+        Long crewId, MultipartFile image) {
+        Crew crew = getCrewByIdAndLeaderId(crewId, crewLeaderId);
 
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewUpdateRequest.crewLocation());
@@ -100,10 +100,11 @@ public class CrewService {
     }
 
     @Transactional
-    public CrewDeleteResponse deleteCrew(Long crewLeaderId) {
-        Crew crew = getCrewByLeaderId(crewLeaderId);
+    public CrewDeleteResponse deleteCrew(Long crewLeaderId, Long crewId) {
+        Crew crew = getCrewByIdAndLeaderId(crewId, crewLeaderId);
         gcsService.delete(crew.getImage());
         crewRepository.delete(crew);
+        crewScoreService.delete(crew);
         return new CrewDeleteResponse(crew.getId());
     }
 
@@ -130,7 +131,7 @@ public class CrewService {
         String city = user.getUserLocation().getCity();
         String dong = user.getUserLocation().getDong();
 
-        Page<Crew> crews = crewRepository.findByCrewLocation_CityAndCrewLocation_Dong(city, dong,
+        Page<Crew> crews = crewRepository.findNearCrewWithoutParticipation(city, dong, userId,
             pageable);
 
         Page<CrewSimpleResponse> crewNearbyResponses = crewMapper.toCrewSimplePagingResponse(crews);
@@ -143,8 +144,8 @@ public class CrewService {
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
     }
 
-    private Crew getCrewByLeaderId(Long crewLeaderId) {
-        return crewRepository.findByCrewLeaderId(crewLeaderId)
+    private Crew getCrewByIdAndLeaderId(Long crewId, Long crewLeaderId) {
+        return crewRepository.findByIdAndCrewLeaderId(crewId, crewLeaderId)
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
     }
 

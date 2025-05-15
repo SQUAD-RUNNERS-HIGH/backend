@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.crewparticipant.dto.CrewParticipantDeleteResponse;
 import runnershigh.capstone.crewparticipant.dto.MyCrewResponse;
@@ -17,6 +18,7 @@ import runnershigh.capstone.global.error.ErrorCode;
 public class CrewParticipantService {
 
     private final CrewParticipantRepository crewParticipantRepository;
+    private final CrewService crewService;
 
     @Transactional
     public CrewParticipantDeleteResponse withdrawCrewParticipant(Long participantId, Long crewId) {
@@ -39,9 +41,15 @@ public class CrewParticipantService {
     }
 
     public MyCrewResponse findMyCrews(final Long userId) {
-        List<MyCrew> myCrews = crewParticipantRepository.findByUserId(userId).stream()
-            .map(cp -> new MyCrew(cp.getCrew().getId(), cp.getCrew().getName(),
-                cp.getCrew().getCrewParticipant().size())).toList();
+        List<MyCrew> myCrews = crewParticipantRepository.findByUserId(userId)
+            .stream()
+            .map(cp -> new MyCrew(
+                    cp.getCrew().getId(),
+                    cp.getCrew().getName(),
+                    cp.getCrew().getCrewParticipant().size(),
+                    cp.getCrew().crewUserRoleIsLeader(userId).toString()
+                )
+            ).toList();
         return new MyCrewResponse(myCrews);
     }
 

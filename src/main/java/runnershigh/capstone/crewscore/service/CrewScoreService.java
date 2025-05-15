@@ -12,7 +12,6 @@ import runnershigh.capstone.course.service.CourseService;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
-import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.crewscore.domain.CrewScore;
 import runnershigh.capstone.crewscore.dto.request.CrewScoreRequest;
 import runnershigh.capstone.crewscore.dto.response.CrewRankListResponse;
@@ -29,25 +28,31 @@ public class CrewScoreService {
     private final CrewScoreRepository crewScoreRepository;
     private final CourseService courseService;
     private final CrewRepository crewRepository;
-    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final static String RANK_KEY = "crew:rank";
 
     @Transactional
-    public void updateCrewScore(final CrewScoreRequest request){
+    public void updateCrewScore(final CrewScoreRequest request) {
         final Course course = courseService.getCourse(request.courseId());
         CrewScore crewScore = getCrewScore(request.crewId());
-        crewScore.updateScore(request.numberOfRunners(),course.getProperties().getPerimeter());
-        redisTemplate.opsForZSet().add(RANK_KEY,request.crewId().toString(),crewScore.getScore());
+        crewScore.updateScore(request.numberOfRunners(), course.getProperties().getPerimeter());
+        redisTemplate.opsForZSet().add(RANK_KEY, request.crewId().toString(), crewScore.getScore());
     }
 
     @Transactional
-    public void save(final Crew crew){
+    public void save(final Crew crew) {
         final CrewScore crewScore = new CrewScore(crew);
-        redisTemplate.opsForZSet().add(RANK_KEY,crew.getId().toString(),0);
+        redisTemplate.opsForZSet().add(RANK_KEY, crew.getId().toString(), 0);
         crewScoreRepository.save(crewScore);
     }
 
-    public CrewRankListResponse getRanks(final Long size){
+    @Transactional
+    public void delete(final Crew crew) {
+        redisTemplate.opsForZSet().remove(RANK_KEY, crew.getId().toString());
+        crewScoreRepository.deleteById(crew.getId());
+    }
+
+    public CrewRankListResponse getRanks(final Long size) {
         List<TypedTuple<Object>> collect = redisTemplate.opsForZSet()
             .reverseRangeWithScores(RANK_KEY, 0, size)
             .stream()
@@ -55,19 +60,19 @@ public class CrewScoreService {
         List<CrewRankResponse> crewRanks = collect.stream()
             .map(u -> {
                 Crew crew = crewRepository.findById(Long.parseLong((String) u.getValue()))
-                    .orElseThrow(()->new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+                    .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
                 return new CrewRankResponse((String) u.getValue(), u.getScore(),
-                    crew.getImage(),crew.getName());
+                    crew.getImage(), crew.getName());
             }).collect(Collectors.toList());
         return new CrewRankListResponse(crewRanks);
     }
 
-    public CrewScore getCrewScore(final Long crewId){
+    public CrewScore getCrewScore(final Long crewId) {
         return crewScoreRepository.findByCrewId(crewId)
             .orElseThrow(() -> new CrewScoreNotFound(ErrorCode.CREW_SCORE_NOT_FOUND));
     }
 
-    public long getCrewRank(final Long crewId){
+    public long getCrewRank(final Long crewId) {
         Long rank = redisTemplate.opsForZSet().reverseRank(RANK_KEY, crewId.toString());
         return rank + 1;
     }

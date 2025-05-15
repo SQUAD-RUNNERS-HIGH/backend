@@ -41,8 +41,8 @@ public class CrewController {
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
     public CrewCreateResponse createCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestBody CrewCreateRequest crewCreateRequest) {
-        return crewService.createCrew(crewLeaderId, crewCreateRequest);
+        @RequestPart CrewCreateRequest crewCreateRequest, @RequestBody MultipartFile image) {
+        return crewService.createCrew(crewLeaderId, crewCreateRequest, image);
     }
 
     @GetMapping("/{crewId}")
@@ -58,11 +58,14 @@ public class CrewController {
         return crewService.getCrewParticipants(crewId);
     }
 
-    @PatchMapping
+    @PatchMapping("/{crewId}")
     @Operation(summary = "크루 정보 수정", description = "크루 리더 ID & 크루 수정 정보를 받아, 크루 ID를 반환합니다.")
-    public CrewUpdateResponse updateCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
-        @RequestPart CrewUpdateRequest crewUpdateRequest, @RequestPart MultipartFile image) {
-        return crewService.updateCrew(crewLeaderId, crewUpdateRequest, image);
+    public CrewUpdateResponse updateCrew(
+        @Parameter(hidden = true) @AuthUser Long crewLeaderId,
+        @RequestPart CrewUpdateRequest crewUpdateRequest,
+        @PathVariable Long crewId,
+        @RequestPart MultipartFile image) {
+        return crewService.updateCrew(crewLeaderId, crewUpdateRequest, crewId, image);
     }
 
     @GetMapping("/search")
@@ -80,9 +83,10 @@ public class CrewController {
         return crewService.getCrewNearby(userId, pageable);
     }
 
-    @DeleteMapping
-    @Operation(summary = "크루 삭제", description = "크루 리더 ID를 받아, 삭제된 크루 ID를 반환합니다.")
-    public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId) {
-        return crewService.deleteCrew(crewLeaderId);
+    @DeleteMapping("/{crewId}")
+    @Operation(summary = "크루 삭제", description = "크루 리더 ID와 크루 ID를 받아, 삭제된 크루 ID를 반환합니다.")
+    public CrewDeleteResponse deleteCrew(@Parameter(hidden = true) @AuthUser Long crewLeaderId,
+        @PathVariable Long crewId) {
+        return crewService.deleteCrew(crewLeaderId, crewId);
     }
 }

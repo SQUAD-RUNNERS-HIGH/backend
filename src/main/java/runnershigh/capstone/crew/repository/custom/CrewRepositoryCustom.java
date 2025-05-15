@@ -8,4 +8,7 @@ import runnershigh.capstone.crew.dto.CrewSearchCondition;
 public interface CrewRepositoryCustom {
 
     Page<Crew> findCrewByCondition(CrewSearchCondition request, Pageable pageable);
+
+    Page<Crew> findNearCrewWithoutParticipation(String city, String dong, Long userId,
+        Pageable pageable);
 }
