@@ -155,10 +155,7 @@ public class CrewService {
 
     private FormattedAddressResponse getFormattedAddressResponse(
         LocationRequest locationRequest) {
-
         return geocodingService.getFormattedAddress(
             locationRequest.latitude(), locationRequest.longitude());
     }
-
-
 }

@@ -58,5 +58,4 @@ public class CrewApplication {
         crew.validationCrewLeader(crewLeaderId);
         this.status = CrewApplicationStatus.REFUSAL;
     }
-
 }
