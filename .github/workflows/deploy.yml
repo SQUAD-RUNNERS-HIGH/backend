@@ -43,19 +43,15 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/capstone-hub:latest
 
-      - name: SSH into GCP VM and deploy
+      - name: SSH into AWS EC2 and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: ${{ secrets.GCP_VM_USER }}
-          key: ${{ secrets.GCP_SSH_KEY }}
+          host: ${{ secrets.AWS_EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }}
           script: |
             echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-            
             docker compose down || true
-            
             docker compose pull
-            
             docker compose up -d
-            
             sudo docker image prune -f
