@@ -22,10 +22,6 @@ jobs:
       - name: Make application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
-      - name: Copy GCP Key to resources
-        run: |
-          echo "${{ secrets.GCP_KEY_JSON }}"| base64 -d > src/main/resources/runnersHighBackend_GCS.json
-
       - name: Build JAR file
         run: ./gradlew clean build
 
