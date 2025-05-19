@@ -78,7 +78,7 @@ public enum ErrorCode {
     /**
      * File 관련 에러 코드 750~799
      */
-    STORAGE_CREATE_FAILED(HttpStatus.NOT_FOUND, "750", "GCS Storage 생성 실패"),
+    FILE_CONVERT_FAILED(HttpStatus.NOT_FOUND, "750", "Convert 실패"),
 
     FILE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "751", "파일 업로드 실패"),
 
