@@ -26,12 +26,12 @@ import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.crewscore.service.CrewScoreService;
-import runnershigh.capstone.gcs.service.GCSService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.location.domain.Location;
 import runnershigh.capstone.location.dto.LocationRequest;
+import runnershigh.capstone.s3.service.S3Service;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.service.UserService;
 
@@ -45,7 +45,9 @@ public class CrewService {
     private final UserService userService;
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
-    private final GCSService gcsService;
+    private final S3Service s3Service;
+
+    private static final String S3_DIRECTORY_NAME = "crew";
 
     @Transactional
     public CrewCreateResponse createCrew(Long crewLeaderId, CrewCreateRequest crewCreateRequest,
@@ -56,7 +58,7 @@ public class CrewService {
         FormattedAddressResponse addressResponse = getFormattedAddressResponse(
             crewCreateRequest.crewLocation());
 
-        String imageUrl = gcsService.upload(image);
+        String imageUrl = s3Service.upload(image, S3_DIRECTORY_NAME);
         Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse, imageUrl);
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
@@ -92,7 +94,7 @@ public class CrewService {
         Location crewLocation = crewMapper.toCrewLocation(addressResponse,
             crewUpdateRequest.crewLocation().specificLocation());
         String beforeImageUrl = crew.getImage();
-        String imageUrl = gcsService.update(beforeImageUrl, image);
+        String imageUrl = s3Service.update(beforeImageUrl, image, S3_DIRECTORY_NAME);
 
         crew.updateCrew(crewUpdateRequest, crewLocation, imageUrl);
         crewRepository.save(crew);
@@ -102,7 +104,7 @@ public class CrewService {
     @Transactional
     public CrewDeleteResponse deleteCrew(Long crewLeaderId, Long crewId) {
         Crew crew = getCrewByIdAndLeaderId(crewId, crewLeaderId);
-        gcsService.delete(crew.getImage());
+        s3Service.delete(crew.getImage());
         crewRepository.delete(crew);
         crewScoreService.delete(crew);
         return new CrewDeleteResponse(crew.getId());

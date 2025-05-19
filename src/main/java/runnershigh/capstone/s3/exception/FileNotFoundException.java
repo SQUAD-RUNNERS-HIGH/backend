@@ -1,4 +1,4 @@
-package runnershigh.capstone.gcs.exception;
+package runnershigh.capstone.s3.exception;
 
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.global.exception.FileException;
