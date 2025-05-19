@@ -37,6 +37,7 @@ public class S3Service {
             log.info("만들어진 사진의 경로 {}", fileName);
             return putS3(uploadFile, fileName);
         } catch (Exception e) {
+            log.error("S3 업로드 중 예외 발생", e);
             throw new FileNotFoundException(ErrorCode.FILE_UPLOAD_FAILED);
         } finally {
             removeNewFile(uploadFile);
