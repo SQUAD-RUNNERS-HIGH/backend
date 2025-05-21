@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.dto.CrewSearchCondition;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
 import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
@@ -115,14 +114,21 @@ public class CrewService {
         CrewSearchRequest crewSearchRequest,
         Pageable pageable) {
 
-        CrewSearchCondition crewSearchCondition = crewMapper.toCrewSearchCondition(
-            crewSearchRequest);
+        if (crewSearchRequest.name() != null) {
+            Page<Crew> crews = crewRepository.searchByName(crewSearchRequest.name(), pageable);
+            Page<CrewSimpleResponse> crewSimpleResponses = crewMapper.toCrewSimplePagingResponse(
+                crews);
+            return CrewSearchPagingResponse.from(crewSimpleResponses);
 
-        Page<Crew> crews = crewRepository.findCrewByCondition(crewSearchCondition,
-            pageable);
-        Page<CrewSimpleResponse> crewSearchResponse = crewMapper.toCrewSimplePagingResponse(crews);
+        } else if (crewSearchRequest.region() != null) {
+            Page<Crew> crews = crewRepository.searchBySpecificLocation(crewSearchRequest.region(),
+                pageable);
+            Page<CrewSimpleResponse> crewSimpleResponses = crewMapper.toCrewSimplePagingResponse(
+                crews);
+            return CrewSearchPagingResponse.from(crewSimpleResponses);
+        }
 
-        return CrewSearchPagingResponse.from(crewSearchResponse);
+        return null;
     }
 
     @Transactional(readOnly = true)
