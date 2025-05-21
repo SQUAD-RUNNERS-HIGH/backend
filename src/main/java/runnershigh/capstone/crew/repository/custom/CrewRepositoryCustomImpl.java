@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.domain.QCrew;
-import runnershigh.capstone.crew.dto.CrewSearchCondition;
 
 @Repository
 public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
@@ -18,24 +17,6 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
 
     public CrewRepositoryCustomImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
-    }
-
-    @Override
-    public Page<Crew> findCrewByCondition(CrewSearchCondition request, Pageable pageable) {
-
-        QCrew crew = QCrew.crew;
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (request.region() != null && !request.region().isBlank()) {
-            builder.and(crew.crewLocation.specificLocation.containsIgnoreCase(request.region()));
-        }
-
-        if (request.name() != null && !request.name().isBlank()) {
-            builder.and(crew.name.containsIgnoreCase(request.name()));
-        }
-
-        return getCrewPage(pageable, crew, builder);
     }
 
     @Override
@@ -74,3 +55,5 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         return new PageImpl<>(content, pageable, totalCount);
     }
 }
+
+

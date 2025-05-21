@@ -15,12 +15,25 @@ public interface CrewRepository extends JpaRepository<Crew, Long>, CrewRepositor
 
     Optional<Crew> findByIdAndCrewLeaderId(Long id, Long crewLeaderId);
 
-    Page<Crew> findByCrewLocation_CityAndCrewLocation_Dong(String city, String dong,
-        Pageable pageable);
-
     @Query("select c from Crew c "
         + "join fetch c.crewParticipant cp "
         + "join fetch cp.participant "
         + "where c.id = :crewId")
     Optional<Crew> findByIdWithParticipants(@Param("crewId") Long crewId);
+
+    @Query(value = """
+        SELECT * 
+        FROM crew 
+        WHERE MATCH(specific_location) 
+              AGAINST(:keyword IN BOOLEAN MODE)
+        """, nativeQuery = true)
+    Page<Crew> searchBySpecificLocation(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query(value = """
+        SELECT * 
+        FROM crew 
+        WHERE MATCH(name) 
+              AGAINST(:keyword IN BOOLEAN MODE)
+        """, nativeQuery = true)
+    Page<Crew> searchByName(@Param("keyword") String keyword, Pageable pageable);
 }

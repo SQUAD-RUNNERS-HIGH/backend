@@ -47,7 +47,8 @@ public class CrewParticipantService {
                     cp.getCrew().getId(),
                     cp.getCrew().getName(),
                     cp.getCrew().getCrewParticipant().size(),
-                    cp.getCrew().crewUserRoleIsLeader(userId).toString()
+                    cp.getCrew().crewUserRoleIsLeader(userId).toString(),
+                    cp.getCrew().getImage()
                 )
             ).toList();
         return new MyCrewResponse(myCrews);
