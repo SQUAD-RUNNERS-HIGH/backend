@@ -10,7 +10,8 @@ public record MyCrewResponse(
         Long crewId,
         String crewName,
         Integer numberOfParticipants,
-        String crewUserRole
+        String crewUserRole,
+        String image
     ) {
 
     }
