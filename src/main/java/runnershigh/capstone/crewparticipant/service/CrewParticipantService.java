@@ -36,6 +36,7 @@ public class CrewParticipantService {
         CrewParticipant crewParticipant = getCrewParticipant(participantId, crewId);
         crewParticipant.getCrew().validationCrewLeader(crewLeaderId);
         crewParticipantRepository.delete(crewParticipant);
+        crewParticipantRepository.flush(); // 낙관적 락 즉시 감지
 
         return new CrewParticipantDeleteResponse(crewParticipant.getParticipant().getId());
     }
