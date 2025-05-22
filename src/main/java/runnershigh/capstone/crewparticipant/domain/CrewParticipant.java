@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,9 +32,6 @@ public class CrewParticipant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Crew crew;
-
-    @Version
-    private Long version;
 
     @Builder
     public CrewParticipant(User participant, Crew crew) {
