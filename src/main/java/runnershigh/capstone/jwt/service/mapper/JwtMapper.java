@@ -11,7 +11,7 @@ public class JwtMapper {
         return LoginResponse.builder()
             .tokenResponse(tokenResponse)
             .userId(userId)
-            .userName(userName)
+            .username(userName)
             .build();
     }
 }

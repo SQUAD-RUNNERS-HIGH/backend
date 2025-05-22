@@ -6,7 +6,7 @@ import lombok.Builder;
 public record LoginResponse(
     TokenResponse tokenResponse,
     Long userId,
-    String userName
+    String username
 ) {
 
 }

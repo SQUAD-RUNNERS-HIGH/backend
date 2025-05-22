@@ -21,7 +21,6 @@ import runnershigh.capstone.running.geometry.GeometryProjectionHandlerMapping;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository.ParticipantLocation;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository.ReadyStatus;
-import runnershigh.capstone.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,7 @@ public class CrewRunningService {
         final String courseId, final String crewId) {
         crewRunningRedisRepository.addLocation(request, courseId, crewId);
         crewRunningRedisRepository.addReadyStatus(courseId, crewId, request.userId(),
-            request.isReady(),request.userName());
+            request.isReady(),request.username());
         return new CrewParticipantInfoResponse(getCrewParticipantInfo(request.userId(),courseId,crewId));
     }
 
@@ -63,12 +62,11 @@ public class CrewRunningService {
         List<ParticipantLocation> locations = crewRunningRedisRepository.geoSearch(courseId, crewId, userId);
         Map<String, ReadyStatus> readyStatus = crewRunningRedisRepository.getReadyStatus(courseId,
             crewId);
-        List<CrewParticipantInfo> list = locations.stream().map(l -> {
-            ReadyStatus status = readyStatus.get(userId);
+        return locations.stream().map(l -> {
+            ReadyStatus status = readyStatus.get(l.getUserId());
             return new CrewParticipantInfo(l.getUserId(), status.isReady(),
                 status.getUsername(), l.getLongitude(),
                 l.getLatitude());
         }).toList();
-        return list;
     }
 }
