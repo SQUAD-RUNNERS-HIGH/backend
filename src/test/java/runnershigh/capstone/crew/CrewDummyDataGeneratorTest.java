@@ -13,10 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import runnershigh.capstone.builders.UserTestBuilder;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.location.domain.Location;
-import runnershigh.capstone.user.domain.Goal;
-import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
 
 @SpringBootTest
@@ -33,8 +32,7 @@ class CrewDummyDataGeneratorTest {
         int count = 100_000;
         int jeongwangCount = 10;
 
-        User user = new User("loginId", "password", "passwordSalt", "username", new Physical(),
-            new Goal(), new Location());
+        User user = UserTestBuilder.builder().build();
         em.persist(user);
 
         // 무작위 인덱스를 정왕동용으로 생성

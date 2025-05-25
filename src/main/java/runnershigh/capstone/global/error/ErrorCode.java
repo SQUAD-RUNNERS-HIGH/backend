@@ -12,6 +12,8 @@ public enum ErrorCode {
      */
     REQUEST_FIELD_VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "000", "요청 파라미터 검증에 실패했습니다"),
 
+    OPTIMISTIC_LOCK_CONFLICT(HttpStatus.CONFLICT, "001", "요청이 충돌하여 처리되지 않았습니다. 다시 시도해주세요."),
+
     /**
      * Course 관련 에러 코드 100~199
      */
