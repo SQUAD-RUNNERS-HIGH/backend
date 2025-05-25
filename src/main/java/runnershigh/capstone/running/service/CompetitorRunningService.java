@@ -31,9 +31,9 @@ public class CompetitorRunningService {
         final UserCoordinate rawUserCoordinate = new UserCoordinate(request.longitude(), request.latitude());
         final UserCoordinate projectedUserCoordinate = handler.project(courseDocument, rawUserCoordinate);
 
-//        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
-//            return new CompetitorRunningResponse(RunningStatus.ESCAPED, rawUserCoordinate.x, rawUserCoordinate.y);
-//        }
+        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
+            return new CompetitorRunningResponse(RunningStatus.ESCAPED, rawUserCoordinate.x, rawUserCoordinate.y);
+        }
         return new CompetitorRunningResponse(RunningStatus.ONGOING, projectedUserCoordinate.x,
             projectedUserCoordinate.y);
     }

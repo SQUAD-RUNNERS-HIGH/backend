@@ -6,7 +6,8 @@ public record CrewRunningResponse(
     RunningStatus runningStatus,
     String userId,
     double longitude,
-    double latitude
+    double latitude,
+    double progress
 ) {
 
 }

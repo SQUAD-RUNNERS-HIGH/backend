@@ -43,10 +43,10 @@ public class CrewRunningService {
 
         if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
             return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
-                rawUserCoordinate.y);
+                rawUserCoordinate.y, request.progress());
         }
         return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(), projectedUserCoordinate.x,
-            projectedUserCoordinate.y);
+            projectedUserCoordinate.y,request.progress());
     }
 
     public CrewParticipantInfoResponse sendReadyLocation(final CrewParticipantInfoRequest request,
