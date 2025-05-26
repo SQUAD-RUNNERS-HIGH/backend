@@ -41,10 +41,10 @@ public class CrewRunningService {
         final Coordinate rawUserCoordinate = new UserCoordinate(request.longitude(), request.latitude());
         final UserCoordinate projectedUserCoordinate = handler.project(courseDocument, rawUserCoordinate);
 
-        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
-            return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
-                rawUserCoordinate.y, request.progress());
-        }
+//        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
+//            return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
+//                rawUserCoordinate.y, request.progress());
+//        }
         return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(), projectedUserCoordinate.x,
             projectedUserCoordinate.y,request.progress());
     }
