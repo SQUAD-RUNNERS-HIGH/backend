@@ -46,12 +46,14 @@ public class CrewApplicationService {
         Long crewId) {
         CrewApplication crewApplication = getCrewApplicationByApplicant(applicantId, crewId);
         crewApplication.approve(crewLeaderId);
+        crewApplicationRepository.delete(crewApplication);
         return new CrewApplicationApprovalResponse(applicantId);
     }
 
     public CrewApplicationRefusalResponse refuse(Long crewLeaderId, Long applicantId, Long crewId) {
         CrewApplication crewApplication = getCrewApplicationByApplicant(applicantId, crewId);
         crewApplication.refuse(crewLeaderId);
+        crewApplicationRepository.delete(crewApplication);
         return new CrewApplicationRefusalResponse();
     }
 

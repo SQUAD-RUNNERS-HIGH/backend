@@ -10,10 +10,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import runnershigh.capstone.chat.domain.ChatRoom;
 import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
 import runnershigh.capstone.crew.enums.CrewUserRole;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
@@ -50,6 +52,9 @@ public class Crew {
     @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CrewParticipant> crewParticipant;
 
+    @OneToOne(mappedBy = "crew", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ChatRoom chatRoom;
+
     @Builder
     public Crew(String name, String description, int maxCapacity, String image,
         Location crewLocation, User crewLeader, Set<CrewParticipant> crewParticipant) {
@@ -83,6 +88,17 @@ public class Crew {
         this.userCount = this.crewParticipant.size();
     }
 
+    public void createChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public CrewUserRole crewUserRoleIsLeader(Long userId) {
+        if (crewLeader.getId().equals(userId)) {
+            return CrewUserRole.LEADER;
+        }
+        return CrewUserRole.MEMBER;
+    }
+
     public void validationCrewLeader(Long crewLeaderId) {
         if (!crewLeader.getId().equals(crewLeaderId)) {
             throw new CrewNotFoundException(ErrorCode.CREW_LEADER_VALIDATION_FAILED);
@@ -111,13 +127,6 @@ public class Crew {
         } else {
             return CrewUserRole.VISITOR;
         }
-    }
-
-    public CrewUserRole crewUserRoleIsLeader(Long userId) {
-        if (crewLeader.getId().equals(userId)) {
-            return CrewUserRole.LEADER;
-        }
-        return CrewUserRole.MEMBER;
     }
 
 }
