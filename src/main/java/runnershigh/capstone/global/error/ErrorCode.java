@@ -43,9 +43,16 @@ public enum ErrorCode {
     CREW_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "350", "존재하지 않는 크루 참가자입니다."),
 
     /**
-     * 인증 관련 에러 코드 400~499
+     * 인증 관련 에러 코드 400~449
      */
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "400", "비밀번호가 일치하지 않습니다."),
+
+    INVALID_TOKEN(HttpStatus.NOT_FOUND, "401", "토큰이 유효하지 않습니다."),
+
+    /**
+     * Chat 관련 에러 코드 450~499
+     */
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "450", "존재하지 않는 채팅방입니다."),
 
     /**
      * User 관련 에러 코드 500~549

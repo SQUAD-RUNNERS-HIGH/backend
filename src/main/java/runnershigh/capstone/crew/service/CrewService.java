@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import runnershigh.capstone.chat.domain.ChatRoom;
+import runnershigh.capstone.chat.service.room.ChatRoomService;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
@@ -41,10 +43,12 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final CrewMapper crewMapper;
+
     private final UserService userService;
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
     private final S3Service s3Service;
+    private final ChatRoomService chatRoomService;
 
     private static final String S3_DIRECTORY_NAME = "crew";
 
@@ -59,8 +63,10 @@ public class CrewService {
 
         String imageUrl = s3Service.upload(image, S3_DIRECTORY_NAME);
         Crew crew = crewMapper.toCrew(crewLeader, crewCreateRequest, addressResponse, imageUrl);
-        crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
 
+        crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
+        crew.createChatRoom(new ChatRoom(crew));
+        
         crewRepository.save(crew);
         crewScoreService.save(crew);
 
