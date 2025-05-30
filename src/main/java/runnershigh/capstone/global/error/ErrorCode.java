@@ -47,6 +47,8 @@ public enum ErrorCode {
      */
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "400", "비밀번호가 일치하지 않습니다."),
 
+    INVALID_TOKEN(HttpStatus.NOT_FOUND, "401", "토큰이 유효하지 않습니다."),
+
     /**
      * Chat 관련 에러 코드 450~499
      */

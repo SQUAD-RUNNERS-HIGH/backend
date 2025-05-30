@@ -10,11 +10,12 @@ import runnershigh.capstone.chat.dto.ChatMessageResponse;
 @Component
 public class ChatMessageMapper {
 
-    public ChatMessage toChatMessage(ChatRoom room, ChatMessageRequest chatMessageRequest) {
+    public ChatMessage toChatMessage(ChatRoom room, ChatMessageRequest chatMessageRequest,
+        Long userId, String senderName) {
         return ChatMessage.builder()
             .chatRoom(room)
-            .senderId(chatMessageRequest.senderId())
-            .senderName(chatMessageRequest.senderName())
+            .senderId(userId)
+            .senderName(senderName)
             .content(chatMessageRequest.content())
             .chatMessageType(ChatMessageType.valueOf(chatMessageRequest.messageType()))
             .build();

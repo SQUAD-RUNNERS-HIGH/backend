@@ -10,6 +10,7 @@ import runnershigh.capstone.chat.dto.ChatMessageResponse;
 import runnershigh.capstone.chat.repository.ChatMessageRepository;
 import runnershigh.capstone.chat.repository.ChatRoomRepository;
 import runnershigh.capstone.chat.service.message.mapper.ChatMessageMapper;
+import runnershigh.capstone.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -17,13 +18,17 @@ import runnershigh.capstone.chat.service.message.mapper.ChatMessageMapper;
 public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatMessageMapper chatMessageMapper;
     private final ChatRoomRepository chatRoomRepository;
 
-    public ChatMessageResponse saveChatMessage(ChatRoom room,
-        ChatMessageRequest chatMessageRequest) {
+    private final ChatMessageMapper chatMessageMapper;
+    private final UserService userService;
 
-        ChatMessage message = chatMessageMapper.toChatMessage(room, chatMessageRequest);
+    public ChatMessageResponse saveChatMessage(ChatRoom room,
+        ChatMessageRequest chatMessageRequest, Long userId) {
+
+        String senderName = userService.getUser(userId).getUsername();
+        ChatMessage message = chatMessageMapper.toChatMessage(room, chatMessageRequest, userId,
+            senderName);
         chatMessageRepository.save(message);
 
         room.saveLastChatTimeStampAndLastChat(message.getSentAt(), message.getContent());

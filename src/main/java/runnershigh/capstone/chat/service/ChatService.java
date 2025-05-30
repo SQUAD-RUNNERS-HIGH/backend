@@ -16,8 +16,8 @@ public class ChatService {
     private final ChatMessageService chatMessageService;
 
     public ChatMessageResponse processAndSaveChatMessage(Long crewId,
-        ChatMessageRequest chatMessageRequest) {
+        ChatMessageRequest chatMessageRequest, Long userId) {
         ChatRoom room = chatRoomService.getChatRoom(crewId);
-        return chatMessageService.saveChatMessage(room, chatMessageRequest);
+        return chatMessageService.saveChatMessage(room, chatMessageRequest, userId);
     }
 }
