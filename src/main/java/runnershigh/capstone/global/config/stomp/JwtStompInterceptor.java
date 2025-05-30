@@ -19,6 +19,7 @@ public class JwtStompInterceptor implements ChannelInterceptor {
     private final JwtValidator jwtValidator;
     private final JwtExtractor jwtExtractor;
 
+    private static final String NATIVE_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
@@ -26,7 +27,7 @@ public class JwtStompInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            String authHeader = accessor.getFirstNativeHeader("Authorization");
+            String authHeader = accessor.getFirstNativeHeader(NATIVE_HEADER);
             if (authHeader.startsWith(BEARER_PREFIX)) {
                 String token = authHeader.substring(7);
                 if (jwtValidator.validateAccessToken(token)) {
