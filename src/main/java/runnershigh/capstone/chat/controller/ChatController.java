@@ -19,8 +19,8 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @MessageMapping("/chat/{crewId}")
-    @SendTo("/topic/crew/{crewId}")
+    @MessageMapping("/chat/crew/{crewId}")
+    @SendTo("/topic/chat/crew/{crewId}")
     public ChatMessageResponse sendToCrew(@DestinationVariable Long crewId,
         @Payload ChatMessageRequest messageRequest, SimpMessageHeaderAccessor headerAccessor) {
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
