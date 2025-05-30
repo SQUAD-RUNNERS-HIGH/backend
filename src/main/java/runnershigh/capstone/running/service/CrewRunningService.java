@@ -45,7 +45,7 @@ public class CrewRunningService {
 //            return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
 //                rawUserCoordinate.y, request.progress());
 //        }
-        return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(), projectedUserCoordinate.x,
+        return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(),request.username(), projectedUserCoordinate.x,
             projectedUserCoordinate.y,request.progress());
     }
 
