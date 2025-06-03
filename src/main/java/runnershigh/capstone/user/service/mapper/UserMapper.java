@@ -11,6 +11,7 @@ import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.dto.UserPhysicalRequest;
 import runnershigh.capstone.user.dto.UserPhysicalResponse;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
+import runnershigh.capstone.user.dto.UserResponse;
 
 @Component
 public class UserMapper {
@@ -66,6 +67,15 @@ public class UserMapper {
             .city(userLocation.getCity())
             .dong(userLocation.getDong())
             .specificLocation(userLocation.getSpecificLocation())
+            .build();
+    }
+
+    public UserResponse toUserResponse(User user) {
+        return UserResponse.builder()
+            .loginId(user.getLoginId())
+            .username(user.getUsername())
+            .physical(toUserPhysicalResponse(user.getPhysical()))
+            .userLocation(toUserLocationResponse(user.getUserLocation()))
             .build();
     }
 }

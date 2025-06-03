@@ -17,6 +17,7 @@ import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
+import runnershigh.capstone.user.service.UserQueryService;
 import runnershigh.capstone.user.service.UserService;
 
 @RestController
@@ -26,6 +27,7 @@ import runnershigh.capstone.user.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final UserQueryService userQueryService;
     private final GeocodingService geocodingService;
 
     @PostMapping("/register")
@@ -37,15 +39,20 @@ public class UserController {
     @GetMapping
     @Operation(summary = "유저 프로필 조회", description = "유저 ID를 받아, 프로필 정보를 반환합니다.")
     public UserResponse getProfile(@Parameter(hidden = true) @AuthUser Long userId) {
-        return userService.getProfile(userId);
+        return userQueryService.getProfile(userId);
     }
 
     @PatchMapping
     @Operation(summary = "유저 프로필 수정", description = "유저 ID & 수정할 유저 정보를 받아, 수정된 프로필 정보를 반환합니다.")
     public UserResponse updateProfile(@Parameter(hidden = true) @AuthUser Long userId,
         @RequestBody UserProfileRequest userProfileRequest) {
-
         return userService.updateProfile(userId, userProfileRequest);
+    }
+
+    @GetMapping("/username")
+    @Operation(summary = "유저네임 조회", description = "유저 ID를 받아, 유저네임을 반환합니다.")
+    public String getUsername(@Parameter(hidden = true) @AuthUser Long userId) {
+        return userQueryService.getUsername(userId);
     }
 
     @GetMapping("/location-test")

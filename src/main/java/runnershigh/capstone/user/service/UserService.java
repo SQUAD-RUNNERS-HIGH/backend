@@ -21,6 +21,7 @@ import runnershigh.capstone.user.service.mapper.UserMapper;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class UserService {
 
@@ -28,7 +29,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final GeocodingService geocodingService;
 
-    @Transactional
     public UserResponse register(UserRegisterRequest userRegisterRequest) {
 
         validateRegisterRequest(userRegisterRequest);
@@ -43,12 +43,9 @@ public class UserService {
 
         userRepository.save(user);
 
-        return new UserResponse(user.getLoginId(), user.getUsername(),
-            userMapper.toUserPhysicalResponse(user.getPhysical()),
-            userMapper.toUserLocationResponse(user.getUserLocation()));
+        return userMapper.toUserResponse(user);
     }
 
-    @Transactional
     public UserResponse updateProfile(Long userId, UserProfileRequest userProfileRequest) {
         User user = getUser(userId);
         Physical physicalRequest = userMapper.toPhysical(userProfileRequest.physical());
@@ -60,17 +57,7 @@ public class UserService {
         user.updateProfile(userProfileRequest.password(), userProfileRequest.username(),
             physicalRequest, userLocation);
 
-        return new UserResponse(user.getLoginId(), user.getUsername(),
-            userMapper.toUserPhysicalResponse(user.getPhysical()),
-            userMapper.toUserLocationResponse(user.getUserLocation()));
-    }
-
-    @Transactional(readOnly = true)
-    public UserResponse getProfile(Long userId) {
-        User user = getUser(userId);
-        return new UserResponse(user.getLoginId(), user.getUsername(),
-            userMapper.toUserPhysicalResponse(user.getPhysical()),
-            userMapper.toUserLocationResponse(user.getUserLocation()));
+        return userMapper.toUserResponse(user);
     }
 
     public User getUser(Long userId) {
@@ -94,6 +81,5 @@ public class UserService {
         return geocodingService.getFormattedAddress(
             userLocationRequest.latitude(), userLocationRequest.longitude());
     }
-
 
 }
