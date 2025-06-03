@@ -12,21 +12,20 @@ import runnershigh.capstone.chat.exception.ChatNotFoundException;
 import runnershigh.capstone.chat.repository.ChatRoomRepository;
 import runnershigh.capstone.chat.service.room.mapper.ChatRoomMapper;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.service.CrewService;
+import runnershigh.capstone.crew.service.CrewQueryService;
 import runnershigh.capstone.global.error.ErrorCode;
 
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
 
-    private final CrewService crewService;
-
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMapper chatRoomMapper;
+    private final CrewQueryService crewQueryService;
 
     @Transactional(readOnly = true)
     public ChatRoomListResponse getChatRoomList(Long userId) {
-        List<Crew> crews = crewService.getCrewsByUserId(userId);
+        List<Crew> crews = crewQueryService.getCrewsByUserId(userId);
 
         List<ChatRoom> chatRooms = crews.stream()
             .map(Crew::getChatRoom)

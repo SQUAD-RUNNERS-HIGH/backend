@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +26,7 @@ import runnershigh.capstone.crew.dto.response.CrewParticipantsDetailsResponse;
 import runnershigh.capstone.crew.dto.response.CrewSearchPagingResponse;
 import runnershigh.capstone.crew.dto.response.CrewSimpleResponse;
 import runnershigh.capstone.crew.dto.response.CrewUpdateResponse;
+import runnershigh.capstone.crew.service.CrewQueryService;
 import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 
@@ -37,6 +37,7 @@ import runnershigh.capstone.global.argumentresolver.AuthUser;
 public class CrewController {
 
     private final CrewService crewService;
+    private final CrewQueryService crewQueryService;
 
     @PostMapping
     @Operation(summary = "크루 생성", description = "크루 리더 ID & 크루 생성 정보를 받아, 크루 ID를 반환합니다.")
@@ -49,13 +50,13 @@ public class CrewController {
     @Operation(summary = "크루 정보 조회", description = "크루 ID를 받아, 크루 관련 정보들을 반환합니다.")
     public CrewDetailResponse getCrewDetail(@Parameter(hidden = true) @AuthUser Long userId,
         @PathVariable Long crewId) {
-        return crewService.getCrewDetail(userId, crewId);
+        return crewQueryService.getCrewDetail(userId, crewId);
     }
 
     @GetMapping("/{crewId}/participants")
     @Operation(summary = "크루 참가자들 조회", description = "크루 ID를 받아, 해당 크루 참가자들의 정보들을 반환합니다.")
     public Set<CrewParticipantsDetailsResponse> getCrewParticipants(@PathVariable Long crewId) {
-        return crewService.getCrewParticipants(crewId);
+        return crewQueryService.getCrewParticipants(crewId);
     }
 
     @PatchMapping("/{crewId}")
@@ -72,7 +73,7 @@ public class CrewController {
     @Operation(summary = "크루 검색", description = "검색할 정보를 받아, 해당하는 크루들의 정보를 반환합니다.")
     public CrewSearchPagingResponse<CrewSimpleResponse> searchCrew(
         @ModelAttribute CrewSearchRequest crewSearchRequest, Pageable pageable) {
-        return crewService.searchCrew(crewSearchRequest, pageable);
+        return crewQueryService.searchCrew(crewSearchRequest, pageable);
     }
 
     @GetMapping("/nearby")
@@ -80,7 +81,7 @@ public class CrewController {
     public CrewSearchPagingResponse<CrewSimpleResponse> getNearbyCrews(
         @Parameter(hidden = true) @AuthUser Long userId,
         Pageable pageable) {
-        return crewService.getCrewNearby(userId, pageable);
+        return crewQueryService.getCrewNearby(userId, pageable);
     }
 
     @DeleteMapping("/{crewId}")
