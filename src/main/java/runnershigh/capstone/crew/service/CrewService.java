@@ -1,5 +1,6 @@
 package runnershigh.capstone.crew.service;
 
+import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.chat.domain.ChatRoom;
-import runnershigh.capstone.chat.service.room.ChatRoomService;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewSearchRequest;
@@ -26,6 +26,7 @@ import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crew.repository.CrewRepository;
 import runnershigh.capstone.crew.service.mapper.CrewMapper;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.crewparticipant.service.CrewParticipantService;
 import runnershigh.capstone.crewscore.service.CrewScoreService;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
@@ -48,7 +49,7 @@ public class CrewService {
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
     private final S3Service s3Service;
-    private final ChatRoomService chatRoomService;
+    private final CrewParticipantService crewParticipantService;
 
     private static final String S3_DIRECTORY_NAME = "crew";
 
@@ -66,7 +67,7 @@ public class CrewService {
 
         crew.addToCrewAsParticipant(new CrewParticipant(crewLeader));
         crew.createChatRoom(new ChatRoom(crew));
-        
+
         crewRepository.save(crew);
         crewScoreService.save(crew);
 
@@ -156,6 +157,11 @@ public class CrewService {
     public Crew getCrewById(Long crewId) {
         return crewRepository.findById(crewId)
             .orElseThrow(() -> new CrewNotFoundException(ErrorCode.CREW_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Crew> getCrewsByUserId(Long userId) {
+        return crewParticipantService.getCrewsByUserId(userId);
     }
 
     private Crew getCrewByIdAndLeaderId(Long crewId, Long crewLeaderId) {

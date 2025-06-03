@@ -21,6 +21,7 @@ import runnershigh.capstone.crew.enums.CrewUserRole;
 import runnershigh.capstone.crew.exception.CrewNotFoundException;
 import runnershigh.capstone.crewapplication.exception.CrewApplicationNotFoundException;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
+import runnershigh.capstone.crewparticipant.exception.CrewParticipantNotFoundException;
 import runnershigh.capstone.global.error.ErrorCode;
 import runnershigh.capstone.location.domain.Location;
 import runnershigh.capstone.user.domain.User;
@@ -31,7 +32,7 @@ import runnershigh.capstone.user.domain.User;
 public class Crew {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -105,11 +106,22 @@ public class Crew {
         }
     }
 
+    public void validationNotCrewParticipant(Long applicantId) {
+        boolean exists = this.crewParticipant.stream()
+            .anyMatch(c -> c.getParticipant().getId().equals(applicantId));
+
+        if (exists) {
+            throw new CrewApplicationNotFoundException(ErrorCode.EXISTED_CREW_PARTICIPANT);
+        }
+    }
+
     public void validationCrewParticipant(Long applicantId) {
-        this.crewParticipant.stream().filter(c -> c.getParticipant().getId().equals(applicantId))
-            .findFirst().ifPresent(c -> {
-                throw new CrewApplicationNotFoundException(ErrorCode.EXISTED_CREW_PARTICIPANT);
-            });
+        boolean isParticipant = this.crewParticipant.stream()
+            .anyMatch(c -> c.getParticipant().getId().equals(applicantId));
+
+        if (!isParticipant) {
+            throw new CrewParticipantNotFoundException(ErrorCode.CREW_PARTICIPANT_NOT_FOUND);
+        }
     }
 
     public void validationCrewAvailableCapacity() {

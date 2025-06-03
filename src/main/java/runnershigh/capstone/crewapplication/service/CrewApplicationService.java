@@ -35,7 +35,7 @@ public class CrewApplicationService {
         validateDuplicatedApplication(applicantId, crewId);
         User applicant = userService.getUser(applicantId);
         Crew crew = crewService.getCrewById(crewId);
-        crew.validationCrewParticipant(applicantId);
+        crew.validationNotCrewParticipant(applicantId);
         CrewApplication crewApplication = crewApplicationMapper.toCrewApplication(applicant, crew);
         crewApplicationRepository.save(crewApplication);
 

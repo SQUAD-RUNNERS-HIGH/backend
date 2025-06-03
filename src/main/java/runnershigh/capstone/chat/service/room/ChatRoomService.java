@@ -5,23 +5,36 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import runnershigh.capstone.chat.domain.ChatMessage;
 import runnershigh.capstone.chat.domain.ChatRoom;
 import runnershigh.capstone.chat.dto.ChatRoomListResponse;
 import runnershigh.capstone.chat.exception.ChatNotFoundException;
 import runnershigh.capstone.chat.repository.ChatRoomRepository;
 import runnershigh.capstone.chat.service.room.mapper.ChatRoomMapper;
-import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
-import runnershigh.capstone.crewparticipant.repository.CrewParticipantRepository;
+import runnershigh.capstone.crew.domain.Crew;
+import runnershigh.capstone.crew.service.CrewService;
 import runnershigh.capstone.global.error.ErrorCode;
 
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final CrewParticipantRepository crewParticipantRepository;
+    private final CrewService crewService;
 
+    private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMapper chatRoomMapper;
+
+    @Transactional(readOnly = true)
+    public ChatRoomListResponse getChatRoomList(Long userId) {
+        List<Crew> crews = crewService.getCrewsByUserId(userId);
+
+        List<ChatRoom> chatRooms = crews.stream()
+            .map(Crew::getChatRoom)
+            .filter(Objects::nonNull)
+            .toList();
+
+        return chatRoomMapper.toChatRoomListResponse(chatRooms);
+    }
 
     @Transactional(readOnly = true)
     public ChatRoom getChatRoom(Long crewId) {
@@ -30,15 +43,10 @@ public class ChatRoomService {
             );
     }
 
-    @Transactional(readOnly = true)
-    public ChatRoomListResponse getChatRoomList(Long userId) {
-        List<CrewParticipant> crewParticipants = crewParticipantRepository.findByUserId(userId);
 
-        List<ChatRoom> chatRooms = crewParticipants.stream()
-            .map(participation -> participation.getCrew().getChatRoom())
-            .filter(Objects::nonNull)
-            .toList();
-
-        return chatRoomMapper.toChatRoomListResponse(chatRooms);
+    @Transactional
+    public void updateLastMessageInfo(ChatRoom room, ChatMessage message) {
+        room.saveLastChatTimeStampAndLastChat(message.getSentAt(), message.getContent());
+        chatRoomRepository.save(room);
     }
 }

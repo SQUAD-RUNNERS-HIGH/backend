@@ -24,6 +24,6 @@ public class ChatController {
     public ChatMessageResponse sendToCrew(@DestinationVariable Long crewId,
         @Payload ChatMessageRequest messageRequest, SimpMessageHeaderAccessor headerAccessor) {
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
-        return chatService.processAndSaveChatMessage(crewId, messageRequest, userId);
+        return chatService.sendChatMessage(crewId, messageRequest, userId);
     }
 }

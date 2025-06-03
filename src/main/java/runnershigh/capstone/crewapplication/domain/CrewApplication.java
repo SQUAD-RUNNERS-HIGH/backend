@@ -23,7 +23,7 @@ import runnershigh.capstone.user.domain.User;
 public class CrewApplication {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

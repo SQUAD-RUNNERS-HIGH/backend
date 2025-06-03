@@ -41,4 +41,8 @@ public class ChatRoom {
         this.lastChatTimeStamp = sendAt;
         this.lastChat = lastChat;
     }
+
+    public void validationCrewParticipant(Long userId) {
+        crew.validationCrewParticipant(userId);
+    }
 }
