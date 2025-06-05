@@ -1,13 +1,12 @@
 package runnershigh.capstone.chat.service.room;
 
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.chat.domain.ChatMessage;
 import runnershigh.capstone.chat.domain.ChatRoom;
-import runnershigh.capstone.chat.dto.ChatRoomListResponse;
+import runnershigh.capstone.chat.dto.response.ChatRoomPreviewListResponse;
 import runnershigh.capstone.chat.exception.ChatNotFoundException;
 import runnershigh.capstone.chat.repository.ChatRoomRepository;
 import runnershigh.capstone.chat.service.room.mapper.ChatRoomMapper;
@@ -24,15 +23,14 @@ public class ChatRoomService {
     private final CrewQueryService crewQueryService;
 
     @Transactional(readOnly = true)
-    public ChatRoomListResponse getChatRoomList(Long userId) {
+    public ChatRoomPreviewListResponse getChatRoomPreviews(Long userId) {
         List<Crew> crews = crewQueryService.getCrewsByUserId(userId);
 
         List<ChatRoom> chatRooms = crews.stream()
             .map(Crew::getChatRoom)
-            .filter(Objects::nonNull)
             .toList();
 
-        return chatRoomMapper.toChatRoomListResponse(chatRooms);
+        return chatRoomMapper.toChatRoomPreviewListResponse(chatRooms);
     }
 
     @Transactional(readOnly = true)
@@ -41,7 +39,6 @@ public class ChatRoomService {
             .orElseThrow(() -> new ChatNotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
             );
     }
-
 
     @Transactional
     public void updateLastMessageInfo(ChatRoom room, ChatMessage message) {

@@ -1,4 +1,4 @@
-package runnershigh.capstone.chat.dto;
+package runnershigh.capstone.chat.dto.request;
 
 public record ChatMessageRequest(
     String content,

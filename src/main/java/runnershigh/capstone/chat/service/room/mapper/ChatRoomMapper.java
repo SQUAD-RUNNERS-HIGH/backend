@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import runnershigh.capstone.chat.domain.ChatRoom;
-import runnershigh.capstone.chat.dto.ChatRoomListResponse;
-import runnershigh.capstone.chat.dto.ChatRoomResponse;
+import runnershigh.capstone.chat.dto.response.ChatRoomPreviewListResponse;
+import runnershigh.capstone.chat.dto.response.ChatRoomPreviewResponse;
 
 @Component
 public class ChatRoomMapper {
 
-    public ChatRoomListResponse toChatRoomListResponse(List<ChatRoom> chatRooms) {
-        List<ChatRoomResponse> responses = chatRooms.stream()
-            .map(this::toChatRoomResponse)
+    public ChatRoomPreviewListResponse toChatRoomPreviewListResponse(List<ChatRoom> chatRooms) {
+        List<ChatRoomPreviewResponse> responses = chatRooms.stream()
+            .map(this::toChatRoomPreviewResponse)
             .collect(Collectors.toList());
 
-        return new ChatRoomListResponse(responses);
+        return new ChatRoomPreviewListResponse(responses);
     }
 
-    public ChatRoomResponse toChatRoomResponse(ChatRoom chatRoom) {
-        return ChatRoomResponse.builder()
+    public ChatRoomPreviewResponse toChatRoomPreviewResponse(ChatRoom chatRoom) {
+        return ChatRoomPreviewResponse.builder()
             .name(chatRoom.getCrew().getName())
             .userCount(chatRoom.getCrew().getUserCount())
             .lastChatTimeStamp(chatRoom.getLastChatTimeStamp())

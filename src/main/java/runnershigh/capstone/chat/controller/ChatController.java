@@ -8,8 +8,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
-import runnershigh.capstone.chat.dto.ChatMessageRequest;
-import runnershigh.capstone.chat.dto.ChatMessageResponse;
+import runnershigh.capstone.chat.dto.request.ChatMessageRequest;
+import runnershigh.capstone.chat.dto.response.ChatMessageResponse;
 import runnershigh.capstone.chat.service.ChatService;
 
 @RestController

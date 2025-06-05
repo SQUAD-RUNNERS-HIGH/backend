@@ -1,10 +1,10 @@
-package runnershigh.capstone.chat.dto;
+package runnershigh.capstone.chat.dto.response;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record ChatRoomResponse(
+public record ChatRoomPreviewResponse(
     String name,
     int userCount,
     LocalDateTime lastChatTimeStamp,

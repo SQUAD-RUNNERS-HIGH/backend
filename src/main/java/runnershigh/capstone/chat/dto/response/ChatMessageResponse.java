@@ -1,4 +1,4 @@
-package runnershigh.capstone.chat.dto;
+package runnershigh.capstone.chat.dto.response;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
