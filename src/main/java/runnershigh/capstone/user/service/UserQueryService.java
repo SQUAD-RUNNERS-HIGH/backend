@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.dto.UserResponse;
+import runnershigh.capstone.user.dto.UsernameResponse;
 import runnershigh.capstone.user.service.mapper.UserMapper;
 
 @Service
@@ -19,10 +20,10 @@ public class UserQueryService {
         User user = userService.getUser(userId);
         return userMapper.toUserResponse(user);
     }
-    
-    public String getUsername(Long userId) {
+
+    public UsernameResponse getUsername(Long userId) {
         User user = userService.getUser(userId);
-        return user.getUsername();
+        return new UsernameResponse(user.getUsername());
     }
 
 }

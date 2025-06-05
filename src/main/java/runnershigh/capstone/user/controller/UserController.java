@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.user.dto.UserProfileRequest;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
+import runnershigh.capstone.user.dto.UsernameResponse;
 import runnershigh.capstone.user.service.UserQueryService;
 import runnershigh.capstone.user.service.UserService;
 
@@ -49,9 +51,9 @@ public class UserController {
         return userService.updateProfile(userId, userProfileRequest);
     }
 
-    @GetMapping("/username")
-    @Operation(summary = "유저네임 조회", description = "유저 ID를 받아, 유저네임을 반환합니다.")
-    public String getUsername(@Parameter(hidden = true) @AuthUser Long userId) {
+    @GetMapping("/{userId}/username")
+    @Operation(summary = "유저네임 조회", description = "유저의 ID를 받아, 유저네임을 반환합니다.")
+    public UsernameResponse getUsername(@PathVariable Long userId) {
         return userQueryService.getUsername(userId);
     }
 
