@@ -38,4 +38,8 @@ public class ChatService {
     public ChatRoomPreviewListResponse getChatRoomPreviews(Long roomId) {
         return chatRoomService.getChatRoomPreviews(roomId);
     }
+
+    public void deleteChatMessages(Long roomId) {
+        chatMessageService.deleteMessagesByRoomId(roomId);
+    }
 }

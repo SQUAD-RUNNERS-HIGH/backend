@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import runnershigh.capstone.chat.domain.ChatRoom;
+import runnershigh.capstone.chat.service.ChatService;
 import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crew.dto.request.CrewCreateRequest;
 import runnershigh.capstone.crew.dto.request.CrewUpdateRequest;
@@ -39,6 +40,7 @@ public class CrewService {
     private final UserService userService;
     private final GeocodingService geocodingService;
     private final CrewScoreService crewScoreService;
+    private final ChatService chatService;
     private final S3Service s3Service;
 
     private static final String S3_DIRECTORY_NAME = "crew";
@@ -83,6 +85,7 @@ public class CrewService {
     public CrewDeleteResponse deleteCrew(Long crewLeaderId, Long crewId) {
         Crew crew = getCrewByIdAndLeaderId(crewId, crewLeaderId);
         s3Service.delete(crew.getImage());
+        chatService.deleteChatMessages(crew.getChatRoom().getId());
         crewRepository.delete(crew);
         crewScoreService.delete(crew);
         return new CrewDeleteResponse(crew.getId());

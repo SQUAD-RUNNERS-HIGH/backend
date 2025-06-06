@@ -43,6 +43,10 @@ public class ChatMessageService {
         return chatMessageMapper.toChatMessageListResponse(chatMessages, senderNames);
     }
 
+    public void deleteMessagesByRoomId(Long roomId) {
+        chatMessageRepository.deleteByChatRoomId(roomId);
+    }
+
     public ChatMessageResponse toChatMessageResponse(ChatMessage chatMessage) {
         return chatMessageMapper.toChatMessageResponse(chatMessage);
     }
