@@ -1,10 +1,11 @@
 package runnershigh.capstone.crewparticipant.service;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import runnershigh.capstone.crew.service.CrewService;
+import runnershigh.capstone.crew.domain.Crew;
 import runnershigh.capstone.crewparticipant.domain.CrewParticipant;
 import runnershigh.capstone.crewparticipant.dto.CrewParticipantDeleteResponse;
 import runnershigh.capstone.crewparticipant.dto.MyCrewResponse;
@@ -18,7 +19,6 @@ import runnershigh.capstone.global.error.ErrorCode;
 public class CrewParticipantService {
 
     private final CrewParticipantRepository crewParticipantRepository;
-    private final CrewService crewService;
 
     @Transactional
     public CrewParticipantDeleteResponse withdrawCrewParticipant(Long participantId, Long crewId) {
@@ -52,6 +52,13 @@ public class CrewParticipantService {
                 )
             ).toList();
         return new MyCrewResponse(myCrews);
+    }
+
+    public List<Crew> getCrewsByUserId(Long userId) {
+        return crewParticipantRepository.findByUserId(userId).stream()
+            .map(CrewParticipant::getCrew)
+            .filter(Objects::nonNull)
+            .toList();
     }
 
     private CrewParticipant getCrewParticipant(Long participantId, Long crewId) {

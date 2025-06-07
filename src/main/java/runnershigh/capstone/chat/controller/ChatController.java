@@ -8,8 +8,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
-import runnershigh.capstone.chat.dto.ChatMessageRequest;
-import runnershigh.capstone.chat.dto.ChatMessageResponse;
+import runnershigh.capstone.chat.dto.request.ChatMessageRequest;
+import runnershigh.capstone.chat.dto.response.ChatMessageResponse;
 import runnershigh.capstone.chat.service.ChatService;
 
 @RestController
@@ -24,6 +24,6 @@ public class ChatController {
     public ChatMessageResponse sendToCrew(@DestinationVariable Long crewId,
         @Payload ChatMessageRequest messageRequest, SimpMessageHeaderAccessor headerAccessor) {
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
-        return chatService.processAndSaveChatMessage(crewId, messageRequest, userId);
+        return chatService.sendChatMessage(crewId, messageRequest, userId);
     }
 }

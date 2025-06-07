@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.crew.domain.Crew;
-import runnershigh.capstone.crew.service.CrewService;
+import runnershigh.capstone.crew.service.CrewQueryService;
 import runnershigh.capstone.crewapplication.domain.CrewApplication;
 import runnershigh.capstone.crewapplication.domain.CrewApplicationStatus;
 import runnershigh.capstone.crewapplication.dto.CrewApplicationApprovalResponse;
@@ -25,17 +25,17 @@ import runnershigh.capstone.user.service.UserService;
 public class CrewApplicationService {
 
     private final UserService userService;
-    private final CrewService crewService;
     private final CrewApplicationMapper crewApplicationMapper;
     private final CrewApplicationRepository crewApplicationRepository;
+    private final CrewQueryService crewQueryService;
 
 
     public CrewApplicationResponse apply(Long applicantId, Long crewId) {
 
         validateDuplicatedApplication(applicantId, crewId);
         User applicant = userService.getUser(applicantId);
-        Crew crew = crewService.getCrewById(crewId);
-        crew.validationCrewParticipant(applicantId);
+        Crew crew = crewQueryService.getCrewById(crewId);
+        crew.validationNotCrewParticipant(applicantId);
         CrewApplication crewApplication = crewApplicationMapper.toCrewApplication(applicant, crew);
         crewApplicationRepository.save(crewApplication);
 
@@ -58,7 +58,7 @@ public class CrewApplicationService {
     }
 
     public CrewApplicationsListResponse getCrewApplicants(Long crewLeaderId, Long crewId) {
-        Crew crew = crewService.getCrewById(crewId);
+        Crew crew = crewQueryService.getCrewById(crewId);
         crew.validationCrewLeader(crewLeaderId);
         List<CrewApplication> crewApplications = getCrewApplications(crewId);
         return crewApplicationMapper.toCrewApplicationsListResponse(crewApplications);

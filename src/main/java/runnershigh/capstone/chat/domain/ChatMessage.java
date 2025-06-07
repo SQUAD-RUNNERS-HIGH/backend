@@ -26,7 +26,6 @@ public class ChatMessage {
     private Long id;
 
     private Long senderId;
-    private String senderName;
 
     private String content;
 
@@ -45,10 +44,9 @@ public class ChatMessage {
     }
 
     @Builder
-    public ChatMessage(Long senderId, String senderName, String content, ChatRoom chatRoom,
+    public ChatMessage(Long senderId, String content, ChatRoom chatRoom,
         ChatMessageType chatMessageType) {
         this.senderId = senderId;
-        this.senderName = senderName;
         this.content = content;
         this.chatRoom = chatRoom;
         this.chatMessageType = chatMessageType;

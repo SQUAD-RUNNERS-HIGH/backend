@@ -22,7 +22,7 @@ import runnershigh.capstone.user.domain.User;
 public class CrewParticipant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +46,4 @@ public class CrewParticipant {
     public void addCrew(Crew crew) {
         this.crew = crew;
     }
-
-
 }

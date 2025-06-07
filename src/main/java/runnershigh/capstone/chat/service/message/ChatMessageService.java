@@ -1,16 +1,20 @@
 package runnershigh.capstone.chat.service.message;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.chat.domain.ChatMessage;
 import runnershigh.capstone.chat.domain.ChatRoom;
-import runnershigh.capstone.chat.dto.ChatMessageRequest;
-import runnershigh.capstone.chat.dto.ChatMessageResponse;
+import runnershigh.capstone.chat.dto.request.ChatMessageRequest;
+import runnershigh.capstone.chat.dto.response.ChatMessageListResponse;
+import runnershigh.capstone.chat.dto.response.ChatMessageResponse;
 import runnershigh.capstone.chat.repository.ChatMessageRepository;
-import runnershigh.capstone.chat.repository.ChatRoomRepository;
 import runnershigh.capstone.chat.service.message.mapper.ChatMessageMapper;
-import runnershigh.capstone.user.service.UserService;
+import runnershigh.capstone.user.service.UserQueryService;
 
 @Service
 @RequiredArgsConstructor
@@ -18,22 +22,32 @@ import runnershigh.capstone.user.service.UserService;
 public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
-
     private final ChatMessageMapper chatMessageMapper;
-    private final UserService userService;
+    private final UserQueryService userQueryService;
 
-    public ChatMessageResponse saveChatMessage(ChatRoom room,
-        ChatMessageRequest chatMessageRequest, Long userId) {
+    public ChatMessage saveMessage(ChatRoom room,
+        ChatMessageRequest messageReq, Long userId) {
+        ChatMessage message = chatMessageMapper.toChatMessage(room, messageReq, userId);
+        return chatMessageRepository.save(message);
+    }
 
-        String senderName = userService.getUser(userId).getUsername();
-        ChatMessage message = chatMessageMapper.toChatMessage(room, chatMessageRequest, userId,
-            senderName);
-        chatMessageRepository.save(message);
+    public ChatMessageListResponse getChatMessages(Long roomId) {
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomIdOrderBySentAtAsc(
+            roomId);
 
-        room.saveLastChatTimeStampAndLastChat(message.getSentAt(), message.getContent());
-        chatRoomRepository.save(room);
+        Set<Long> senderIds = chatMessages.stream()
+            .map(ChatMessage::getSenderId)
+            .collect(Collectors.toSet());
 
-        return chatMessageMapper.toChatMessageResponse(message);
+        Map<Long, String> senderNames = userQueryService.getUsernamesByIds(senderIds);
+        return chatMessageMapper.toChatMessageListResponse(chatMessages, senderNames);
+    }
+
+    public void deleteMessagesByRoomId(Long roomId) {
+        chatMessageRepository.deleteByChatRoomId(roomId);
+    }
+
+    public ChatMessageResponse toChatMessageResponse(ChatMessage chatMessage) {
+        return chatMessageMapper.toChatMessageResponse(chatMessage);
     }
 }

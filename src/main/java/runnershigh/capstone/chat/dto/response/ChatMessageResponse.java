@@ -1,4 +1,4 @@
-package runnershigh.capstone.chat.dto;
+package runnershigh.capstone.chat.dto.response;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.Builder;
 public record ChatMessageResponse(
     Long crewId,
     Long senderId,
-    String senderName,
     String content,
     String messageType,
     LocalDateTime sentAt
