@@ -10,12 +10,12 @@ import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 import runnershigh.capstone.course.repository.CourseDocumentRepository;
 import runnershigh.capstone.running.domain.UserCoordinate;
+import runnershigh.capstone.running.dto.RunningStatus;
 import runnershigh.capstone.running.dto.request.CrewParticipantInfoRequest;
-import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse;
 import runnershigh.capstone.running.dto.request.CrewRunningInfoRequest;
+import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse;
 import runnershigh.capstone.running.dto.response.CrewParticipantInfoResponse.CrewParticipantInfo;
 import runnershigh.capstone.running.dto.response.CrewRunningResponse;
-import runnershigh.capstone.running.dto.RunningStatus;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandler;
 import runnershigh.capstone.running.geometry.GeometryProjectionHandlerMapping;
 import runnershigh.capstone.running.repository.CrewRunningRedisRepository;
@@ -41,20 +41,27 @@ public class CrewRunningService {
         final Coordinate rawUserCoordinate = new UserCoordinate(request.longitude(), request.latitude());
         final UserCoordinate projectedUserCoordinate = handler.project(courseDocument, rawUserCoordinate);
 
-//        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
-//            return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), rawUserCoordinate.x,
-//                rawUserCoordinate.y, request.progress());
-//        }
-        return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(),request.username(), projectedUserCoordinate.x,
-            projectedUserCoordinate.y,request.progress());
+        return getCrewRunningResponse(request, projectedUserCoordinate, rawUserCoordinate);
+    }
+
+    private CrewRunningResponse getCrewRunningResponse(final CrewRunningInfoRequest request,
+        final UserCoordinate projectedUserCoordinate, final Coordinate rawUserCoordinate) {
+        if (projectedUserCoordinate.isUserEscapedCourse(rawUserCoordinate)) {
+            return new CrewRunningResponse(RunningStatus.ESCAPED, request.userId(), request.username(),
+                rawUserCoordinate.x, rawUserCoordinate.y, request.progress());
+        }
+        return new CrewRunningResponse(RunningStatus.ONGOING, request.userId(), request.username(),
+            projectedUserCoordinate.x, projectedUserCoordinate.y, request.progress());
     }
 
     public CrewParticipantInfoResponse sendReadyLocation(final CrewParticipantInfoRequest request,
         final String courseId, final String crewId) {
         crewRunningRedisRepository.addLocation(request, courseId, crewId);
         crewRunningRedisRepository.addReadyStatus(courseId, crewId, request.userId(),
-            request.isReady(),request.username());
-        return new CrewParticipantInfoResponse(getCrewParticipantInfo(request.userId(),courseId,crewId));
+            request.isReady(), request.username());
+        List<CrewParticipantInfo> crewParticipantInfo = getCrewParticipantInfo(request.userId(), courseId, crewId);
+        log.info("participants:{}",crewParticipantInfo);
+        return new CrewParticipantInfoResponse(crewParticipantInfo);
     }
 
     private List<CrewParticipantInfo> getCrewParticipantInfo(final String userId,

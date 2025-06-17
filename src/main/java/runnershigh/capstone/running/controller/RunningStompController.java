@@ -49,7 +49,7 @@ public class RunningStompController {
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,
         @DestinationVariable("crewId") String crewId,
         @Payload CrewParticipantInfoRequest request) {
-        log.info("request:",request);
+        log.info("request:{}",request);
         return crewRunningService.sendReadyLocation(request, courseId, crewId);
     }
 }

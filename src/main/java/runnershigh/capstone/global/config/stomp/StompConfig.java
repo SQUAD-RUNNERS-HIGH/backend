@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final JwtStompInterceptor jwtStompInterceptor;
+    private final StompInterceptor stompInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -30,7 +30,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(jwtStompInterceptor);
+        registration.interceptors(stompInterceptor);
     }
 
 

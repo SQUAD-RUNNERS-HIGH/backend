@@ -44,6 +44,11 @@ public class CrewRunningRedisRepository {
         }
     }
 
+    public void removeReadyStatus(final String courseId, final String crewId, final String userId) {
+        String readyKey = CREW_READY_STATUS_KEY.formatted(courseId, crewId);
+        redisTemplate.opsForHash().delete(readyKey, userId);
+    }
+
     public Map<String,ReadyStatus> getReadyStatus(final String courseId, final String crewId){
         String readyKey = CREW_READY_STATUS_KEY.formatted(courseId, crewId);
         Map<Object, Object> raw = redisTemplate.opsForHash().entries(readyKey);
@@ -65,6 +70,11 @@ public class CrewRunningRedisRepository {
         final Point point = new Point(info.longitude(), info.latitude());
         String geoKey = CREW_LOCATION_KEY.formatted(courseId, crewId);
         redisTemplate.opsForGeo().add(geoKey, point, info.userId());
+    }
+
+    public void removeLocation(final String courseId, final String crewId, final String userId) {
+        String geoKey = CREW_LOCATION_KEY.formatted(courseId, crewId);
+        redisTemplate.opsForZSet().remove(geoKey, userId);
     }
 
     public List<ParticipantLocation> geoSearch(final String courseId, final String crewId, final String userId){
