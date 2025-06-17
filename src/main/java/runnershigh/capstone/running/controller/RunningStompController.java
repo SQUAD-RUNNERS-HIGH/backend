@@ -41,9 +41,6 @@ public class RunningStompController {
         return crewRunningService.calculateCrewRunning(request, courseId, crewId);
     }
 
-    // 주변 크루원 찾기
-    // Subscribe : /topic/crew-participant/course/{courseId}/crew/{crewId}
-    // Destination : /app/crew-participant/course/{courseId}/crew/{crewId}
     @MessageMapping("/crew-participant/course/{courseId}/crew/{crewId}")
     @SendToUser("/queue/reply")
     public CrewParticipantInfoResponse sendLocation(@DestinationVariable("courseId") String courseId,

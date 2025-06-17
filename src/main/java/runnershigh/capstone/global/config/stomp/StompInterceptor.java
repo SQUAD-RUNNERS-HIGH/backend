@@ -1,6 +1,7 @@
 package runnershigh.capstone.global.config.stomp;
 
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -37,24 +38,28 @@ public class StompInterceptor implements ChannelInterceptor {
             String authHeader = accessor.getFirstNativeHeader(NATIVE_AUTHORIZATION_HEADER);
             if (authHeader.startsWith(BEARER_PREFIX)) {
                 String token = authHeader.substring(7);
-                if (jwtValidator.validateAccessToken(token)) {
-                    Long userId = jwtExtractor.extractUserIdByAccessToken(token);
-                    accessor.getSessionAttributes().put("userId", userId);
-                } else {
-                    throw new JwtNotFoundException(ErrorCode.INVALID_TOKEN);
-                }
+                validateToken(token, accessor);
             } else {
                 throw new JwtNotFoundException(ErrorCode.INVALID_TOKEN);
             }
-        }
-        if (StompCommand.SUBSCRIBE.equals(accessor.getCommand()) && isDestinationUserQueue(accessor)) {
-            String courseId = accessor.getFirstNativeHeader("CourseId");
-            String crewId = accessor.getFirstNativeHeader("CrewId");
-            log.info("CourseId:{}, CrewId:{}",courseId,crewId);
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            sessionAttributes.put("courseId", courseId);
-            sessionAttributes.put("crewId", crewId);
+            String endpoint = (String) sessionAttributes.get("endpoint");
+            if (Objects.nonNull(endpoint) && endpoint.equals("running")) {
+                String crewId = accessor.getFirstNativeHeader("CrewId");
+                String courseId = accessor.getFirstNativeHeader("CourseId");
+                sessionAttributes.put("crewId",crewId);
+                sessionAttributes.put("courseId",courseId);
+            }
         }
         return message;
+    }
+
+    private void validateToken(final String token, final StompHeaderAccessor accessor) {
+        if (jwtValidator.validateAccessToken(token)) {
+            Long userId = jwtExtractor.extractUserIdByAccessToken(token);
+            accessor.getSessionAttributes().put("userId", userId);
+        } else {
+            throw new JwtNotFoundException(ErrorCode.INVALID_TOKEN);
+        }
     }
 }

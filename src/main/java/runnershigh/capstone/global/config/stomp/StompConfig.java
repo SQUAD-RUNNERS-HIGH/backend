@@ -14,11 +14,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompInterceptor stompInterceptor;
+    private final RunningStompHandshakeInterceptor runningHandShakeInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
+        registry.addEndpoint("/ws-chat")
             .setAllowedOriginPatterns("*")
+            .setAllowedOrigins("*");
+
+        registry.addEndpoint("/ws-running")
+            .setAllowedOriginPatterns("*")
+            .addInterceptors(runningHandShakeInterceptor)
             .setAllowedOrigins("*");
     }
 
