@@ -22,12 +22,6 @@ jobs:
       - name: Make application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
-      - name: Build JAR file
-        run: ./gradlew clean build
-
-      - name: Change built file name
-        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
-
       - name: Log in to Docker Hub (GitHub Actions)
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
