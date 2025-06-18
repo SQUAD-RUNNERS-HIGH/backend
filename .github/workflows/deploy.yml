@@ -48,6 +48,7 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
             docker compose down || true
+            docker image prune -a -f
             docker compose pull
             docker compose up -d
             sudo docker image prune -f
