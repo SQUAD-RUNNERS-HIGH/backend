@@ -13,6 +13,8 @@ public class UserTestBuilder {
     private Physical physical = new Physical();
     private Goal goal = new Goal();
     private Location location = new Location();
+    private double latitude = 37.5665;   // 기본 위도 (서울 좌표 예시)
+    private double longitude = 126.9780; // 기본 경도 (서울 좌표 예시)
 
     public static UserTestBuilder builder() {
         return new UserTestBuilder();
@@ -48,8 +50,20 @@ public class UserTestBuilder {
         return this;
     }
 
+    public UserTestBuilder latitude(double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public UserTestBuilder longitude(double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
+
     public User build() {
         String passwordSalt = "defaultPasswordSalt";
-        return new User(loginId, password, passwordSalt, username, physical, goal, location);
+        return new User(loginId, password, passwordSalt, username,
+            latitude, longitude, physical, goal, location);
     }
+
 }
