@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import runnershigh.capstone.user.domain.User;
-import runnershigh.capstone.user.dto.UserResponse;
+import runnershigh.capstone.user.dto.UserProfileResponse;
 import runnershigh.capstone.user.dto.UsernameResponse;
 import runnershigh.capstone.user.repository.UserRepository;
 import runnershigh.capstone.user.service.mapper.UserMapper;
@@ -21,9 +21,9 @@ public class UserQueryService {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public UserResponse getProfile(Long userId) {
+    public UserProfileResponse getProfile(Long userId) {
         User user = userService.getUser(userId);
-        return userMapper.toUserResponse(user);
+        return userMapper.toUserProfileResponse(user);
     }
 
     public UsernameResponse getUsername(Long userId) {

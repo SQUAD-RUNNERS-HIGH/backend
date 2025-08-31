@@ -16,6 +16,7 @@ import runnershigh.capstone.geocoding.dto.GeocodingApiResponse;
 import runnershigh.capstone.geocoding.service.GeocodingService;
 import runnershigh.capstone.global.argumentresolver.AuthUser;
 import runnershigh.capstone.user.dto.UserProfileRequest;
+import runnershigh.capstone.user.dto.UserProfileResponse;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
 import runnershigh.capstone.user.dto.UsernameResponse;
@@ -40,7 +41,7 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "유저 프로필 조회", description = "유저 ID를 받아, 프로필 정보를 반환합니다.")
-    public UserResponse getProfile(@Parameter(hidden = true) @AuthUser Long userId) {
+    public UserProfileResponse getProfile(@Parameter(hidden = true) @AuthUser Long userId) {
         return userQueryService.getProfile(userId);
     }
 

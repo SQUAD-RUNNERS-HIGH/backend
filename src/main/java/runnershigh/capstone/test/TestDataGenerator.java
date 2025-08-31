@@ -31,7 +31,7 @@ public class TestDataGenerator {
     @PostMapping("/api/test-data/{courseId}")
     public void saveTestData(@PathVariable String courseId) {
         User user = userRepository.save(
-            new User("test", "test", "t", "러너스하이", new Physical(), new Goal(),
+            new User("test", "test", "t", "러너스하이", 37.3456, 126.7375, new Physical(), new Goal(),
                 new Location()));
         Course course = courseService.getCourse(courseId);
         double perimeter = course.getProperties().getPerimeter();
