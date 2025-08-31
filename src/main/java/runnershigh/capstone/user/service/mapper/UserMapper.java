@@ -5,11 +5,13 @@ import org.springframework.stereotype.Component;
 import runnershigh.capstone.geocoding.dto.FormattedAddressResponse;
 import runnershigh.capstone.location.domain.Location;
 import runnershigh.capstone.location.dto.LocationResponse;
+import runnershigh.capstone.location.dto.LocationWithCoordinatesResponse;
 import runnershigh.capstone.user.domain.Gender;
 import runnershigh.capstone.user.domain.Physical;
 import runnershigh.capstone.user.domain.User;
 import runnershigh.capstone.user.dto.UserPhysicalRequest;
 import runnershigh.capstone.user.dto.UserPhysicalResponse;
+import runnershigh.capstone.user.dto.UserProfileResponse;
 import runnershigh.capstone.user.dto.UserRegisterRequest;
 import runnershigh.capstone.user.dto.UserResponse;
 
@@ -25,6 +27,8 @@ public class UserMapper {
             .password(hashedPassword)
             .passwordSalt(salt)
             .username(userRegisterRequest.username())
+            .latitude(userRegisterRequest.userLocation().latitude())
+            .longitude(userRegisterRequest.userLocation().longitude())
             .physical(toPhysical(userRegisterRequest.physical()))
             .userLocation(toUserLocation(formattedAddressResponse,
                 userRegisterRequest.userLocation().specificLocation()))
@@ -70,6 +74,15 @@ public class UserMapper {
             .build();
     }
 
+    public LocationWithCoordinatesResponse toUserLocationWithCoordinatesResponse(double latitude,
+        double longitude, String specificLocation) {
+        return LocationWithCoordinatesResponse.builder()
+            .latitude(latitude)
+            .longitude(longitude)
+            .specificLocation(specificLocation)
+            .build();
+    }
+
     public UserResponse toUserResponse(User user) {
         return UserResponse.builder()
             .loginId(user.getLoginId())
@@ -78,4 +91,16 @@ public class UserMapper {
             .userLocation(toUserLocationResponse(user.getUserLocation()))
             .build();
     }
+
+    public UserProfileResponse toUserProfileResponse(User user) {
+        return UserProfileResponse.builder()
+            .loginId(user.getLoginId())
+            .username(user.getUsername())
+            .physical(toUserPhysicalResponse(user.getPhysical()))
+            .userLocation(
+                toUserLocationWithCoordinatesResponse(user.getLatitude(), user.getLongitude(),
+                    user.getUserLocation().getSpecificLocation()))
+            .build();
+    }
+
 }

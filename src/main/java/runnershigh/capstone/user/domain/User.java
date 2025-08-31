@@ -24,6 +24,9 @@ public class User {
     private String passwordSalt;
     private String username;
 
+    private double latitude;
+    private double longitude;
+
     @Embedded
     private Physical physical;
 
@@ -35,11 +38,14 @@ public class User {
 
     @Builder
     public User(String loginId, String password, String passwordSalt, String username,
+        double latitude, double longitude,
         Physical physical, Goal goal, Location userLocation) {
         this.loginId = loginId;
         this.password = password;
         this.passwordSalt = passwordSalt;
         this.username = username;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.physical = physical;
         this.goal = goal;
         this.userLocation = userLocation;
