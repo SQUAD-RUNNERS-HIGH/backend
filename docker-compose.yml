@@ -1,6 +1,6 @@
 services:
   backend:
-    image: jjinbok/capstone-hub:latest
+    image: juu0/capstone-hub:latest
     container_name: backend
     ports:
       - "8080:8080"
