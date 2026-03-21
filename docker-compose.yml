@@ -11,6 +11,9 @@ services:
     depends_on:
       - mysql
       - redis
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     networks:
       runnershigh:
 
@@ -23,6 +26,7 @@ services:
     environment:
       MYSQL_DATABASE: runnershigh
       MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_HOST: '%'
       TZ: Asia/Seoul
     volumes:
       - mysql_data:/var/lib/mysql
