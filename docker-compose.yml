@@ -1,5 +1,6 @@
 services:
   backend:
+    build: .
     image: juu0/capstone-hub:latest
     container_name: backend
     ports:
@@ -9,8 +10,10 @@ services:
       SPRING_PROFILES_ACTIVE: dev
     tty: true
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -30,6 +33,11 @@ services:
       TZ: Asia/Seoul
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       runnershigh:
   redis:
