@@ -13,6 +13,10 @@ java {
     }
 }
 
+springBoot {
+    mainClass = 'runnershigh.capstone.CapstoneApplication'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
