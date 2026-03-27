@@ -78,8 +78,10 @@ public class UserService {
     private FormattedAddressResponse getFormattedAddressResponse(
         LocationRequest userLocationRequest) {
 
-        return geocodingService.getFormattedAddress(
-            userLocationRequest.latitude(), userLocationRequest.longitude());
+        // TODO: Geocoding API 연동 후 아래 주석 해제
+        // return geocodingService.getFormattedAddress(
+        //     userLocationRequest.latitude(), userLocationRequest.longitude());
+        return new FormattedAddressResponse(null, null, null, null);
     }
 
 }

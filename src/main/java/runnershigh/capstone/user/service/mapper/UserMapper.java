@@ -47,10 +47,10 @@ public class UserMapper {
     public Location toUserLocation(FormattedAddressResponse formattedAddressResponse,
         String specificLocation) {
         return Location.builder()
-            .country(formattedAddressResponse.country())
-            .province(formattedAddressResponse.province())
-            .city(formattedAddressResponse.city())
-            .dong(formattedAddressResponse.dong())
+            .country(formattedAddressResponse != null ? formattedAddressResponse.country() : null)
+            .province(formattedAddressResponse != null ? formattedAddressResponse.province() : null)
+            .city(formattedAddressResponse != null ? formattedAddressResponse.city() : null)
+            .dong(formattedAddressResponse != null ? formattedAddressResponse.dong() : null)
             .specificLocation(specificLocation)
             .build();
     }
