@@ -16,13 +16,13 @@ public class ElevationClientConfig {
     @Value("${runnershigh.elevation.url}")
     private String elevationApiUrl;
 
+    @Value("${runnershigh.elevation.key}")
+    private String elevationApiKey;
+
     @Bean
     public ElevationClient elevationClient() {
         final RestClient restClient = RestClient.builder()
-            .baseUrl(elevationApiUrl)
-            .requestInterceptor((request, body,execution) -> {
-                return execution.execute(request,body);
-            })
+            .baseUrl(elevationApiUrl + "?key=" + elevationApiKey)
             .build();
         final RestClientAdapter restClientAdapter = RestClientAdapter.create(restClient);
         final HttpServiceProxyFactory factory =
