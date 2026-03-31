@@ -1,13 +1,13 @@
 package runnershigh.capstone.course.infrastructure;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import runnershigh.capstone.course.domain.Course;
 import runnershigh.capstone.course.consts.GeoJsonType;
 
 public class ElevationRequestParameterGenerator {
 
-    public static ElevationRequest generate(final Course course) {
+    public static String generate(final Course course) {
         if (course.getGeometry().getType().equals(GeoJsonType.LINE_STRING.getType())) {
             return fromLineString(course.getGeometry().getCoordinates());
         } else {
@@ -15,21 +15,16 @@ public class ElevationRequestParameterGenerator {
         }
     }
 
-    public static ElevationRequest fromLineString(
-        final List<List<List<Double>>> coordinates) {
-        ArrayList<Location> locations = new ArrayList<>();
-        coordinates.forEach(
-            outer -> locations.add(new Location(outer.get(1).get(0), outer.get(0).get(0))));
-        return new ElevationRequest(locations);
+    public static String fromLineString(final List<List<List<Double>>> coordinates) {
+        return coordinates.stream()
+            .map(outer -> outer.get(1).get(0) + "," + outer.get(0).get(0))
+            .collect(Collectors.joining("|"));
     }
 
-    public static ElevationRequest fromPolygon(
-        final List<List<List<Double>>> coordinates) {
-        ArrayList<Location> locations = new ArrayList<>();
-        coordinates.forEach(
-            outer -> outer.forEach(inner -> locations.add(new Location(
-                inner.get(1), inner.get(0)))));
-        return new ElevationRequest(locations);
+    public static String fromPolygon(final List<List<List<Double>>> coordinates) {
+        return coordinates.stream()
+            .flatMap(outer -> outer.stream())
+            .map(inner -> inner.get(1) + "," + inner.get(0))
+            .collect(Collectors.joining("|"));
     }
-
 }

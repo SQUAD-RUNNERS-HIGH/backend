@@ -1,6 +1,5 @@
 package runnershigh.capstone.course.infrastructure;
 
-import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +22,10 @@ public class ElevationClientConfig {
     public ElevationClient elevationClient() {
         final RestClient restClient = RestClient.builder()
             .baseUrl(elevationApiUrl + "?key=" + elevationApiKey)
+            .requestInterceptor((request, body, execution) -> {
+                log.info("[Elevation API] {} {}", request.getMethod(), request.getURI());
+                return execution.execute(request, body);
+            })
             .build();
         final RestClientAdapter restClientAdapter = RestClientAdapter.create(restClient);
         final HttpServiceProxyFactory factory =
